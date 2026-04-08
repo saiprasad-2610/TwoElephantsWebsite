@@ -58,32 +58,6 @@ const Contact = () => {
       </nav>
 
       <main>
-        <section className="contact-hero">
-          <div className="container">
-            <motion.div 
-              className="contact-hero-inner"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="eyebrow no-line" style={{ color: 'rgba(255,255,255,0.7)', justifyContent: 'center' }}>GET IN TOUCH</div>
-              <h2>Let's Build Something <em>That Lasts.</em></h2>
-              <p>Whether you're a BFSI CTO, an Oil & Gas operations head, or a pharma compliance officer — we want to hear from you.</p>
-              
-              <div className="contact-hero-badges">
-                <div className="chero-badge">
-                  <Clock size={16} color="var(--color-blue-glow)" />
-                  Response within 24 hours
-                </div>
-                <div className="chero-badge">
-                  <Globe size={16} color="var(--accent-emerald)" />
-                  Solapur HQ + Houston Office
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
         <section className="contact-body">
           <div className="container">
             <div className="contact-grid">
@@ -174,8 +148,8 @@ const Contact = () => {
 
                           <div className="form-group">
                             <label htmlFor="interest">I'm interested in…</label>
-                            <select id="interest" onChange={handleChange}>
-                              <option value="" disabled selected>Select a service area</option>
+                            <select id="interest" defaultValue="" onChange={handleChange}>
+                              <option value="" disabled>Select a service area</option>
                               <option>BFSI Technology</option>
                               <option>Oil & Gas IT</option>
                               <option>Pharmaceutical IT</option>
