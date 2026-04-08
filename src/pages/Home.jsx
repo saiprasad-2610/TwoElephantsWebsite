@@ -684,29 +684,25 @@ const Home = () => {
         <SectionReveal><Team /></SectionReveal>
         <SectionReveal><Insights /></SectionReveal>
         
-        {/* Careers CTA */}
+        {/* Unified CTA */}
         <SectionReveal>
-          <section className="careers-section">
-            <div className="careers-bg"></div>
+          <section className="cta-merged">
+            <div className="cta-merged-bg" />
             <div className="container">
-              <div className="careers-inner">
-                <h2 className="careers-title">Build Your Career Without Leaving Your City.</h2>
-                <p className="careers-desc">We're building a 500-person engineering team in Solapur. Metro salaries. Your hometown.</p>
-                <div className="careers-actions">
-                  <Link to="/contact" className="btn btn-primary">Join the Herd</Link>
+              <div className="cta-merged-grid">
+                <div className="cta-merged-card">
+                  <h2 className="cta-merged-title">Build Your Career Without Leaving Your City.</h2>
+                  <p className="cta-merged-desc">We're building a 500-person engineering team in Solapur. Metro salaries. Your hometown.</p>
+                  <div className="cta-merged-actions">
+                    <Link to="/contact" className="btn btn-primary cta-join">
+                      Join the Herd
+                      <span className="cta-btn-arrow" aria-hidden="true">
+                        <ArrowRight size={18} className="cta-btn-arrow-icon" />
+                      </span>
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
-        </SectionReveal>
-
-        {/* Final CTA */}
-        <SectionReveal>
-          <section className="cta-strip">
-            <div className="container">
-              <h2 className="cta-title">Ready to Build Something That Lasts?</h2>
-              <p className="cta-sub">Start a conversation with our enterprise team today.</p>
-              <Link to="/contact" className="btn btn-white">Get Started <ArrowRight size={18} /></Link>
             </div>
           </section>
         </SectionReveal>

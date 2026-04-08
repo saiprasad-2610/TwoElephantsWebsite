@@ -148,7 +148,7 @@ const Contact = () => {
 
                           <div className="form-group">
                             <label htmlFor="interest">I'm interested in…</label>
-                            <select id="interest" defaultValue="" onChange={handleChange}>
+                            <select id="interest" onChange={handleChange} defaultValue="">
                               <option value="" disabled>Select a service area</option>
                               <option>BFSI Technology</option>
                               <option>Oil & Gas IT</option>
