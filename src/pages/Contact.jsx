@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Mail, 
-  Phone, 
-  Linkedin, 
-  MapPin, 
-  Send, 
+import { useEffect } from "react";
+import {
+  Mail,
+  Phone,
+  Linkedin,
+  MapPin,
+  Send,
   CheckCircle,
   Clock,
   Globe,
   ArrowLeft
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const Contact = () => {
   const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success
@@ -36,26 +39,13 @@ const Contact = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="contact-page">
-      <nav id="main-nav" className="scrolled">
-        <div className="container nav-inner">
-          <Link to="/" className="logo">
-            <div className="logo-text">
-              <span className="logo-main" style={{ color: 'var(--color-dark)' }}>Two Elephants</span>
-              <span className="logo-sub">TECHNOLOGIES</span>
-            </div>
-          </Link>
-          <div className="nav-links">
-            <Link to="/" style={{ color: 'var(--color-dark)' }}>Home</Link>
-            <Link to="/contact" className="active">Contact</Link>
-          </div>
-          <Link to="/" className="btn btn-ghost btn-sm">
-            <ArrowLeft size={16} /> Back to Home
-          </Link>
-        </div>
-      </nav>
+      <Navbar />
 
       <main>
         <section className="contact-body">
@@ -121,7 +111,7 @@ const Contact = () => {
                 <div className="contact-form-wrap">
                   <AnimatePresence mode="wait">
                     {formStatus !== 'success' ? (
-                      <motion.div 
+                      <motion.div
                         key="form"
                         initial={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -169,7 +159,7 @@ const Contact = () => {
                         </form>
                       </motion.div>
                     ) : (
-                      <motion.div 
+                      <motion.div
                         key="success"
                         className="form-success show"
                         initial={{ opacity: 0, scale: 0.9 }}
@@ -212,14 +202,7 @@ const Contact = () => {
         </section>
       </main>
 
-      <footer style={{ background: 'var(--color-dark)', color: '#fff', padding: '40px 0' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center' }}>
-            <div className="logo-main" style={{ fontSize: '24px', marginBottom: '16px' }}>Two Elephants</div>
-            <p style={{ opacity: 0.7 }}>© 2026 Two Elephants Technologies. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

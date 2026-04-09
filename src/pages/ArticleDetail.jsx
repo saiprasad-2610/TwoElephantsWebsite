@@ -1,18 +1,31 @@
 import React, { useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Clock, User, Calendar, Share2, Linkedin, Twitter, Link as LinkIcon } from 'lucide-react';
+import { ArrowLeft, Clock, User, Calendar, Linkedin, Twitter, Link as LinkIcon } from 'lucide-react';
 import { articles } from '../data/articles';
 import Navbar from '../components/Navbar';
-import logo from '../assets/images/logo1.svg';
+import Footer from '../components/Footer';
 
 const ArticleDetail = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const article = articles.find(a => a.id === id);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    const updateProgress = () => {
+      const progressBar = document.getElementById('scroll-progress');
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (!progressBar || docHeight <= 0) return;
+
+      const scrollTop = window.scrollY;
+      const scrollPercent = Math.min(Math.max((scrollTop / docHeight) * 100, 0), 100);
+      progressBar.style.width = `${scrollPercent}%`;
+    };
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+    return () => window.removeEventListener('scroll', updateProgress);
   }, []);
 
   if (!article) {
@@ -26,8 +39,30 @@ const ArticleDetail = () => {
     );
   }
 
+  const relatedArticles = articles.filter(a => a.cat === article.cat && a.id !== id).slice(0, 2);
+  const shareUrl = window.location.href;
+  const shareTitle = article.title;
+
+  const shareOnLinkedIn = () => {
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+  };
+
+  const shareOnTwitter = () => {
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareTitle)}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+  };
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      // Could add a toast notification here
+    } catch (err) {
+      console.error('Failed to copy link:', err);
+    }
+  };
+
   return (
     <div className="article-detail-page">
+      <div id="scroll-progress"></div>
       <Navbar />
 
       <main style={{ paddingTop: '100px' }}>
@@ -83,9 +118,9 @@ const ArticleDetail = () => {
                 <div className="share-box">
                   <span className="share-label">Share this insight</span>
                   <div className="share-actions">
-                    <button className="share-btn"><Linkedin size={18} /></button>
-                    <button className="share-btn"><Twitter size={18} /></button>
-                    <button className="share-btn"><LinkIcon size={18} /></button>
+                    <button className="share-btn" onClick={shareOnLinkedIn}><Linkedin size={18} /></button>
+                    <button className="share-btn" onClick={shareOnTwitter}><Twitter size={18} /></button>
+                    <button className="share-btn" onClick={copyLink}><LinkIcon size={18} /></button>
                   </div>
                 </div>
               </div>
@@ -98,14 +133,55 @@ const ArticleDetail = () => {
             </div>
           </div>
         </article>
+
+        {/* Related Articles Section */}
+        {relatedArticles.length > 0 && (
+          <section className="related-articles section-padding">
+            <div className="container">
+              <motion.div 
+                className="section-header text-center"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <h2 className="section-title">Related Insights</h2>
+                <p className="section-subtitle">Explore more articles in {article.cat}</p>
+              </motion.div>
+
+              <div className="related-articles-grid">
+                {relatedArticles.map((relatedArticle, index) => (
+                  <motion.div 
+                    key={relatedArticle.id}
+                    className="related-article-card"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                  >
+                    <Link to={`/insights/${relatedArticle.id}`} className="related-article-link">
+                      <div className="related-article-image">
+                        <img src={relatedArticle.img} alt={relatedArticle.title} />
+                      </div>
+                      <div className="related-article-content">
+                        <div className="eyebrow amber">{relatedArticle.cat}</div>
+                        <h3>{relatedArticle.title}</h3>
+                        <p>{relatedArticle.excerpt}</p>
+                        <div className="related-article-meta">
+                          <span>{relatedArticle.author}</span>
+                          <span>{relatedArticle.readTime}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
       </main>
 
-      <footer style={{ background: 'var(--color-dark)', color: '#fff', padding: '60px 0 30px' }}>
-        <div className="container" style={{ textAlign: 'center' }}>
-          <div className="logo-main" style={{ fontSize: '24px', marginBottom: '16px' }}>Two Elephants</div>
-          <p style={{ opacity: 0.6 }}>© 2026 Two Elephants Technologies LLP. Built with precision in Solapur.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

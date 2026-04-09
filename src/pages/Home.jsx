@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import ElephantModel3D from '../components/ElephantModel3D';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import { 
   ArrowRight, 
@@ -27,14 +26,44 @@ import { articles } from '../data/articles';
 
 import ParticleBackground from '../components/ParticleBackground';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+
+const MotionLink = motion(Link);
+
+import ElephantModel3D from '../components/ElephantModel3D';
 
 // Import images
 import logo from '../assets/images/logo1.svg';
-import abhiImg from '../assets/images/Abhi.jpeg';
-import auImg from '../assets/images/Au.jpeg';
-import sapnaImg from '../assets/images/Sapna.jpeg';
-import pankajImg from '../assets/images/pankaj.jpeg';
-import ptImg from '../assets/images/prashant1.png';
+import prashant1 from '../assets/images/prashant1.png'
+import pankaj from '../assets/images/pankaj.jpeg'
+import Abhi from '../assets/images/Abhi.jpeg'
+import Au from '../assets/images/Au.jpeg'
+import Sapna from '../assets/images/Sapna.jpeg'
+import saurabh from '../assets/images/saurabh.jpeg'
+import prashant_bollu from '../assets/images/prashant_bollu.jpeg'
+
+
+// Temporary fallbacks for moved assets
+const abhiImg = Abhi;
+const auImg = Au;
+const sapnaImg = Sapna;
+const pankajImg = pankaj;
+const ptImg = prashant1;
+const saurabhImg = saurabh;
+const prashantBolluImg = prashant_bollu;
+
+
+
+const HeroFallback = () => (
+  <motion.img 
+    src={logo} 
+    alt="Two Elephants Logo" 
+    className="hero-svg hero-logo hero-logo-cropped"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    style={{ maxWidth: '380px', height: 'auto' }}
+  />
+);
 
 const Hero = () => {
   const [text, setText] = useState('');
@@ -109,20 +138,46 @@ const Hero = () => {
             
             <motion.div
               className="hero-logo-wrapper"
-              animate={{ y: [0, -15, 0] }}
+              animate={{ y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+              style={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center',
+                width: '100%',
+                maxWidth: '600px',
+                height: '480px',
+                position: 'relative'
+              }}
             >
-              <motion.img 
-                src={logo} 
-                alt="Two Elephants Logo" 
-                className="hero-svg hero-logo hero-logo-cropped"
-              />
+              <div style={{ width: '100%', height: '100%', position: 'relative', zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <motion.img
+                  src={logo}
+                  alt="Two Elephants"
+                  style={{ 
+                    width: '100%', 
+                    maxWidth: '420px', 
+                    filter: 'drop-shadow(0 0 40px rgba(248, 204, 28, 0.35)) drop-shadow(0 0 80px rgba(0, 200, 255, 0.15))',
+                    userSelect: 'none'
+                  }}
+                  animate={{ 
+                    filter: [
+                      'drop-shadow(0 0 40px rgba(248, 204, 28, 0.35)) drop-shadow(0 0 80px rgba(0, 200, 255, 0.15))',
+                      'drop-shadow(0 0 60px rgba(248, 204, 28, 0.55)) drop-shadow(0 0 100px rgba(0, 200, 255, 0.25))',
+                      'drop-shadow(0 0 40px rgba(248, 204, 28, 0.35)) drop-shadow(0 0 80px rgba(0, 200, 255, 0.15))',
+                    ]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                  draggable={false}
+                />
+              </div>
+              
               <motion.div 
                 className="hero-slogan"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
+                style={{ position: 'relative', zIndex: 20, marginTop: '-40px' }}
               >
                 <div className="slogan-top">TWO ELEPHANTS TECHNOLOGIES LLP</div>
                 <div className="slogan-bottom">
@@ -138,11 +193,6 @@ const Hero = () => {
               transition={{ delay: 1 }}
               style={{ right: '5%', bottom: '10%', left: 'auto' }}
             >
-              {/* <div className="legacy-badge-title">
-                <CheckCircle2 size={16} color="var(--color-blue-glow)" />
-                Do Haathi
-              </div> 
-               <div className="legacy-badge-sub">65 Years of Trust</div> */}
             </motion.div>
           </motion.div>
         </div>
@@ -195,15 +245,34 @@ const Counter = ({ value, label }) => {
 const Story = () => {
   const { scrollYProgress } = useScroll();
   const timelineScale = useSpring(useTransform(scrollYProgress, [0.15, 0.45], [0, 1]), {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
+    stiffness: 100, damping: 30, restDelta: 0.001
   });
 
   const milestones = [
-    { year: "1959", title: "Pushpa Textiles Founded", desc: "The Rathi family begins a legacy of manufacturing precision in Solapur." },
-    { year: "1980s", title: "Global Expansion", desc: "Becoming a trusted supplier for national brands like IndiGo and Maruti Suzuki." },
-    { year: "2026", title: "Two Elephants Tech", desc: "Transitioning industrial wisdom into enterprise-grade technology solutions." }
+    { 
+      year: "1959", 
+      title: "Pushpa Textiles Founded", 
+      desc: "The Rathi family begins a legacy of manufacturing precision in Solapur.",
+      icon: "🏭",
+      color: "#4da8ff",
+      glow: "rgba(77,168,255,0.3)"
+    },
+    { 
+      year: "1980s", 
+      title: "Global Expansion", 
+      desc: "Becoming a trusted supplier for national brands like IndiGo and Maruti Suzuki.",
+      icon: "🌐",
+      color: "#f8cc1c",
+      glow: "rgba(248,204,28,0.3)"
+    },
+    { 
+      year: "2026", 
+      title: "Two Elephants Tech", 
+      desc: "Transitioning industrial wisdom into enterprise-grade technology solutions.",
+      icon: "🚀",
+      color: "#7c3aed",
+      glow: "rgba(124,58,237,0.3)"
+    }
   ];
 
   return (
@@ -212,21 +281,22 @@ const Story = () => {
         <div className="story-grid">
           <motion.div 
             className="story-images"
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -60 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="image-stack">
               <motion.img 
                 src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85" 
                 alt="Pushpa Textiles" 
                 className="story-img-main"
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.03, rotate: 1 }}
+                transition={{ type: 'spring', stiffness: 200, damping: 20 }}
               />
               <motion.div 
                 className="story-img-card card-legacy"
-                animate={{ y: [0, -10, 0] }}
+                animate={{ y: [0, -12, 0], boxShadow: ['0 8px 32px rgba(77,168,255,0.2)', '0 20px 48px rgba(77,168,255,0.4)', '0 8px 32px rgba(77,168,255,0.2)'] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               >
                 <span className="card-year">1959</span>
@@ -236,13 +306,13 @@ const Story = () => {
                 src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=85" 
                 alt="Modern tech" 
                 className="story-img-fg"
-                animate={{ y: [0, 10, 0] }}
+                animate={{ y: [0, 12, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.06 }}
               />
               <motion.div 
                 className="story-img-card card-tech"
-                animate={{ x: [0, 5, 0] }}
+                animate={{ x: [0, 6, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               >
                 <Zap size={16} color="var(--color-blue-glow)" />
@@ -253,16 +323,46 @@ const Story = () => {
           
           <motion.div 
             className="story-content"
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 60 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
           >
-            <div className="eyebrow dark">OUR STORY</div>
+            <motion.div 
+              className="eyebrow dark"
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >OUR STORY</motion.div>
             <div className="section-rule visible"></div>
-            <h2 className="h2-title">A Legacy That Earns Its <em>Next Chapter</em></h2>
-            <p className="body-text">Every great technology company is built on something real. Ours is built on <strong>65 years of industrial trust.</strong></p>
-            <p className="body-text">The Rathi family — known in Solapur as "Do Haathi" (Two Elephants) — has mastered the art of precision over decades. Today, we bring that same uncompromising quality to the digital world.</p>
+            <motion.h2 
+              className="h2-title"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.7 }}
+            >
+              A Legacy That Earns Its <em>Next Chapter</em>
+            </motion.h2>
+            <motion.p 
+              className="body-text"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
+            >
+              Every great technology company is built on something real. Ours is built on <strong>65 years of industrial trust.</strong>
+            </motion.p>
+            <motion.p 
+              className="body-text"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+            >
+              The Rathi family — known in Solapur as "Do Haathi" (Two Elephants) — has mastered the art of precision over decades. Today, we bring that same uncompromising quality to the digital world.
+            </motion.p>
             
             <div className="legacy-stats">
               <Counter value="65+" label="Years of Trust" />
@@ -272,8 +372,12 @@ const Story = () => {
 
             <motion.blockquote 
               className="pull-quote"
-              whileHover={{ borderLeftWidth: "8px", paddingLeft: "36px" }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.6 }}
+              whileHover={{ borderLeftWidth: "8px", paddingLeft: "36px", color: '#f8cc1c' }}
+              transition2={{ duration: 0.3 }}
             >
               "We didn't move into technology. We extended who we already were."
             </motion.blockquote>
@@ -281,33 +385,70 @@ const Story = () => {
           </motion.div>
         </div>
 
-        {/* Interactive Timeline */}
+        {/* ══════════ PREMIUM TIMELINE ══════════ */}
         <div className="timeline-wrap">
-          <motion.div 
-            className="timeline-line-glow"
-            style={{ scaleX: timelineScale }}
-          />
-          <div className="timeline-grid">
-            {milestones.map((m, i) => (
-              <motion.div 
-                key={i} 
-                className="timeline-item"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.2, duration: 0.6 }}
-                whileHover={{ y: -5 }}
-              >
+          <div className="timeline-header">
+            <div className="eyebrow amber">MILESTONES</div>
+            <h3>From textile heritage to modern enterprise-scale technology.</h3>
+            <p>For the home page, this timeline narrates the transformation from trusted craftsmanship to enterprise-grade digital services.</p>
+          </div>
+
+          <div className="timeline-container">
+            <motion.div 
+              className="timeline-axis"
+              style={{ scaleY: timelineScale, transformOrigin: 'top center' }}
+            />
+
+            <div className="timeline-grid">
+              {milestones.map((m, i) => (
                 <motion.div 
-                  className="t-dot"
-                  whileHover={{ scale: 1.5, backgroundColor: "var(--color-blue-glow)" }}
-                />
-                <div className="t-year">{m.year}</div>
-                <h4 className="t-title">{m.title}</h4>
-                <p className="t-desc">{m.desc}</p>
-                <div className="t-hover-bg" />
-              </motion.div>
-            ))}
+                  key={i} 
+                  className={`timeline-item ${i % 2 === 0 ? 'is-left' : 'is-right'}`}
+                  initial={{ opacity: 0, y: 60, scale: 0.94 }}
+                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true, margin: '-80px' }}
+                  transition={{
+                    delay: i * 0.18,
+                    type: 'spring',
+                    stiffness: 120,
+                    damping: 18,
+                  }}
+                >
+                  <motion.div
+                    className="timeline-card"
+                    whileHover={{ y: -6, scale: 1.01 }}
+                    transition={{ type: 'spring', stiffness: 220, damping: 18 }}
+                  >
+                    <motion.div
+                      className="timeline-card-glow"
+                      initial={{ opacity: 0.08, scale: 0.9 }}
+                      animate={{ opacity: [0.08, 0.18, 0.08], scale: [0.94, 1.02, 0.94] }}
+                      transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: i * 0.12 }}
+                    />
+                    <div className="timeline-card-head">
+                      <motion.div
+                        className="timeline-icon"
+                        style={{ background: m.glow }}
+                        animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.08, 0.98, 1] }}
+                        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: i * 0.15 }}
+                      >
+                        <span>{m.icon}</span>
+                      </motion.div>
+                      <div className="timeline-tag" style={{ color: m.color }}>
+                        {m.year}
+                      </div>
+                    </div>
+                    <h4 className="t-title">{m.title}</h4>
+                    <p className="t-desc">{m.desc}</p>
+                  </motion.div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          <div className="timeline-footer">
+            <p>Our home page now leads visitors through a meaningful timeline, emphasizing why Two Elephants is the trusted intersection of industry and innovation.</p>
+            <Link to="/contact" className="btn btn-primary">Talk to our team</Link>
           </div>
         </div>
       </div>
@@ -316,6 +457,8 @@ const Story = () => {
 };
 
 const ServiceCard = ({ title, desc, cat, tags, color, img, delay }) => {
+  const navigate = useNavigate();
+
   return (
     <motion.div 
       className="service-card"
@@ -329,7 +472,15 @@ const ServiceCard = ({ title, desc, cat, tags, color, img, delay }) => {
         rotateY: 2,
         transition: { duration: 0.2 }
       }}
-      style={{ perspective: 1000 }}
+      onClick={() => navigate('/services')}
+      style={{ perspective: 1000, cursor: 'pointer' }}
+      role="link"
+      tabIndex={0}
+      onKeyDown={event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          navigate('/services');
+        }
+      }}
     >
       <div className={`svc-accent acc-${color}`}></div>
       <img src={img} alt={title} loading="lazy" />
@@ -510,7 +661,22 @@ const Team = () => {
       img: pankajImg,
       bio: "Based in Houston, Texas. Leads global shipping and logistics for enterprise clients. Pankaj manages our international presence and ensures seamless coordination for our global projects.",
       linkedin: "https://www.linkedin.com/in/pankajsureshrathi/"
+    },
+    {
+      name: "Saurabh Kulkarni",
+      role: "Tech Lead - Cyber Security",
+      img: saurabhImg,
+      bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.",
+      // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
+    }, {
+      name: "Prashant Bollu",
+      role: "...",
+      img: prashantBolluImg,
+      bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textiles. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
+      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
     }
+
+
   ];
 
   return (
@@ -560,15 +726,15 @@ const Insights = () => {
         </div>
         <div className="insights-grid">
           {articles.map((article, idx) => (
-            <motion.div 
-              key={idx} 
+            <MotionLink
+              key={idx}
+              to={`/insights/${article.id}`}
               className="blog-card"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 * idx }}
               whileHover={{ y: -10 }}
-              onClick={() => navigate(`/insights/${article.id}`)}
             >
               <div className="blog-img-wrap">
                 <img src={article.img} alt={article.title} className="blog-img" />
@@ -584,70 +750,11 @@ const Insights = () => {
                   <span className="read-more">Read Full Article <ArrowRight size={14} /></span>
                 </div>
               </div>
-            </motion.div>
+            </MotionLink>
           ))}
         </div>
       </div>
     </section>
-  );
-};
-
-const Footer = () => {
-  return (
-    <footer>
-      <div className="container">
-        <div className="footer-grid">
-          <div>
-            <div className="logo">
-              <img src={logo} alt="Two Elephants" style={{ height: '32px' }} />
-              <div className="logo-text">
-                <span className="logo-main" style={{ color: '#fff' }}>Two Elephants</span>
-                <span className="logo-sub">TECHNOLOGIES</span>
-              </div>
-            </div>
-            <p className="f-tagline">Strength. Care. Honesty.</p>
-            <p className="f-desc">Technology grounded in 65 years of industrial wisdom. Built in Solapur.</p>
-            <div className="social-row">
-              <a href="#" className="social-btn"><Linkedin size={18} /></a>
-              <a href="#" className="social-btn"><Twitter size={18} /></a>
-              <a href="#" className="social-btn"><Github size={18} /></a>
-            </div>
-          </div>
-          <div>
-            <h4 className="f-col-title">Company</h4>
-            <ul className="f-links">
-              <li><a href="#story">Our Story</a></li>
-              <li><a href="#team">Team</a></li>
-              <li><a href="/contact">Contact</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="f-col-title">Services</h4>
-            <ul className="f-links">
-              <li><a href="#services">BFSI Technology</a></li>
-              <li><a href="#services">Oil & Gas IT</a></li>
-              <li><a href="#services">Pharma IT</a></li>
-            </ul>
-          </div>
-          <div className="f-contact">
-            <h4 className="f-col-title">Reach Us</h4>
-            <p><MapPin size={16} /> Solapur, Maharashtra, India</p>
-            <p><Mail size={16} /> hello@twoelephants.tech</p>
-            <div className="f-response">
-              <Clock size={12} /> Response within 24 hours.
-            </div>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <div>© 2026 Two Elephants Technologies LLP.</div>
-          <div className="f-bottom-links">
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
-          </div>
-          <div>Standing on 65 years. Building for the next 65.</div>
-        </div>
-      </div>
-    </footer>
   );
 };
 
@@ -694,7 +801,7 @@ const Home = () => {
                   <h2 className="cta-merged-title">Build Your Career Without Leaving Your City.</h2>
                   <p className="cta-merged-desc">We're building a 500-person engineering team in Solapur. Metro salaries. Your hometown.</p>
                   <div className="cta-merged-actions">
-                    <Link to="/contact" className="btn btn-primary cta-join">
+                    <Link to="/careers" className="btn btn-primary cta-join">
                       Join the Herd
                       <span className="cta-btn-arrow" aria-hidden="true">
                         <ArrowRight size={18} className="cta-btn-arrow-icon" />
