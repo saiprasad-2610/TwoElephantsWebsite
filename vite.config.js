@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
@@ -15,6 +14,7 @@ export default defineConfig({
     watch: {
       usePolling: true,
       interval: 1000,
-    }
+    },
+    allowedHosts: ["all"]
   }
 })

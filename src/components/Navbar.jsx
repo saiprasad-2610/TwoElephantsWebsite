@@ -149,15 +149,16 @@ const Navbar = () => {
       <div className="container nav-inner">
 
         {/* ── LOGO ── */}
-        <Link to="/" className="logo" style={{ textDecoration: 'none' }}>
+        <Link to="/#home"  onClick={() => window.scrollTo(0,0)} className="logo" style={{ textDecoration: "none" }}>
           <motion.img
             src={logo}
             alt="Two Elephants"
-            style={{ height: '65px', width: 'auto' }}
+            style={{ height: "65px", width: "auto" }}
             whileHover={{ scale: 1.12, rotate: -5 }}
             whileTap={{ scale: 0.95 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 14 }}
+            transition={{ type: "spring", stiffness: 400, damping: 14 }}
           />
+
           <div className="logo-text">
             <span className="logo-main">Two Elephants</span>
             <span className="logo-sub">TECHNOLOGIES LLP</span>
@@ -251,7 +252,7 @@ const Navbar = () => {
           })}
 
           {/* CTA "Get in Touch" Button */}
-          <motion.div
+          {/* <motion.div
             style={{ marginLeft: '8px' }}
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -274,7 +275,7 @@ const Navbar = () => {
             >
               Get in Touch ✦
             </Link>
-          </motion.div>
+          </motion.div> */}
 
           {/* Mobile toggle */}
           <motion.button

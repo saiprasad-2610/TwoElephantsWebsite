@@ -39,8 +39,10 @@ import pankaj from '../assets/images/pankaj.jpeg'
 import Abhi from '../assets/images/Abhi.jpeg'
 import Au from '../assets/images/Au.jpeg'
 import Sapna from '../assets/images/Sapna.jpeg'
-import saurabh from '../assets/images/saurabh.jpeg'
+import saurabh from '../assets/images/saurabh1.png'
 import prashant_bollu from '../assets/images/prashant_bollu.jpeg'
+import arpita from '../assets/images/arpita.jpg'
+
 
 
 // Temporary fallbacks for moved assets
@@ -51,6 +53,8 @@ const pankajImg = pankaj;
 const ptImg = prashant1;
 const saurabhImg = saurabh;
 const prashantBolluImg = prashant_bollu;
+const arpitaImg = arpita;
+
 
 
 
@@ -628,7 +632,7 @@ const Team = () => {
   const [selectedMember, setSelectedMember] = useState(null);
   const members = [
     {
-      name: "Prashant Ratthi",
+      name: "Prashant Rathi",
       role: "Co-Founder & CEO",
       img: ptImg,
       bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textiles. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
@@ -673,6 +677,13 @@ const Team = () => {
       role: "...",
       img: prashantBolluImg,
       bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textiles. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
+      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
+    },
+    {
+      name: "Arpita Kulkarni",
+      role: "...",
+      img: arpitaImg,
+      bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.",
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
     }
 
