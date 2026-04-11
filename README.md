@@ -1,89 +1,179 @@
-🐘 Two Elephants Website
+# 🐘 Two Elephants Website
 
-A modern responsive website built using React.js for the Two Elephants brand.
-The project focuses on delivering a clean UI, responsive layout, and optimized performance for users across devices.
+[![React](https://img.shields.io/badge/React-18-blue)](https://react.dev/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active-success)]()
 
-🚀 Features
-Responsive modern UI
-Component-based architecture
-Optimized React performance
-Scalable project structure
-Easy deployment
-🛠️ Tech Stack
-Frontend: React.js
-Styling: CSS / Tailwind / SCSS (update based on your project)
-Package Manager: npm
-Version Control: Git & GitHub
-📦 Installation
+A modern **React.js-based website** built for the **Two Elephants brand**, focusing on clean design, responsive layout, and scalable frontend architecture.
 
-Follow these steps to run the project locally.
+This project demonstrates best practices in **component-based development**, reusable UI components, and maintainable project structure.
 
-1️⃣ Clone the repository
+---
+
+# 🚀 Live Project
+
+*(Add your deployed website link here)*
+
+Example:
+
+```
+https://twoelephantswebsite.vercel.app
+```
+
+---
+
+# ✨ Features
+
+* ⚛️ Built with React.js
+* 📱 Fully responsive design
+* 🧩 Reusable component architecture
+* ⚡ Fast and optimized performance
+* 🎨 Modern UI/UX
+* 📂 Clean folder structure for scalability
+
+---
+
+# 🛠️ Tech Stack
+
+| Technology        | Usage                 |
+| ----------------- | --------------------- |
+| React.js          | Frontend Framework    |
+| JavaScript (ES6+) | Application Logic     |
+| HTML5             | Structure             |
+| CSS3              | Styling               |
+| npm               | Dependency Management |
+| Git & GitHub      | Version Control       |
+
+---
+
+# 📦 Getting Started
+
+Follow these instructions to run the project locally.
+
+## 1️⃣ Clone the Repository
+
+```bash
 git clone https://github.com/saiprasad-2610/TwoElephantsWebsite.git
-2️⃣ Navigate to the project directory
+```
+
+## 2️⃣ Navigate to Project Folder
+
+```bash
 cd TwoElephantsWebsite
-3️⃣ Install dependencies
+```
+
+## 3️⃣ Install Dependencies
+
+```bash
 npm install
-▶️ Running the Project
+```
 
-Start the development server:
+---
 
+# ▶️ Run the Development Server
+
+```bash
 npm start
+```
 
-The application will run on:
+The application will start on:
 
+```
 http://localhost:3000
+```
 
-The page will reload automatically when you make changes.
+The page automatically reloads when you make changes.
 
-🏗️ Build for Production
+---
 
-To create an optimized production build:
+# 🏗️ Production Build
 
+To generate an optimized production build:
+
+```bash
 npm run build
+```
 
-The build files will be generated in the build/ folder.
+This will create a **build/** folder with production-ready files.
 
-📂 Project Structure
+---
+
+# 📂 Project Structure
+
+```
 TwoElephantsWebsite
 │
-├── public/             # Static assets
+├── public/                 # Static assets
 │
 ├── src/
-│   ├── components/     # Reusable components
-│   ├── pages/          # Website pages
-│   ├── assets/         # Images and static resources
-│   ├── App.js
-│   └── index.js
+│   ├── components/         # Reusable UI components
+│   ├── pages/              # Website pages
+│   ├── assets/             # Images and media
+│   ├── styles/             # Global styles
+│   ├── App.js              # Root component
+│   └── index.js            # Application entry point
 │
 ├── package.json
+├── package-lock.json
 └── README.md
-🌐 Deployment
+```
 
-You can deploy this project using:
+---
 
-Vercel
-Netlify
-GitHub Pages
+# 🌐 Deployment
 
-Example build command:
+You can deploy this project easily on:
 
+* **Vercel**
+* **Netlify**
+* **GitHub Pages**
+
+Example deployment steps:
+
+```bash
 npm run build
+```
 
-Upload the build folder to your hosting provider.
+Upload the generated **build folder** to your hosting provider.
 
-🤝 Contributing
+---
 
-Contributions are welcome!
+# 🤝 Contributing
 
-Fork the repository
-Create a new branch
-git checkout -b feature-name
-Commit your changes
-git commit -m "Added new feature"
-Push to the branch
-git push origin feature-name
-Open a Pull Request
-📄 License
+Contributions are welcome and appreciated.
 
-This project is licensed under the MIT License.
+1. Fork the repository
+2. Create a new branch
+
+```bash
+git checkout -b feature/new-feature
+```
+
+3. Commit your changes
+
+```bash
+git commit -m "Add new feature"
+```
+
+4. Push to the branch
+
+```bash
+git push origin feature/new-feature
+```
+
+5. Create a Pull Request
+
+---
+
+# 👨‍💻 Author
+
+**Sai Prasad**
+
+GitHub:
+https://github.com/saiprasad-2610
+
+---
+
+# 📄 License
+
+This project is licensed under the **MIT License**.
