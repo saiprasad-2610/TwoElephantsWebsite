@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Linkedin, 
-  Twitter, 
-  Github, 
-  MapPin, 
-  Mail, 
-  Clock 
+import {
+  Linkedin,
+  Twitter,
+  Instagram,
+  MapPin,
+  Mail,
+  Phone,
+  Clock
 } from 'lucide-react';
 import logo from '../assets/images/logo1.svg';
 
@@ -20,15 +21,15 @@ const Footer = () => {
               <img src={logo} alt="Two Elephants" style={{ height: '32px' }} />
               <div className="logo-text">
                 <span className="logo-main" style={{ color: '#fff' }}>Two Elephants</span>
-                <span className="logo-sub">TECHNOLOGIES</span>
+                <span className="logo-sub">TECHNOLOGIES LLP</span>
               </div>
             </div>
             <p className="f-tagline">Strength. Care. Honesty.</p>
             <p className="f-desc">Technology grounded in 65 years of industrial wisdom. Built in Solapur.</p>
             <div className="social-row">
-              <a href="#" className="social-btn"><Linkedin size={18} /></a>
+              <a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" className="social-btn"><Linkedin size={18} /></a>
               <a href="#" className="social-btn"><Twitter size={18} /></a>
-              <a href="#" className="social-btn"><Github size={18} /></a>
+              <a href="https://www.instagram.com/twoelephantstechnologiesllp?igsh=MWw5b2psZHJhMGJ4cA%3D%3D&utm_source=qr" className="social-btn"><Instagram size={18} /></a>
             </div>
           </div>
           <div>
@@ -43,15 +44,16 @@ const Footer = () => {
           <div>
             <h4 className="f-col-title">Services</h4>
             <ul className="f-links">
-              <li><a href="/#services">BFSI Technology</a></li>
-              <li><a href="/#services">Oil & Gas IT</a></li>
-              <li><a href="/#services">Pharma IT</a></li>
+              <li><a href="/services">Digital Transformation</a></li>
+              <li><a href="/services">AI Solutions</a></li>
+              <li><a href="/services">Cybersecurity</a></li>
             </ul>
           </div>
           <div className="f-contact">
             <h4 className="f-col-title">Reach Us</h4>
-            <p><MapPin size={16} /> Solapur, Maharashtra, India</p>
-            <p><Mail size={16} /> hello@twoelephants.tech</p>
+            <p><MapPin size={16} /> 30/70, Vivekanand House, Padma Nagar, Akkalkot Road, Solapur - 413005</p>
+            <p><Mail size={16} /> <a href="mailto:support@twoelephants.org" style={{ color: 'inherit' }}>support@twoelephants.org</a></p>
+            <p><Phone size={16} /> <a href="tel:+919175484351" style={{ color: 'inherit' }}>+91 9175484351</a> &nbsp;|&nbsp; <a href="tel:+917249570505" style={{ color: 'inherit' }}>7249570505</a></p>
             <div className="f-response">
               <Clock size={12} /> Response within 24 hours.
             </div>
