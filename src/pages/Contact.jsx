@@ -15,6 +15,7 @@ import {
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import './Contact.css';
 
 const Contact = () => {
   const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success
@@ -65,7 +66,7 @@ const Contact = () => {
                     <div className="cc-icon"><Mail size={20} /></div>
                     <div className="cc-body">
                       <div className="cc-label">Email</div>
-                      <div className="cc-value"><a href="mailto:hello@twoelephants.tech">hello@twoelephants.tech</a></div>
+                      <div className="cc-value"><a href="mailto:hello@twoelephants.tech">support@twoelephants.tech</a></div>
                       <div className="cc-sub">Response within 24 business hours</div>
                     </div>
                   </div>
@@ -81,7 +82,7 @@ const Contact = () => {
                     <div className="cc-icon"><Linkedin size={20} /></div>
                     <div className="cc-body">
                       <div className="cc-label">LinkedIn</div>
-                      <div className="cc-value"><a href="https://linkedin.com/company/two-elephants" target="_blank" rel="noreferrer">two-elephants-tech</a></div>
+                      <div className="cc-value"><a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" target="_blank" rel="noreferrer">two-elephants-technologies-llp</a></div>
                       <div className="cc-sub">Follow us for updates</div>
                     </div>
                   </div>
@@ -131,9 +132,15 @@ const Contact = () => {
                             </div>
                           </div>
 
-                          <div className="form-group">
-                            <label htmlFor="email">Work Email *</label>
-                            <input type="email" id="email" required placeholder="rajesh@company.com" onChange={handleChange} />
+                          <div className="form-row">
+                            <div className="form-group">
+                              <label htmlFor="email">Work Email *</label>
+                              <input type="email" id="email" required placeholder="rajesh@company.com" onChange={handleChange} />
+                            </div>
+                            <div className="form-group">
+                              <label htmlFor="location">Location / City *</label>
+                              <input type="text" id="location" required placeholder="Solapur, India" onChange={handleChange} />
+                            </div>
                           </div>
 
                           <div className="form-group">
