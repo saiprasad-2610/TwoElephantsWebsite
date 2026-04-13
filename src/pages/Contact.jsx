@@ -1,16 +1,15 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from "react";
 import emailjs from '@emailjs/browser';
 import {
   Mail,
   Phone,
-  Linkedin,
+  Globe,
   MapPin,
   Send,
   CheckCircle,
   Clock,
-  Globe,
   ArrowLeft
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -18,8 +17,11 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import './Contact.css';
 
+const CONTACT_RECEIVER_EMAIL = 'support@twoelephants.tech';
+
 const Contact = () => {
-  const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success, error
+  const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success
+  const [formError, setFormError] = useState('');
   const [formData, setFormData] = useState({
     fname: '',
     lname: '',
@@ -29,25 +31,75 @@ const Contact = () => {
     message: ''
   });
 
-  const formRef = useRef();
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormStatus('loading');
+    setFormError('');
 
-    emailjs.sendForm(
-      'YOUR_SERVICE_ID',       // 🔁 Replace with your EmailJS Service ID
-      'YOUR_TEMPLATE_ID',      // 🔁 Replace with your EmailJS Template ID
-      formRef.current,
-      'YOUR_PUBLIC_KEY'        // 🔁 Replace with your EmailJS Public Key
-    )
-    .then(() => {
+    try {
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error('Missing email configuration');
+      }
+
+      const fullName = `${formData.fname} ${formData.lname}`.trim();
+      const submittedAt = new Date().toLocaleString('en-IN', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+        hour12: true
+      });
+      const interest = formData.interest || 'General inquiry';
+      const safeMessage = formData.message.trim();
+
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          to_email: CONTACT_RECEIVER_EMAIL,
+          reply_to: formData.email,
+          subject: `New Contact Inquiry - ${interest}`,
+          from_name: fullName,
+          from_email: formData.email,
+          // Backward-compatible keys used by many default EmailJS templates
+          name: fullName,
+          email: formData.email,
+          location: formData.location,
+          interest,
+          message: safeMessage,
+          time: submittedAt,
+          title: `New Contact Inquiry - ${interest}`,
+          company_name: 'Two Elephants Website',
+          submitted_at: submittedAt,
+          summary_text: [
+            `New inquiry from ${fullName}`,
+            `Email: ${formData.email}`,
+            `Location: ${formData.location}`,
+            `Interest: ${interest}`,
+            `Submitted: ${submittedAt}`,
+            '',
+            'Message:',
+            safeMessage
+          ].join('\n')
+        },
+        publicKey
+      );
+
       setFormStatus('success');
-    })
-    .catch((error) => {
-      console.error('EmailJS Error:', error);
-      setFormStatus('error');
-    });
+      setFormData({
+        fname: '',
+        lname: '',
+        email: '',
+        location: '',
+        interest: '',
+        message: ''
+      });
+    } catch (error) {
+      setFormStatus('idle');
+      setFormError('Message could not be sent. Please try again.');
+    }
   };
 
   const handleChange = (e) => {
@@ -93,7 +145,7 @@ const Contact = () => {
                     </div>
                   </div>
                   <div className="contact-card">
-                    <div className="cc-icon"><Linkedin size={20} /></div>
+                    <div className="cc-icon"><Globe size={20} /></div>
                     <div className="cc-body">
                       <div className="cc-label">LinkedIn</div>
                       <div className="cc-value"><a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" target="_blank" rel="noreferrer">two-elephants-technologies-llp</a></div>
@@ -134,38 +186,32 @@ const Contact = () => {
                         <div className="form-title">Send Us a Message</div>
                         <div className="form-sub">Fill out the details below and our team will reach out.</div>
 
-                        {formStatus === 'error' && (
-                          <div style={{ color: 'red', marginBottom: '12px', fontSize: '14px' }}>
-                            Something went wrong. Please try again or email us directly.
-                          </div>
-                        )}
-
-                        <form ref={formRef} onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit}>
                           <div className="form-row">
                             <div className="form-group">
                               <label htmlFor="fname">First Name *</label>
-                              <input type="text" id="fname" name="fname" required placeholder="Rajesh" onChange={handleChange} />
+                              <input type="text" id="fname" required placeholder="Rajesh" onChange={handleChange} value={formData.fname} />
                             </div>
                             <div className="form-group">
                               <label htmlFor="lname">Last Name *</label>
-                              <input type="text" id="lname" name="lname" required placeholder="Sharma" onChange={handleChange} />
+                              <input type="text" id="lname" required placeholder="Sharma" onChange={handleChange} value={formData.lname} />
                             </div>
                           </div>
 
                           <div className="form-row">
                             <div className="form-group">
                               <label htmlFor="email">Work Email *</label>
-                              <input type="email" id="email" name="email" required placeholder="rajesh@company.com" onChange={handleChange} />
+                              <input type="email" id="email" required placeholder="rajesh@company.com" onChange={handleChange} value={formData.email} />
                             </div>
                             <div className="form-group">
                               <label htmlFor="location">Location / City *</label>
-                              <input type="text" id="location" name="location" required placeholder="Solapur, India" onChange={handleChange} />
+                              <input type="text" id="location" required placeholder="Solapur, India" onChange={handleChange} value={formData.location} />
                             </div>
                           </div>
 
                           <div className="form-group">
                             <label htmlFor="interest">I'm interested in…</label>
-                            <select id="interest" name="interest" onChange={handleChange} defaultValue="">
+                            <select id="interest" onChange={handleChange} value={formData.interest}>
                               <option value="" disabled>Select a service area</option>
                               <option>BFSI Technology</option>
                               <option>Oil & Gas IT</option>
@@ -177,12 +223,13 @@ const Contact = () => {
 
                           <div className="form-group">
                             <label htmlFor="message">Your Message *</label>
-                            <textarea id="message" name="message" required placeholder="Tell us about your project..." onChange={handleChange}></textarea>
+                            <textarea id="message" required placeholder="Tell us about your project..." onChange={handleChange} value={formData.message}></textarea>
                           </div>
 
                           <button className="btn btn-primary form-submit" type="submit" disabled={formStatus === 'loading'}>
                             {formStatus === 'loading' ? 'Sending...' : 'Send Message'}
                           </button>
+                          {formError && <p style={{ color: '#ff6b6b', marginTop: '12px' }}>{formError}</p>}
                         </form>
                       </motion.div>
                     ) : (
@@ -195,7 +242,7 @@ const Contact = () => {
                         <div className="success-icon"><CheckCircle size={64} color="var(--accent-emerald)" /></div>
                         <div className="success-title">Message Received!</div>
                         <div className="success-sub">Thank you for reaching out. Our team will get back to you within 24 business hours.</div>
-                        <button className="btn btn-outline-dark" onClick={() => setFormStatus('idle')} style={{ marginTop: '24px' }}>
+                        <button className="btn btn-outline-dark" onClick={() => { setFormStatus('idle'); setFormError(''); }} style={{ marginTop: '24px' }}>
                           Send Another Message
                         </button>
                       </motion.div>

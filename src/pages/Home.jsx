@@ -3,21 +3,18 @@ import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'fra
 import {
   ArrowRight,
   ExternalLink,
-  Linkedin,
-  Twitter,
+  Globe,
+  Send,
   Mail,
   MapPin,
   Phone,
   CheckCircle2,
   ChevronRight,
-  Globe,
   Layers,
   Cpu,
   Database,
   Shield,
   Zap,
-  Github,
-  Youtube,
   Clock,
   X
 } from 'lucide-react';
@@ -638,8 +635,8 @@ const TeamModal = ({ member, onClose }) => {
             <p className="modal-bio">{member.bio}</p>
 
             <div className="modal-social-inline">
-              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><Linkedin size={20} fill="currentColor" className="brand-fill" /></a>
-              <a href="#" className="m-social-btn twitter-btn"><Twitter size={20} fill="currentColor" className="brand-fill" /></a>
+              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><Globe size={20} /></a>
+              <a href="#" className="m-social-btn twitter-btn"><Send size={20} /></a>
               <a href="#" className="m-social-btn mail-btn"><Mail size={20} strokeWidth={2.5} /></a>
             </div>
 

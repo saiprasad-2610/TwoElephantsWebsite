@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Linkedin,
-  Twitter,
-  Instagram,
+  Globe,
+  Send,
+  Camera,
   MapPin,
   Mail,
   Phone,
@@ -27,9 +27,9 @@ const Footer = () => {
             <p className="f-tagline">Strength. Care. Honesty.</p>
             <p className="f-desc">Technology grounded in 65 years of industrial wisdom. Built in Solapur.</p>
             <div className="social-row">
-              <a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" className="social-btn"><Linkedin size={18} /></a>
-              <a href="#" className="social-btn"><Twitter size={18} /></a>
-              <a href="https://www.instagram.com/twoelephantstechnologiesllp?igsh=MWw5b2psZHJhMGJ4cA%3D%3D&utm_source=qr" className="social-btn"><Instagram size={18} /></a>
+              <a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" className="social-btn"><Globe size={18} /></a>
+              <a href="#" className="social-btn"><Send size={18} /></a>
+              <a href="https://www.instagram.com/twoelephantstechnologiesllp?igsh=MWw5b2psZHJhMGJ4cA%3D%3D&utm_source=qr" className="social-btn"><Camera size={18} /></a>
             </div>
           </div>
           <div>
