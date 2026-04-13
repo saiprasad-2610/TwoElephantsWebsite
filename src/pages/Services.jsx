@@ -7,6 +7,71 @@ import Footer from '../components/Footer';
 
 const services = [
   {
+    cat: 'Enterprise Resource Planning (ERP)',
+    title: 'Tailored ERP for your industry',
+    desc: 'Tailored ERP for textile, pharma, BFSI and SME sectors — built on deep operational understanding to drive efficiency and real-time visibility.',
+    points: [
+      'ERP integration for textile, pharma and SME sectors',
+      'Automation of manufacturing and supply chain workflows',
+      'Inventory, order management and operational dashboards',
+      'Data-driven planning built on 65 years of industrial expertise'
+    ],
+    tags: ['ERP', 'Manufacturing', 'Automation', 'BFSI'],
+    color: 'purple'
+  },
+  {
+    cat: 'Cybersecurity & Compliance',
+    title: 'End-to-end security and compliance',
+    desc: 'End-to-end security — VAPT, compliance frameworks (RBI, DPDP, FDA), SOC operations and threat management to keep enterprise data safe.',
+    points: [
+      'Vulnerability Assessment & Penetration Testing (VAPT)',
+      'Regulatory compliance: RBI, DPDP, FDA frameworks',
+      'SOC operations and continuous threat monitoring',
+      'Secure architecture reviews and incident readiness'
+    ],
+    tags: ['Security', 'VAPT', 'Compliance', 'SOC'],
+    color: 'emerald'
+  },
+  {
+    cat: 'FinTech & Banking Solutions',
+    title: 'Purpose-built for cooperative banks and RCBs',
+    desc: 'Core banking, digital payments and NBFC platforms — purpose-built for cooperative banks and RCBs with regulatory compliance at the core.',
+    points: [
+      'Core banking systems for cooperative banks and RCBs',
+      'Digital payments and NBFC platform development',
+      'RBI-compliant financial product engineering',
+      'Secure, auditable transaction and reporting systems'
+    ],
+    tags: ['FinTech', 'Banking', 'NBFC', 'Payments'],
+    color: 'cyan'
+  },
+  {
+    cat: 'AI / ML & Intelligent Automation',
+    title: 'Actionable intelligence for enterprise operations',
+    desc: 'ML models, RPA workflows and intelligent process automation for operational efficiency — turning data into decisive business advantage.',
+    points: [
+      'Machine learning models and predictive analytics',
+      'Robotic Process Automation (RPA) workflow design',
+      'Cognitive AI for natural language and decision automation',
+      'Operational intelligence dashboards and insights'
+    ],
+    tags: ['AI', 'ML', 'RPA', 'Automation'],
+    color: 'cyan'
+  },
+  {
+    cat: 'Business Process Management (BPM)',
+    title: 'Streamline and automate enterprise workflows',
+    desc: 'Process analysis, re-engineering and automation across enterprise workflows to eliminate inefficiencies and drive consistent business outcomes.',
+    points: [
+      'Business process analysis and re-engineering',
+      'Workflow automation across enterprise operations',
+      'Process performance monitoring and optimization',
+      'BPM tooling integration and governance frameworks'
+    ],
+    tags: ['BPM', 'Workflow', 'Automation', 'Governance'],
+    color: 'amber'
+  },
+  {
     cat: 'Digital Transformation',
     title: 'Modernize processes and platforms',
     desc: 'We help organizations transform legacy operations into future-ready digital systems with scalable architecture and modern workflows.',
@@ -18,6 +83,19 @@ const services = [
     ],
     tags: ['Automation', 'Cloud', 'Workflow', 'Modernization'],
     color: 'blue'
+  },
+  {
+    cat: 'Cloud & Data Engineering',
+    title: 'Scalable cloud and data infrastructure',
+    desc: 'Cloud migration strategies, data pipelines, warehousing and analytics for enterprise decision-making — built for speed, scale and security.',
+    points: [
+      'Cloud migration strategies and architecture design',
+      'Data pipelines and ETL engineering',
+      'Data warehousing and lake infrastructure',
+      'Analytics and BI platforms for enterprise decision-making'
+    ],
+    tags: ['Cloud', 'Data', 'Analytics', 'Pipelines'],
+    color: 'teal'
   },
   {
     cat: 'Product Engineering',
@@ -32,59 +110,8 @@ const services = [
     tags: ['UX', 'APIs', 'Microservices', 'Quality'],
     color: 'amber'
   },
-  {
-    cat: 'Cybersecurity & Risk',
-    title: 'Protect data and manage digital risk',
-    desc: 'Keep sensitive systems safe through vulnerability assessments, compliance frameworks, and continuous monitoring tailored to enterprise needs.',
-    points: [
-      'Vulnerability and risk assessments',
-      'Secure design and architecture reviews',
-      'Compliance-driven security controls',
-      'Continuous monitoring and incident readiness'
-    ],
-    tags: ['Security', 'Risk', 'Compliance', 'Monitoring'],
-    color: 'emerald'
-  },
-  {
-    cat: 'ERP Solutions',
-    title: 'Strategic ERP for manufacturing',
-    desc: 'Empower manufacturing and operations with integrated ERP systems that provide real-time insights, automation, and centralized control.',
-    points: [
-      'ERP integration for enterprise operations',
-      'Automation of manufacturing workflows',
-      'Inventory, order, and supply chain visibility',
-      'Data-driven planning and execution'
-    ],
-    tags: ['ERP', 'Manufacturing', 'Automation', 'Insights'],
-    color: 'purple'
-  },
-  {
-    cat: 'AI & Data Solutions',
-    title: 'Actionable insights and intelligent systems',
-    desc: 'Use data science, AI, and automation to create transparent, trustworthy analytics and decision systems for business operations.',
-    points: [
-      'AI-driven analytics and predictions',
-      'Data governance and trust frameworks',
-      'Personalization and process intelligence',
-      'Operational analytics for enterprise teams'
-    ],
-    tags: ['AI', 'Data', 'Analytics', 'Trust'],
-    color: 'cyan'
-  },
-  {
-    cat: 'Cognitive AI',
-    title: 'AI-enabled intelligence for operations',
-    desc: 'Deploy advanced cognitive solutions to automate processes, interpret data, and augment teams across complex enterprise workflows.',
-    points: [
-      'Intelligent automation for repetitive workflows',
-      'Cognitive process orchestration',
-      'Natural language and decision automation',
-      'Data-driven operational intelligence'
-    ],
-    tags: ['Cognitive', 'Automation', 'NLP', 'Workflow'],
-    color: 'teal'
-  }
 ];
+
 
 
 

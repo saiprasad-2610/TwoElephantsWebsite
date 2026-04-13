@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect } from "react";
+import emailjs from '@emailjs/browser';
 import {
   Mail,
   Phone,
@@ -18,32 +19,45 @@ import Footer from '../components/Footer';
 import './Contact.css';
 
 const Contact = () => {
-  const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success
+  const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success, error
   const [formData, setFormData] = useState({
     fname: '',
     lname: '',
     email: '',
-    company: '',
+    location: '',
     interest: '',
     message: ''
   });
 
+  const formRef = useRef();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormStatus('loading');
-    // Simulate API call
-    setTimeout(() => {
+
+    emailjs.sendForm(
+      'YOUR_SERVICE_ID',       // 🔁 Replace with your EmailJS Service ID
+      'YOUR_TEMPLATE_ID',      // 🔁 Replace with your EmailJS Template ID
+      formRef.current,
+      'YOUR_PUBLIC_KEY'        // 🔁 Replace with your EmailJS Public Key
+    )
+    .then(() => {
       setFormStatus('success');
-    }, 1500);
+    })
+    .catch((error) => {
+      console.error('EmailJS Error:', error);
+      setFormStatus('error');
+    });
   };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
   return (
     <div className="contact-page">
       <Navbar />
@@ -66,7 +80,7 @@ const Contact = () => {
                     <div className="cc-icon"><Mail size={20} /></div>
                     <div className="cc-body">
                       <div className="cc-label">Email</div>
-                      <div className="cc-value"><a href="mailto:hello@twoelephants.tech">support@twoelephants.tech</a></div>
+                      <div className="cc-value"><a href="mailto:support@twoelephants.tech">support@twoelephants.tech</a></div>
                       <div className="cc-sub">Response within 24 business hours</div>
                     </div>
                   </div>
@@ -120,32 +134,38 @@ const Contact = () => {
                         <div className="form-title">Send Us a Message</div>
                         <div className="form-sub">Fill out the details below and our team will reach out.</div>
 
-                        <form onSubmit={handleSubmit}>
+                        {formStatus === 'error' && (
+                          <div style={{ color: 'red', marginBottom: '12px', fontSize: '14px' }}>
+                            Something went wrong. Please try again or email us directly.
+                          </div>
+                        )}
+
+                        <form ref={formRef} onSubmit={handleSubmit}>
                           <div className="form-row">
                             <div className="form-group">
                               <label htmlFor="fname">First Name *</label>
-                              <input type="text" id="fname" required placeholder="Rajesh" onChange={handleChange} />
+                              <input type="text" id="fname" name="fname" required placeholder="Rajesh" onChange={handleChange} />
                             </div>
                             <div className="form-group">
                               <label htmlFor="lname">Last Name *</label>
-                              <input type="text" id="lname" required placeholder="Sharma" onChange={handleChange} />
+                              <input type="text" id="lname" name="lname" required placeholder="Sharma" onChange={handleChange} />
                             </div>
                           </div>
 
                           <div className="form-row">
                             <div className="form-group">
                               <label htmlFor="email">Work Email *</label>
-                              <input type="email" id="email" required placeholder="rajesh@company.com" onChange={handleChange} />
+                              <input type="email" id="email" name="email" required placeholder="rajesh@company.com" onChange={handleChange} />
                             </div>
                             <div className="form-group">
                               <label htmlFor="location">Location / City *</label>
-                              <input type="text" id="location" required placeholder="Solapur, India" onChange={handleChange} />
+                              <input type="text" id="location" name="location" required placeholder="Solapur, India" onChange={handleChange} />
                             </div>
                           </div>
 
                           <div className="form-group">
                             <label htmlFor="interest">I'm interested in…</label>
-                            <select id="interest" onChange={handleChange} defaultValue="">
+                            <select id="interest" name="interest" onChange={handleChange} defaultValue="">
                               <option value="" disabled>Select a service area</option>
                               <option>BFSI Technology</option>
                               <option>Oil & Gas IT</option>
@@ -157,7 +177,7 @@ const Contact = () => {
 
                           <div className="form-group">
                             <label htmlFor="message">Your Message *</label>
-                            <textarea id="message" required placeholder="Tell us about your project..." onChange={handleChange}></textarea>
+                            <textarea id="message" name="message" required placeholder="Tell us about your project..." onChange={handleChange}></textarea>
                           </div>
 
                           <button className="btn btn-primary form-submit" type="submit" disabled={formStatus === 'loading'}>

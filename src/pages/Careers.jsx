@@ -7,13 +7,9 @@ import ParticleBackground from '../components/ParticleBackground';
 import "./Careers.css";
 
 
-// Import images from assets
-// Temporary fallbacks for moved assets
-import logo from '../assets/images/logo1.svg';
-const abhiImg = logo;
-const auImg = logo;
-const sapnaImg = logo;
-const pankajImg = logo;
+// Import tech hero images for careers bento grid
+import techHero1 from '../assets/images/tech_hero_1.png';
+import techHero2 from '../assets/images/tech_hero_2.png';
 
 const Careers = () => {
   const [activeRole, setActiveRole] = useState(0);
@@ -162,11 +158,11 @@ const Careers = () => {
               </div>
             </motion.div>
             <motion.div className="bento-box bento-img-box" variants={item}>
-              <img src={auImg} alt="Culture" />
+              <img src={techHero1} alt="Technology workspace" />
               <div className="img-overlay"></div>
             </motion.div>
             <motion.div className="bento-box bento-img-box" variants={item}>
-              <img src={abhiImg} alt="Team" />
+              <img src={techHero2} alt="Server infrastructure" />
               <div className="img-overlay"></div>
             </motion.div>
             <motion.div className="bento-box bento-text-box bento-dark" variants={item}>

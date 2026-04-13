@@ -671,6 +671,13 @@ const Team = () => {
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
     },
     {
+      name: "Sapna Rathi",
+      role: "Co-Founder",
+      img: sapnaImg,
+      bio: "Specialist in operational governance and process architecture. Expert in ISO frameworks. Sapna ensures the operational excellence and quality standards that our enterprise clients depend on.",
+      linkedin: "https://www.linkedin.com/in/sapna-rathi-44928b3b/"
+    },
+    {
       name: "Anuradha Biswas",
       role: "Advisor & Mentor",
       img: auImg,
@@ -685,13 +692,6 @@ const Team = () => {
       linkedin: "https://www.linkedin.com/in/abhik/"
     },
     {
-      name: "Sapna Rathi",
-      role: "Co-Founder",
-      img: sapnaImg,
-      bio: "Specialist in operational governance and process architecture. Expert in ISO frameworks. Sapna ensures the operational excellence and quality standards that our enterprise clients depend on.",
-      linkedin: "https://www.linkedin.com/in/sapna-rathi-44928b3b/"
-    },
-    {
       name: "Pankaj Rathi",
       role: "Overseas Operations",
       img: pankajImg,
@@ -699,26 +699,27 @@ const Team = () => {
       linkedin: "https://www.linkedin.com/in/pankajsureshrathi/"
     },
     {
-      name: "Saurabh Kulkarni",
-      role: "Tech Lead - Cyber Security",
-      img: saurabhImg,
-      bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.",
-      // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
-    }, {
+      name: "Arpita Kulkarni",
+      role: "...",
+      img: arpitaImg,
+      bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.",
+      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
+    },
+    {
       name: "Prashant Bollu",
       role: "...",
       img: prashantBolluImg,
       bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
     },
-    {
-      name: "Arpita Kulkarni",
-      role: "...",
-      img: arpitaImg,
-      bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.",
-      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
-    }
 
+    {
+      name: "Saurabh Kulkarni",
+      role: "Tech Lead - Cyber Security",
+      img: saurabhImg,
+      bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.",
+      // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
+    }
 
   ];
 

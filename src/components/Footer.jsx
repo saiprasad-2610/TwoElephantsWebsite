@@ -8,7 +8,7 @@ import {
   Mail,
   Phone,
   Clock
-} from 'lucide-react';
+} from "lucide-react";
 import logo from '../assets/images/logo1.svg';
 
 const Footer = () => {
