@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Globe,
+  Linkedin,
   Send,
-  Camera,
   MapPin,
   Mail,
   Phone,
-  Clock
+  Clock,
+  Instagram
 } from "lucide-react";
 import logo from '../assets/images/logo1.svg';
 
@@ -16,7 +16,7 @@ const Footer = () => {
     <footer>
       <div className="container">
         <div className="footer-grid">
-          <div>
+          <div className="f-col f-brand">
             <div className="logo">
               <img src={logo} alt="Two Elephants" style={{ height: '32px' }} />
               <div className="logo-text">
@@ -27,12 +27,12 @@ const Footer = () => {
             <p className="f-tagline">Strength. Care. Honesty.</p>
             <p className="f-desc">Technology grounded in 65 years of industrial wisdom. Built in Solapur.</p>
             <div className="social-row">
-              <a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" className="social-btn"><Globe size={18} /></a>
-              <a href="#" className="social-btn"><Send size={18} /></a>
-              <a href="https://www.instagram.com/twoelephantstechnologiesllp?igsh=MWw5b2psZHJhMGJ4cA%3D%3D&utm_source=qr" className="social-btn"><Camera size={18} /></a>
+              <a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" className="social-btn" aria-label="LinkedIn"><Linkedin size={18} /></a>
+              <a href="#" className="social-btn" aria-label="Telegram"><Send size={18} /></a>
+              <a href="https://www.instagram.com/twoelephantstechnologiesllp?igsh=MWw5b2psZHJhMGJ4cA%3D%3D&utm_source=qr" className="social-btn" aria-label="Instagram"><Instagram size={18} /></a>
             </div>
           </div>
-          <div>
+          <div className="f-col">
             <h4 className="f-col-title">Company</h4>
             <ul className="f-links">
               <li><a href="/#story">Our Story</a></li>
@@ -41,7 +41,7 @@ const Footer = () => {
               <li><Link to="/careers">Careers</Link></li>
             </ul>
           </div>
-          <div>
+          <div className="f-col">
             <h4 className="f-col-title">Services</h4>
             <ul className="f-links">
               <li><a href="/services">Digital Transformation</a></li>
@@ -49,7 +49,7 @@ const Footer = () => {
               <li><a href="/services">Cybersecurity</a></li>
             </ul>
           </div>
-          <div className="f-contact">
+          <div className="f-col f-contact">
             <h4 className="f-col-title">Reach Us</h4>
             <p><MapPin size={16} /> 30/70, Vivekanand House, Padma Nagar, Akkalkot Road, Solapur - 413005</p>
             <p><Mail size={16} /> <a href="mailto:support@twoelephants.org" style={{ color: 'inherit' }}>support@twoelephants.org</a></p>

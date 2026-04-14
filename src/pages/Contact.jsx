@@ -297,7 +297,7 @@ import {
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import './Contact.css';
+import '../styles/contact.css';
 
 const API_URL = 'http://localhost:8000/api/contact/'; // Change to your production URL later
 

@@ -26,10 +26,10 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/blog.css';
 import '../styles/team.css';
+// import '../assets/images';
 
 const MotionLink = motion(Link);
 
-import ElephantModel3D from '../components/ElephantModel3D';
 
 // Import images
 import logo from '../assets/images/logo1.svg';
@@ -41,8 +41,8 @@ import Sapna from '../assets/images/Sapna.png'
 import saurabh from '../assets/images/saurabh1.png'
 import prashant_bollu from '../assets/images/prashant_bollu.jpeg'
 import arpita from '../assets/images/arpita.jpg'
-
-
+import looms from '../assets/images/looms.jpg';
+import labs from '../assets/images/labs.jpg';
 
 // Temporary fallbacks for moved assets
 const abhiImg = Abhi;
@@ -53,8 +53,8 @@ const ptImg = prashant1;
 const saurabhImg = saurabh;
 const prashantBolluImg = prashant_bollu;
 const arpitaImg = arpita;
-
-
+const labsImg = labs;
+const loomsImg = looms;
 
 
 // HeroFallback removed - using enhanced dual elephant system
@@ -149,8 +149,8 @@ const Hero = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 width: '100%',
-                maxWidth: '600px',
-                height: '480px',
+                maxWidth: 'min(100%, 600px)',
+                height: 'clamp(300px, 62vw, 480px)',
                 position: 'relative'
               }}
             >
@@ -163,7 +163,7 @@ const Hero = () => {
                   animate={{ opacity: 1 }}
                   style={{
                     width: '100%',
-                    maxWidth: '420px',
+                    maxWidth: 'min(78vw, 420px)',
                     userSelect: 'none'
                   }}
                   whileHover={{
@@ -180,7 +180,7 @@ const Hero = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
-                style={{ position: 'relative', zIndex: 20, marginTop: '-40px' }}
+                style={{ position: 'relative', zIndex: 20, marginTop: 'clamp(-28px, -6vw, -16px)' }}
               >
                 <div className="slogan-top">TWO ELEPHANTS TECHNOLOGIES LLP</div>
                 <div className="slogan-bottom">
@@ -291,7 +291,7 @@ const Story = () => {
           >
             <div className="image-stack">
               <motion.img
-                src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85"
+                src={loomsImg}
                 alt="Pushpa Textile"
                 className="story-img-main"
                 whileHover={{ scale: 1.03, rotate: 1 }}
@@ -306,7 +306,7 @@ const Story = () => {
                 <span className="card-text">Legacy Begins</span>
               </motion.div>
               <motion.img
-                src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=85"
+                src={labsImg}
                 alt="Modern tech"
                 className="story-img-fg"
                 animate={{ y: [0, 12, 0] }}
@@ -391,7 +391,7 @@ const Story = () => {
         {/* ══════════ COMPACT HORIZONTAL TIMELINE ══════════ */}
         <div className="htl-wrap">
           <div className="htl-header">
-            <div className="eyebrow amber">MILESTONES</div>
+            <div className="eyebrow dark">MILESTONES</div>
             <h3>From textile heritage to enterprise-scale technology.</h3>
           </div>
 

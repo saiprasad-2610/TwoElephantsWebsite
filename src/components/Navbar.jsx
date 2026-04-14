@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { NavHashLink } from 'react-router-hash-link';
 import logo from '../assets/images/logo1.svg';
@@ -117,6 +116,36 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location.pathname]);
+
+  const closeMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(false);
+  }, []);
+
+  const toggleMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen((prev) => !prev);
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle('no-scroll', isMobileMenuOpen);
+    return () => document.body.classList.remove('no-scroll');
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    closeMobileMenu();
+  }, [location.pathname, location.hash, closeMobileMenu]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        closeMobileMenu();
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isMobileMenuOpen, closeMobileMenu]);
 
   const navItems = [
     { name: 'Home', path: '/#home', isHash: true },
@@ -277,60 +306,57 @@ const Navbar = () => {
             </Link>
           </motion.div> */}
 
-          {/* Mobile toggle */}
-          <motion.button
-            className="menu-btn"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            whileTap={{ scale: 0.88, rotate: 90 }}
-            style={{ marginLeft: '12px' }}
-          >
-            <AnimatePresence mode="wait">
-              {isMobileMenuOpen
-                ? <motion.span key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.18 }}><X size={24} /></motion.span>
-                : <motion.span key="men" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.18 }}><Menu size={24} /></motion.span>
-              }
-            </AnimatePresence>
-          </motion.button>
         </div>
+
+        <button
+          className={`menu-btn${isMobileMenuOpen ? ' active' : ''}`}
+          onClick={toggleMobileMenu}
+          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isMobileMenuOpen}
+          aria-controls="mobile-menu"
+          type="button"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
 
       {/* ── MOBILE MENU ── */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            className="mobile-menu open"
-            initial={{ x: '100%', opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: '100%', opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 30 }}
-          >
-            {navItems.map((item, i) => {
-              const Component = item.isHash ? NavHashLink : Link;
-              return (
-                <motion.div
-                  key={item.path}
-                  initial={{ x: 50, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: i * 0.06, type: 'spring', stiffness: 280, damping: 24 }}
-                >
-                  <Component smooth={item.isHash} to={item.path} onClick={() => setIsMobileMenuOpen(false)}>
-                    {item.name}
-                  </Component>
-                </motion.div>
-              );
-            })}
-            <motion.div
-              initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: navItems.length * 0.06 }}
-              style={{ marginTop: '24px' }}
-            >
-              <Link to="/contact" className="btn btn-primary" onClick={() => setIsMobileMenuOpen(false)}>
-                Contact Us
-              </Link>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <button
+        type="button"
+        className={`mobile-overlay${isMobileMenuOpen ? ' open' : ''}`}
+        onClick={closeMobileMenu}
+        aria-label="Close menu overlay"
+      ></button>
+
+      <div id="mobile-menu" className={`mobile-menu${isMobileMenuOpen ? ' open' : ''}`}>
+        <Link to="/#home" className="mobile-menu-logo" onClick={closeMobileMenu}>
+          <img src={logo} alt="Two Elephants" />
+          <span>Two Elephants</span>
+        </Link>
+
+        <div className="mobile-menu-links">
+          {navItems.map((item) => {
+            const Component = item.isHash ? NavHashLink : Link;
+            return (
+              <Component
+                key={item.path}
+                smooth={item.isHash}
+                to={item.path}
+                className="mobile-nav-link"
+                onClick={closeMobileMenu}
+              >
+                {item.name}
+              </Component>
+            );
+          })}
+        </div>
+
+        <Link to="/contact" className="btn btn-primary mobile-menu-cta" onClick={closeMobileMenu}>
+          Contact Us
+        </Link>
+      </div>
     </motion.nav>
   );
 };
