@@ -298,7 +298,7 @@ import {
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import '../styles/contact.css';
+import '../styles/Contact.css';
 
 const CONTACT_RECEIVER_EMAIL =
   import.meta.env.VITE_CONTACT_RECEIVER_EMAIL || 'support@twoelephants.tech';

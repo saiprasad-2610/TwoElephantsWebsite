@@ -4,7 +4,7 @@ import { ChevronRight, ArrowRight } from "lucide-react";
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ParticleBackground from '../components/ParticleBackground';
-import '../styles/careers.css';
+import '../styles/Careers.css';
 
 
 // Import tech hero images for careers bento grid
