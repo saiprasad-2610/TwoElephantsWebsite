@@ -174,11 +174,10 @@ const ServiceCard3D = ({ service, idx }) => {
 };
 
 const Services = () => {
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
+
   return (
     <div className="page-wrapper">
       <Navbar />

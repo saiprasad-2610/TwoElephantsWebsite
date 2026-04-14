@@ -115,7 +115,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'Home', path: '/#home', isHash: true },
-    { name: 'Our Story', path: '/#story', isHash: true },
+    { name: 'Our Story', path: '/story', isHash: false },
     { name: 'Services', path: '/services', isHash: false },
     { name: 'Team', path: '/#team', isHash: true },
     { name: 'Insights', path: '/#insights', isHash: true },

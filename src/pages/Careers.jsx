@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ArrowRight } from "lucide-react";
+import { FaChevronRight, FaArrowRight } from "react-icons/fa";
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ParticleBackground from '../components/ParticleBackground';
@@ -13,7 +13,11 @@ import techHero2 from '../assets/images/tech_hero_2.png';
 
 const Careers = () => {
   const [activeRole, setActiveRole] = useState(0);
-  
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const openings = [
     {
       title: "Python Developer",
@@ -140,7 +144,7 @@ const Careers = () => {
             </p>
             <div className="flex gap-4">
               <a href="#openings" className="btn-yellow">
-                Explore Roles <ChevronRight size={18} />
+                Explore Roles <FaChevronRight size={18} />
               </a>
             </div>
           </motion.div>
@@ -270,7 +274,7 @@ const Careers = () => {
                       className="os-indicator"
                       animate={{ scale: activeRole === idx ? 1 : 0, opacity: activeRole === idx ? 1 : 0 }}
                     >
-                      <ArrowRight size={24} />
+                      <FaArrowRight size={24} />
                     </motion.div>
                   </div>
                 </div>
@@ -305,7 +309,7 @@ const Careers = () => {
                     </ul>
                     
                     <a href={openings[activeRole].link} className="apply-btn-massive">
-                      Submit Application <ArrowRight size={20} className="ml-2" />
+                      Submit Application <FaArrowRight size={20} className="ml-2" />
                     </a>
                   </div>
                 </motion.div>

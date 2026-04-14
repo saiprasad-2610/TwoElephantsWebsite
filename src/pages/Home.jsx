@@ -1,10 +1,9 @@
 
 import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
-import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import {
   ArrowRight,
   ExternalLink,
-  Linkedin,
   Send,
   Mail,
   MapPin,
@@ -16,9 +15,9 @@ import {
   Database,
   Shield,
   Zap,
-  Clock,
-  X
+  Clock
 } from 'lucide-react';
+import { FaLinkedin } from "react-icons/fa";
 import { useNavigate, Link } from 'react-router-dom';
 import { articles } from '../data/articles';
 
@@ -119,9 +118,9 @@ const Hero = () => {
               <span className="typewriter-cursor">|</span>
             </div>
             <div className="hero-buttons">
-              <a href="#story" className="btn btn-primary">
+              <Link to="/story" className="btn btn-primary">
                 Explore Our Story <ArrowRight size={18} />
-              </a>
+              </Link>
               <a href="#services" className="btn btn-outline">
                 Our Services
               </a>
@@ -238,50 +237,6 @@ const Counter = ({ value, label }) => {
 };
 
 const Story = () => {
-  const timelineRef = useRef(null);
-  const [hoveredMilestone, setHoveredMilestone] = useState(null);
-  const { scrollYProgress: timelineScrollProgress } = useScroll({
-    target: timelineRef,
-    offset: ['start 80%', 'end 35%'],
-  });
-  const timelineScale = useSpring(useTransform(timelineScrollProgress, [0, 1], [0, 1]), {
-    stiffness: 100, damping: 30, restDelta: 0.001
-  });
-
-  const milestones = [
-    {
-      year: "1959",
-      title: "Pushpa Textile Founded",
-      desc: "The Rathi family begins a legacy of manufacturing precision in Solapur.",
-      icon: "🏭",
-      color: "#4da8ff",
-      glow: "rgba(77,168,255,0.3)"
-    },
-    {
-      year: "1980",
-      title: "Global Expansion",
-      desc: "Becoming a trusted supplier for national brands like IndiGo and Maruti Suzuki.",
-      icon: "🌐",
-      color: "#cf0d0dff",
-      glow: "rgba(248,204,28,0.3)"
-    },
-    {
-      year: "2026",
-      title: "Two Elephants Technologies LLP",
-      desc: "Transitioning industrial wisdom into enterprise-grade technology solutions.",
-      icon: "🚀",
-      color: "#7c3aed",
-      glow: "rgba(124,58,237,0.3)"
-    }
-  ];
-
-  const getMilestoneLineWidth = (index) => {
-    const trackStart = 2;
-    const trackSpan = 96;
-    const progressPoint = (index + 0.5) / milestones.length;
-    return `${trackStart + trackSpan * progressPoint}%`;
-  };
-
   return (
     <section className="story-section section-padding" id="story">
       <div className="container">
@@ -306,7 +261,7 @@ const Story = () => {
                 animate={{ y: [0, -12, 0], boxShadow: ['0 8px 32px rgba(77,168,255,0.2)', '0 20px 48px rgba(77,168,255,0.4)', '0 8px 32px rgba(77,168,255,0.2)'] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               >
-                <span className="card-year">1959</span>
+                <span className="card-year">1960</span>
                 <span className="card-text">Legacy Begins</span>
               </motion.div>
               <motion.img
@@ -383,82 +338,13 @@ const Story = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.6 }}
-              whileHover={{ borderLeftWidth: "8px", paddingLeft: "36px", color: '#f8cc1c' }}
-              transition2={{ duration: 0.3 }}
+              whileHover={{ borderLeftWidth: "8px", paddingLeft: "36px", color: 'var(--color-blue-glow)' }}
             >
               "We didn't move into technology. We extended who we already were."
             </motion.blockquote>
-            <Link to="/contact" className="text-link">Partner with us <ArrowRight size={16} /></Link>
+            <Link to="/story" className="text-link">Explore More <ArrowRight size={16} /></Link>
           </motion.div>
         </div>
-
-        {/* ══════════ COMPACT HORIZONTAL TIMELINE ══════════ */}
-        <div className="htl-wrap">
-          <div className="htl-header">
-            <div className="eyebrow dark">MILESTONES</div>
-            <h3>From textile heritage to enterprise-scale technology.</h3>
-          </div>
-
-          <div
-            className="htl-track"
-            ref={timelineRef}
-            onMouseLeave={() => setHoveredMilestone(null)}
-          >
-            {/* Animated progress line */}
-            <motion.div
-              className="htl-line"
-              style={hoveredMilestone === null ? { scaleX: timelineScale } : undefined}
-              animate={
-                hoveredMilestone !== null
-                  ? { width: getMilestoneLineWidth(hoveredMilestone), scaleX: 1 }
-                  : undefined
-              }
-              transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-            />
-
-            {milestones.map((m, i) => (
-              <motion.div
-                key={i}
-                className="htl-item"
-                onMouseEnter={() => setHoveredMilestone(i)}
-                onFocus={() => setHoveredMilestone(i)}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.25, duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
-              >
-                {/* Dot on the line */}
-                <motion.div
-                  className="htl-dot"
-                  style={{ background: m.color, boxShadow: `0 0 0 6px ${m.glow}` }}
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.25 + 0.4, type: 'spring', stiffness: 300 }}
-                />
-
-                {/* Card */}
-                <motion.div
-                  className="htl-card"
-                  whileHover={{ y: -8, boxShadow: '0 20px 50px rgba(0,0,0,0.12)' }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-                >
-                  <div className="htl-icon" style={{ background: m.glow }}>
-                    <span>{m.icon}</span>
-                  </div>
-                  <div className="htl-year" style={{ color: m.color }}>{m.year}</div>
-                  <h4 className="htl-title">{m.title}</h4>
-                  <p className="htl-desc">{m.desc}</p>
-                </motion.div>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="htl-footer">
-            <Link to="/contact" className="btn btn-primary">Talk to our team</Link>
-          </div>
-        </div>
-
       </div>
     </section>
   );
@@ -543,45 +429,36 @@ const Services = () => {
           <h2 className="h2-title">Enterprise Technology for <em>Demanding Industries</em></h2>
           <p className="services-sub">We build the systems that banks stake their reputation on and oil companies stake their operations on.</p>
         </div>
-        <div className="services-stack-container">
+        <div className="insights-grid">
           {services.map((svc, idx) => (
             <motion.div
               key={idx}
-              className="sticky-card-wrapper"
-              initial={{ opacity: 0, y: 100 }}
+              className="blog-card"
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              style={{
-                position: 'sticky',
-                top: `${120 + idx * 12}px`,
-                marginBottom: '40px',
-                zIndex: idx + 1
-              }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 * idx }}
+              whileHover={{ y: -10 }}
+              onClick={() => window.location.href = '/services'}
+              style={{ cursor: 'pointer' }}
             >
-              <motion.div
-                className="service-card-stack"
-                whileHover={{ scale: 1.015 }}
-                transition={{ duration: 0.4 }}
-              >
-                <div className={`svc-card-inner acc-${svc.color}`}>
-                  <div className="svc-content">
-                    <span className="svc-cat">{svc.cat}</span>
-                    <h3 className="svc-title">{svc.title}</h3>
-                    <p className="svc-desc">{svc.desc}</p>
-                    <div className="svc-tags">
-                      {svc.tags.map(tag => <span key={tag} className="s-tag">{tag}</span>)}
-                    </div>
-                    <div className={`svc-link svc-link-${svc.color}`} onClick={() => window.location.href = '/services'}>
-                      Explore Solutions <ChevronRight size={18} />
-                    </div>
-                  </div>
-                  <div className="svc-visual">
-                    <img src={svc.img} alt={svc.title} />
-                    <div className="svc-glaze"></div>
-                  </div>
+              <div className="blog-img-wrap">
+                <img src={svc.img} alt={svc.title} className="blog-img" />
+                <div className="blog-overlay-info">
+                  <span>{svc.cat}</span>
                 </div>
-              </motion.div>
+              </div>
+              <div className="blog-content">
+                <span className="blog-cat" style={{ color: svc.color === 'blue' ? 'var(--color-blue-core)' : `var(--accent-${svc.color})` }}>{svc.cat}</span>
+                <h3 className="blog-title">{svc.title}</h3>
+                <p className="blog-excerpt">{svc.desc}</p>
+                <div className="svc-tags" style={{ marginTop: '16px', marginBottom: '16px' }}>
+                  {svc.tags.map(tag => <span key={tag} className="s-tag" style={{ background: 'rgba(0,0,0,0.05)', color: '#475569', border: '1px solid rgba(0,0,0,0.08)' }}>{tag}</span>)}
+                </div>
+                <div className="blog-footer">
+                  <span className="read-more">Explore Solutions <ArrowRight size={14} /></span>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -591,87 +468,41 @@ const Services = () => {
 };
 
 
-const TeamMember = ({ name, role, img, delay, onClick }) => {
+const TeamMember = ({ name, role, img, bio, linkedin, delay }) => {
   return (
     <motion.div
-      className="team-card-enhanced"
+      className="team-card-horizontal"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: delay * 0.08, duration: 0.6 }}
-      onClick={onClick}
-      style={{ cursor: 'pointer' }}
+      transition={{ delay: delay * 0.1, duration: 0.6 }}
     >
-      <div className="team-card-inner">
-        <div className="team-image-container">
-          <img src={img} alt={name} className="team-img" />
+      <div className="team-card-aside">
+        <div className="circle-image-container">
+          <img src={img} alt={name} className="circle-img" loading="lazy" />
+          <div className="circle-border-accent"></div>
         </div>
-        <div className="team-info">
-          <span className="team-role-tag">{role}</span>
-          <h3 className="team-name">{name}</h3>
+      </div>
+      <div className="team-card-main">
+        <div className="team-card-header">
+          <div>
+            <h3 className="circle-name">{name}</h3>
+            <p className="circle-role">{role}</p>
+          </div>
+          {linkedin && (
+            <a href={linkedin} target="_blank" rel="noopener noreferrer" className="circle-linkedin-link">
+              <FaLinkedin size={20} />
+            </a>
+          )}
         </div>
+        <div className="circle-divider"></div>
+        <p className="circle-bio">{bio}</p>
       </div>
     </motion.div>
   );
 };
 
-const TeamModal = ({ member, onClose }) => {
-  if (!member) return null;
-
-  return (
-    <motion.div
-      className="team-modal-overlay"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-    >
-      <motion.div
-        className="team-modal-content"
-        initial={{ scale: 0.9, y: 20, opacity: 0 }}
-        animate={{ scale: 1, y: 0, opacity: 1 }}
-        exit={{ scale: 0.9, y: 20, opacity: 0 }}
-        onClick={e => e.stopPropagation()}
-      >
-        <button className="modal-close" onClick={onClose}><X size={24} /></button>
-
-        <div className="modal-body">
-          <div className="modal-image-wrap">
-            <img src={member.img} alt={member.name} className="modal-img" />
-          </div>
-
-          <div className="modal-text">
-            <div className="eyebrow amber no-line">TEAM MEMBER</div>
-            <h2 className="modal-name">{member.name}</h2>
-            <div className="modal-role">{member.role}</div>
-            <div className="modal-divider"></div>
-            <p className="modal-bio">{member.bio}</p>
-
-            <div className="modal-social-inline">
-              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><Linkedin size={20} /></a>
-              <a href="#" className="m-social-btn twitter-btn"><Send size={20} /></a>
-              <a href="#" className="m-social-btn mail-btn"><Mail size={20} strokeWidth={2.5} /></a>
-            </div>
-
-            <div className="modal-stats">
-              <div className="m-stat">
-                <span className="m-stat-label">Expertise</span>
-                <span className="m-stat-val">Enterprise IT</span>
-              </div>
-              <div className="m-stat">
-                <span className="m-stat-label">Location</span>
-                <span className="m-stat-val">Solapur / Global</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-};
-
 const Team = () => {
-  const [selectedMember, setSelectedMember] = useState(null);
   const members = [
     {
       name: "Prashant Rathi",
@@ -688,6 +519,13 @@ const Team = () => {
       linkedin: "https://www.linkedin.com/in/sapna-rathi-44928b3b/"
     },
     {
+      name: "Pankaj Rathi",
+      role: "Overseas Operations",
+      img: pankajImg,
+      bio: "Based in Houston, Texas. Leads global shipping and logistics for enterprise clients. Pankaj manages our international presence and ensures seamless coordination for our global projects.",
+      linkedin: "https://www.linkedin.com/in/pankajsureshrathi/"
+    },
+    {
       name: "Anuradha Biswas",
       role: "Advisor & Mentor",
       img: auImg,
@@ -702,35 +540,26 @@ const Team = () => {
       linkedin: "https://www.linkedin.com/in/abhik/"
     },
     {
-      name: "Pankaj Rathi",
-      role: "Overseas Operations",
-      img: pankajImg,
-      bio: "Based in Houston, Texas. Leads global shipping and logistics for enterprise clients. Pankaj manages our international presence and ensures seamless coordination for our global projects.",
-      linkedin: "https://www.linkedin.com/in/pankajsureshrathi/"
-    },
-    {
       name: "Arpita Kulkarni",
-      role: "Technology Leader - IT Product and Services",
+      role: "Tech Leader - Products & Services",
       img: arpitaImg,
       bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.",
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
     },
     {
       name: "Prashant Bollu",
-      role: "Technology Leader - IT Product and Services",
+      role: "Tech Leader - Products & Services",
       img: prashantBolluImg,
       bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
     },
-
     {
       name: "Saurabh Kulkarni",
-      role: "Technology Leader - Cyber Security",
+      role: "Tech Leader - Cyber Security",
       img: saurabhImg,
       bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.",
-      // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
+      linkedin: "https://www.linkedin.com/in/saurabh-kulkarni-249a5726/"
     }
-
   ];
 
   return (
@@ -742,26 +571,17 @@ const Team = () => {
           <h2 className="h2-title">Leadership Rooted in <em>Legacy</em></h2>
           <p className="services-sub">Meet the visionaries bridging industrial wisdom with digital execution.</p>
         </div>
+
         <div className="team-grid-enhanced">
           {members.map((member, idx) => (
             <TeamMember
               key={idx}
               {...member}
               delay={idx}
-              onClick={() => setSelectedMember(member)}
             />
           ))}
         </div>
       </div>
-
-      <AnimatePresence>
-        {selectedMember && (
-          <TeamModal
-            member={selectedMember}
-            onClose={() => setSelectedMember(null)}
-          />
-        )}
-      </AnimatePresence>
     </section>
   );
 };

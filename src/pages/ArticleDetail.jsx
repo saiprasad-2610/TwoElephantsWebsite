@@ -1,7 +1,17 @@
 import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { NavHashLink } from 'react-router-hash-link';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Clock, User, Calendar, Globe, Send, Link as LinkIcon } from 'lucide-react';
+import {
+  FaUser,
+  FaCalendar,
+  FaClock,
+  FaGlobe,
+  FaPaperPlane,
+  FaLink,
+  FaArrowLeft
+} from "react-icons/fa";
+
 import { articles } from '../data/articles';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -34,7 +44,9 @@ const ArticleDetail = () => {
       <div className="error-page section-padding" style={{ textAlign: 'center' }}>
         <div className="container">
           <h2>Article not found</h2>
-          <Link to="/" className="btn btn-primary" style={{ marginTop: '24px' }}>Back to Home</Link>
+          <NavHashLink smooth to="/#insights" className="btn btn-primary" style={{ marginTop: '24px' }}>
+            Back to All Insights
+          </NavHashLink>
         </div>
       </div>
     );
@@ -55,7 +67,6 @@ const ArticleDetail = () => {
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
-      // Could add a toast notification here
     } catch (err) {
       console.error('Failed to copy link:', err);
     }
@@ -80,15 +91,15 @@ const ArticleDetail = () => {
                 
                 <div className="article-meta-row">
                   <div className="meta-item">
-                    <User size={16} />
+                    <FaUser size={14} />
                     <span>{article.author}</span>
                   </div>
                   <div className="meta-item">
-                    <Calendar size={16} />
+                    <FaCalendar size={14} />
                     <span>{article.date}</span>
                   </div>
                   <div className="meta-item">
-                    <Clock size={16} />
+                    <FaClock size={14} />
                     <span>{article.readTime}</span>
                   </div>
                 </div>
@@ -119,23 +130,28 @@ const ArticleDetail = () => {
                 <div className="share-box">
                   <span className="share-label">Share this insight</span>
                   <div className="share-actions">
-                    <button className="share-btn" onClick={shareOnLinkedIn}><Globe size={18} /></button>
-                    <button className="share-btn" onClick={shareOnTwitter}><Send size={18} /></button>
-                    <button className="share-btn" onClick={copyLink}><LinkIcon size={18} /></button>
+                    <button className="share-btn" onClick={shareOnLinkedIn}>
+                      <FaGlobe size={16} />
+                    </button>
+                    <button className="share-btn" onClick={shareOnTwitter}>
+                      <FaPaperPlane size={16} />
+                    </button>
+                    <button className="share-btn" onClick={copyLink}>
+                      <FaLink size={16} />
+                    </button>
                   </div>
                 </div>
               </div>
               
               <div className="article-navigation">
-                <Link to="/" className="btn btn-outline-dark">
-                  <ArrowLeft size={16} /> Back to All Insights
-                </Link>
+                <NavHashLink smooth to="/#insights" className="btn btn-outline-dark">
+                  <FaArrowLeft size={14} /> Back to All Insights
+                </NavHashLink>
               </div>
             </div>
           </div>
         </article>
 
-        {/* Related Articles Section */}
         {relatedArticles.length > 0 && (
           <section className="related-articles section-padding">
             <div className="container">

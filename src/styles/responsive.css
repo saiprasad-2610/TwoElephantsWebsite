@@ -30,6 +30,12 @@
   .contact-form-wrap {
     position: static !important;
   }
+
+  .insights-grid,
+  .team-grid-enhanced {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 32px !important;
+  }
 }
 
 @media (max-width: 900px) {
@@ -266,26 +272,32 @@
     margin-bottom: 20px !important;
   }
 
-  .services-stack-container {
-    padding-top: 16px;
+  .team-card-horizontal {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+    justify-items: center;
+    padding: 32px 24px !important;
   }
 
-  .team-grid-enhanced {
+  .team-card-aside {
+    margin-bottom: 20px;
+  }
+
+  .team-card-header {
     flex-direction: column;
-    height: auto;
-    gap: 14px;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
   }
 
-  .team-card-enhanced {
-    height: 96px !important;
-    min-height: 96px;
-    flex: none !important;
+  .circle-divider {
+    margin: 0 auto 20px !important;
   }
 
-  .team-card-enhanced:hover,
-  .team-card-enhanced:active {
-    height: 360px !important;
-    flex: none !important;
+  .team-card-professional {
+    max-width: 380px;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .modal-body {
@@ -553,6 +565,26 @@
 
   .htl-card {
     padding: 22px 18px;
+  }
+
+  .solapur-grid,
+  .talent-steps {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+
+  .values-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+
+  .value-card {
+    padding: 32px 24px !important;
+  }
+
+  .solapur-stats {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
   }
 
   .service-detail-card,
