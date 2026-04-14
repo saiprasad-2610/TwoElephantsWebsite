@@ -1,23 +1,24 @@
-import React, { useEffect, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight,
   ExternalLink,
   Linkedin,
+<<<<<<< HEAD
   Twitter,
+=======
+  Send,
+>>>>>>> newFeatures
   Mail,
   MapPin,
   Phone,
   CheckCircle2,
   ChevronRight,
-  Globe,
   Layers,
   Cpu,
   Database,
   Shield,
   Zap,
-  Github,
-  Youtube,
   Clock,
   X
 } from 'lucide-react';
@@ -29,10 +30,12 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/blog.css';
 import '../styles/team.css';
+<<<<<<< HEAD
+=======
+// import '../assets/images';
+>>>>>>> newFeatures
 
 const MotionLink = motion(Link);
-
-import ElephantModel3D from '../components/ElephantModel3D';
 
 // Import images
 import logo from '../assets/images/logo1.svg';
@@ -44,8 +47,8 @@ import Sapna from '../assets/images/Sapna.png'
 import saurabh from '../assets/images/saurabh1.png'
 import prashant_bollu from '../assets/images/prashant_bollu.jpeg'
 import arpita from '../assets/images/arpita.jpg'
-
-
+import looms from '../assets/images/looms.jpg';
+import labs from '../assets/images/labs.jpg';
 
 // Temporary fallbacks for moved assets
 const abhiImg = Abhi;
@@ -56,13 +59,19 @@ const ptImg = prashant1;
 const saurabhImg = saurabh;
 const prashantBolluImg = prashant_bollu;
 const arpitaImg = arpita;
-
-
+const labsImg = labs;
+const loomsImg = looms;
 
 
 // HeroFallback removed - using enhanced dual elephant system
 
 
+<<<<<<< HEAD
+// HeroFallback removed - using enhanced dual elephant system
+
+
+=======
+>>>>>>> newFeatures
 const Hero = () => {
   const [text, setText] = useState('');
   const phrases = [
@@ -152,8 +161,8 @@ const Hero = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 width: '100%',
-                maxWidth: '600px',
-                height: '480px',
+                maxWidth: 'min(100%, 600px)',
+                height: 'clamp(300px, 62vw, 480px)',
                 position: 'relative'
               }}
             >
@@ -166,7 +175,11 @@ const Hero = () => {
                   animate={{ opacity: 1 }}
                   style={{
                     width: '100%',
+<<<<<<< HEAD
                     maxWidth: '420px',
+=======
+                    maxWidth: 'min(78vw, 420px)',
+>>>>>>> newFeatures
                     userSelect: 'none'
                   }}
                   whileHover={{
@@ -183,15 +196,20 @@ const Hero = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
-                style={{ position: 'relative', zIndex: 20, marginTop: '-40px' }}
+                style={{ position: 'relative', zIndex: 20, marginTop: 'clamp(-28px, -6vw, -16px)' }}
               >
                 <div className="slogan-top">TWO ELEPHANTS TECHNOLOGIES LLP</div>
                 <div className="slogan-bottom">
+<<<<<<< HEAD
                   One Promise: <span className="s-amber">Strength</span> <span className="slogan-bottom">Care</span> <span className="s-amber">Honesty</span>
+=======
+                  One Promise: <span className="s-amber">Strength</span> Care <span className="s-amber">Honesty</span>
+>>>>>>> newFeatures
                 </div>
               </motion.div>
             </motion.div>
 
+<<<<<<< HEAD
             <motion.div
               className="legacy-badge"
               initial={{ opacity: 0, x: 20 }}
@@ -200,6 +218,8 @@ const Hero = () => {
               style={{ right: '5%', bottom: '10%', left: 'auto' }}
             >
             </motion.div>
+=======
+>>>>>>> newFeatures
           </motion.div>
         </div>
       </div>
@@ -249,8 +269,13 @@ const Counter = ({ value, label }) => {
 };
 
 const Story = () => {
-  const { scrollYProgress } = useScroll();
-  const timelineScale = useSpring(useTransform(scrollYProgress, [0.15, 0.45], [0, 1]), {
+  const timelineRef = useRef(null);
+  const [hoveredMilestone, setHoveredMilestone] = useState(null);
+  const { scrollYProgress: timelineScrollProgress } = useScroll({
+    target: timelineRef,
+    offset: ['start 80%', 'end 35%'],
+  });
+  const timelineScale = useSpring(useTransform(timelineScrollProgress, [0, 1], [0, 1]), {
     stiffness: 100, damping: 30, restDelta: 0.001
   });
 
@@ -281,6 +306,13 @@ const Story = () => {
     }
   ];
 
+  const getMilestoneLineWidth = (index) => {
+    const trackStart = 2;
+    const trackSpan = 96;
+    const progressPoint = (index + 0.5) / milestones.length;
+    return `${trackStart + trackSpan * progressPoint}%`;
+  };
+
   return (
     <section className="story-section section-padding" id="story">
       <div className="container">
@@ -294,7 +326,11 @@ const Story = () => {
           >
             <div className="image-stack">
               <motion.img
+<<<<<<< HEAD
                 src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85"
+=======
+                src={loomsImg}
+>>>>>>> newFeatures
                 alt="Pushpa Textile"
                 className="story-img-main"
                 whileHover={{ scale: 1.03, rotate: 1 }}
@@ -309,7 +345,11 @@ const Story = () => {
                 <span className="card-text">Legacy Begins</span>
               </motion.div>
               <motion.img
+<<<<<<< HEAD
                 src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=85"
+=======
+                src={labsImg}
+>>>>>>> newFeatures
                 alt="Modern tech"
                 className="story-img-fg"
                 animate={{ y: [0, 12, 0] }}
@@ -394,6 +434,7 @@ const Story = () => {
         {/* ══════════ COMPACT HORIZONTAL TIMELINE ══════════ */}
         <div className="htl-wrap">
           <div className="htl-header">
+<<<<<<< HEAD
             <div className="eyebrow amber">MILESTONES</div>
             <h3>From textile heritage to enterprise-scale technology.</h3>
           </div>
@@ -406,12 +447,38 @@ const Story = () => {
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+=======
+            <div className="eyebrow dark">MILESTONES</div>
+            <h3>From textile heritage to enterprise-scale technology.</h3>
+          </div>
+
+          <div
+            className="htl-track"
+            ref={timelineRef}
+            onMouseLeave={() => setHoveredMilestone(null)}
+          >
+            {/* Animated progress line */}
+            <motion.div
+              className="htl-line"
+              style={hoveredMilestone === null ? { scaleX: timelineScale } : undefined}
+              animate={
+                hoveredMilestone !== null
+                  ? { width: getMilestoneLineWidth(hoveredMilestone), scaleX: 1 }
+                  : undefined
+              }
+              transition={{ type: 'spring', stiffness: 260, damping: 28 }}
+>>>>>>> newFeatures
             />
 
             {milestones.map((m, i) => (
               <motion.div
                 key={i}
                 className="htl-item"
+<<<<<<< HEAD
+=======
+                onMouseEnter={() => setHoveredMilestone(i)}
+                onFocus={() => setHoveredMilestone(i)}
+>>>>>>> newFeatures
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -504,7 +571,7 @@ const Services = () => {
       cat: "BFSI",
       tags: ["KYC", "Compliance", "Core Banking"],
       color: "blue",
-      img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1000&q=80"
+      img: "https://www.mindinventory.com/blog/wp-content/uploads/2024/04/digital-transformation-banking.webp"
     },
     {
       title: "Industrial Technology for Energy Operations",
@@ -512,7 +579,7 @@ const Services = () => {
       cat: "OIL & GAS",
       tags: ["IIoT", "Maintenance", "SCADA"],
       color: "amber",
-      img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1000&q=80"
+      img: "https://tse2.mm.bing.net/th/id/OIP.nlJXKjXI9gWDzqlmOXUA9wHaEK?pid=Api&P=0&h=220"
     },
     {
       title: "Compliance-First Technology for Pharma",
@@ -520,7 +587,7 @@ const Services = () => {
       cat: "PHARMACEUTICALS",
       tags: ["GMP", "FDA", "Serialization"],
       color: "emerald",
-      img: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1000&q=80"
+      img: "https://thetechintel.com/wp-content/uploads/2025/08/Article-31-Overcoming-Pharmaceutical-Industry-Challenges-with-SAP-Business-One_-A-Guide-to-Compliance-and-Cost-Efficiency.jpg"
     }
   ];
 
@@ -638,8 +705,13 @@ const TeamModal = ({ member, onClose }) => {
             <p className="modal-bio">{member.bio}</p>
 
             <div className="modal-social-inline">
+<<<<<<< HEAD
               <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><Linkedin size={20} fill="currentColor" className="brand-fill" /></a>
               <a href="#" className="m-social-btn twitter-btn"><Twitter size={20} fill="currentColor" className="brand-fill" /></a>
+=======
+              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><Linkedin size={20} /></a>
+              <a href="#" className="m-social-btn twitter-btn"><Send size={20} /></a>
+>>>>>>> newFeatures
               <a href="#" className="m-social-btn mail-btn"><Mail size={20} strokeWidth={2.5} /></a>
             </div>
 
@@ -671,6 +743,13 @@ const Team = () => {
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
     },
     {
+      name: "Sapna Rathi",
+      role: "Co-Founder",
+      img: sapnaImg,
+      bio: "Specialist in operational governance and process architecture. Expert in ISO frameworks. Sapna ensures the operational excellence and quality standards that our enterprise clients depend on.",
+      linkedin: "https://www.linkedin.com/in/sapna-rathi-44928b3b/"
+    },
+    {
       name: "Anuradha Biswas",
       role: "Advisor & Mentor",
       img: auImg,
@@ -685,13 +764,6 @@ const Team = () => {
       linkedin: "https://www.linkedin.com/in/abhik/"
     },
     {
-      name: "Sapna Rathi",
-      role: "Co-Founder",
-      img: sapnaImg,
-      bio: "Specialist in operational governance and process architecture. Expert in ISO frameworks. Sapna ensures the operational excellence and quality standards that our enterprise clients depend on.",
-      linkedin: "https://www.linkedin.com/in/sapna-rathi-44928b3b/"
-    },
-    {
       name: "Pankaj Rathi",
       role: "Overseas Operations",
       img: pankajImg,
@@ -699,6 +771,7 @@ const Team = () => {
       linkedin: "https://www.linkedin.com/in/pankajsureshrathi/"
     },
     {
+<<<<<<< HEAD
       name: "Saurabh Kulkarni",
       role: "Tech Lead - Cyber Security",
       img: saurabhImg,
@@ -712,13 +785,29 @@ const Team = () => {
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
     },
     {
+=======
+>>>>>>> newFeatures
       name: "Arpita Kulkarni",
-      role: "...",
+      role: "Technology Leader - IT Product and Services",
       img: arpitaImg,
       bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.",
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
-    }
+    },
+    {
+      name: "Prashant Bollu",
+      role: "Technology Leader - IT Product and Services",
+      img: prashantBolluImg,
+      bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
+      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
+    },
 
+    {
+      name: "Saurabh Kulkarni",
+      role: "Technology Leader - Cyber Security",
+      img: saurabhImg,
+      bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.",
+      // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
+    }
 
   ];
 

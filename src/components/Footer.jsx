@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   Linkedin,
+<<<<<<< HEAD
   Twitter,
   Instagram,
   MapPin,
@@ -9,6 +10,15 @@ import {
   Phone,
   Clock
 } from 'lucide-react';
+=======
+  Facebook,
+  MapPin,
+  Mail,
+  Phone,
+  Clock,
+  Instagram
+} from "lucide-react";
+>>>>>>> newFeatures
 import logo from '../assets/images/logo1.svg';
 
 const Footer = () => {
@@ -16,7 +26,7 @@ const Footer = () => {
     <footer>
       <div className="container">
         <div className="footer-grid">
-          <div>
+          <div className="f-col f-brand">
             <div className="logo">
               <img src={logo} alt="Two Elephants" style={{ height: '32px' }} />
               <div className="logo-text">
@@ -27,12 +37,18 @@ const Footer = () => {
             <p className="f-tagline">Strength. Care. Honesty.</p>
             <p className="f-desc">Technology grounded in 65 years of industrial wisdom. Built in Solapur.</p>
             <div className="social-row">
+<<<<<<< HEAD
               <a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" className="social-btn"><Linkedin size={18} /></a>
               <a href="#" className="social-btn"><Twitter size={18} /></a>
               <a href="https://www.instagram.com/twoelephantstechnologiesllp?igsh=MWw5b2psZHJhMGJ4cA%3D%3D&utm_source=qr" className="social-btn"><Instagram size={18} /></a>
+=======
+              <a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" className="social-btn" aria-label="LinkedIn"><Linkedin size={18} /></a>
+              <a href="#" className="social-btn" aria-label="Facebook"><Facebook size={18} /></a>
+              <a href="https://www.instagram.com/twoelephantstechnologiesllp?igsh=MWw5b2psZHJhMGJ4cA%3D%3D&utm_source=qr" className="social-btn" aria-label="Instagram"><Instagram size={18} /></a>
+>>>>>>> newFeatures
             </div>
           </div>
-          <div>
+          <div className="f-col">
             <h4 className="f-col-title">Company</h4>
             <ul className="f-links">
               <li><a href="/#story">Our Story</a></li>
@@ -41,7 +57,7 @@ const Footer = () => {
               <li><Link to="/careers">Careers</Link></li>
             </ul>
           </div>
-          <div>
+          <div className="f-col">
             <h4 className="f-col-title">Services</h4>
             <ul className="f-links">
               <li><a href="/services">Digital Transformation</a></li>
@@ -49,11 +65,15 @@ const Footer = () => {
               <li><a href="/services">Cybersecurity</a></li>
             </ul>
           </div>
-          <div className="f-contact">
+          <div className="f-col f-contact">
             <h4 className="f-col-title">Reach Us</h4>
             <p><MapPin size={16} /> 30/70, Vivekanand House, Padma Nagar, Akkalkot Road, Solapur - 413005</p>
             <p><Mail size={16} /> <a href="mailto:support@twoelephants.org" style={{ color: 'inherit' }}>support@twoelephants.org</a></p>
+<<<<<<< HEAD
             <p><Phone size={16} /> <a href="tel:+919175484351" style={{ color: 'inherit' }}>+91 9175484351</a> &nbsp;|&nbsp; <a href="tel:+917249570505" style={{ color: 'inherit' }}>7249570505</a></p>
+=======
+            <p><Phone size={16} /> <a href="tel:+917507080000" style={{ color: 'inherit' }}>+91 7507080000</a> &nbsp;|&nbsp; <a href="tel:+917249570505" style={{ color: 'inherit' }}>9405236989</a></p>
+>>>>>>> newFeatures
             <div className="f-response">
               <Clock size={12} /> Response within 24 hours.
             </div>

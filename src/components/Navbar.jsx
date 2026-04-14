@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { NavHashLink } from 'react-router-hash-link';
 import logo from '../assets/images/logo1.svg';
@@ -10,26 +9,20 @@ import logo from '../assets/images/logo1.svg';
  *  Each character bounces up in ripple order
  * ───────────────────────────────────────── */
 const NavText = ({ text, isActive, isHovered }) => (
-  <span style={{ display: 'inline-flex', gap: 0 }} aria-label={text}>
-    {text.split('').map((char, i) => (
-      <motion.span
-        key={i}
-        animate={
-          isHovered
-            ? { y: -5, color: '#f8cc1c', textShadow: '0 0 14px rgba(248,204,28,0.85)' }
-            : isActive
-              ? { y: 0, color: '#f8cc1c', textShadow: '0 0 8px rgba(248,204,28,0.5)' }
-              : { y: 0, color: 'rgba(255,255,255,0.80)', textShadow: 'none' }
-        }
-        transition={{
-          type: 'spring', stiffness: 650, damping: 20,
-          delay: isHovered ? i * 0.03 : (text.length - i) * 0.015,
-        }}
-        style={{ display: 'inline-block', willChange: 'transform, color' }}
-      >
-        {char === ' ' ? '\u00A0' : char}
-      </motion.span>
-    ))}
+  <span className="nav-text" aria-label={text}>
+    <motion.span
+      animate={
+        isHovered
+          ? { color: 'rgba(255,255,255,0.96)' }
+          : isActive
+            ? { color: '#f8cc1c' }
+            : { color: 'rgba(255,255,255,0.80)' }
+      }
+      transition={{ duration: 0.2 }}
+      style={{ fontWeight: isActive ? 700 : isHovered ? 600 : 500 }}
+    >
+      {text}
+    </motion.span>
   </span>
 );
 
@@ -37,38 +30,8 @@ const NavText = ({ text, isActive, isHovered }) => (
  *  EFFECT 2: Magnetic Hover
  *  Each link slightly follows the cursor
  * ───────────────────────────────────────── */
-const MagneticLink = ({ children, onMouseEnter, onMouseLeave, ...props }) => {
-  const ref = useRef(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const sx = useSpring(x, { stiffness: 350, damping: 30 });
-  const sy = useSpring(y, { stiffness: 350, damping: 30 });
+// MagneticLink removed - using direct motion.div hover
 
-  const handleMouseMove = (e) => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    x.set((e.clientX - cx) * 0.25);
-    y.set((e.clientY - cy) * 0.25);
-  };
-  const handleLeave = (e) => {
-    x.set(0); y.set(0);
-    onMouseLeave?.(e);
-  };
-
-  return (
-    <motion.div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleLeave}
-      onMouseEnter={onMouseEnter}
-      style={{ x: sx, y: sy, display: 'inline-block' }}
-    >
-      {children}
-    </motion.div>
-  );
-};
 
 /** ─────────────────────────────────────────
  *  EFFECT 3: Click Ripple
@@ -108,6 +71,7 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredPath, setHoveredPath] = useState(null);
   const [clickedPath, setClickedPath] = useState(null);
+  const [isClicked, setIsClicked] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -117,6 +81,37 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location.pathname]);
+
+  const closeMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(false);
+  }, []);
+
+  const toggleMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen((prev) => !prev);
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle('no-scroll', isMobileMenuOpen);
+    return () => document.body.classList.remove('no-scroll');
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    closeMobileMenu();
+  }, [location.pathname, location.hash, closeMobileMenu]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        closeMobileMenu();
+      }
+    };
+ 
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isMobileMenuOpen, closeMobileMenu]);
 
   const navItems = [
     { name: 'Home', path: '/#home', isHash: true },
@@ -188,65 +183,88 @@ const Navbar = () => {
                 transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.2 + idx * 0.07 }}
                 style={{ display: 'inline-block' }}
               >
-                <MagneticLink
+                <motion.div
+                  className="simple-hover-link"
+                  whileHover={{ scale: 1.005 }}
+                  transition={{ type: "spring", stiffness: 320, damping: 28 }}
                   onMouseEnter={() => setHoveredPath(item.path)}
                   onMouseLeave={() => setHoveredPath(null)}
                 >
                   <Component
                     {...(item.isHash ? { smooth: true } : {})}
                     to={item.path}
-                    onClick={() => { setClickedPath(item.path); setTimeout(() => setClickedPath(null), 50); }}
+                    onClick={() => {
+                      setClickedPath(item.path);
+                      setIsClicked(true);
+                      setTimeout(() => {
+                        setClickedPath(null);
+                        setIsClicked(false);
+                      }, 200);
+                    }}
                     className="nav-item-link"
                     style={{
-                      position: 'relative', display: 'inline-block',
-                      textDecoration: 'none', padding: '8px 14px',
+                      position: 'relative',
+                      display: 'inline-block',
+                      textDecoration: 'none',
+                      padding: '8px 14px',
                       borderRadius: '8px',
-                      /* EFFECT 6: Dim inactive links when any is hovered */
-                      opacity: anyHovered && !isHovered ? 0.48 : 1,
+                      opacity: anyHovered && !isHovered ? 0.62 : 1,
                       transition: 'opacity 0.25s ease',
                     }}
                   >
-                    {/* Animated background pill */}
-                    <AnimatePresence>
-                      {isHovered && (
-                        <motion.span
-                          layoutId="nav-pill"
-                          style={{
-                            position: 'absolute', inset: 0, borderRadius: '8px', zIndex: 0,
-                            background: 'linear-gradient(135deg, rgba(248,204,28,0.14) 0%, rgba(77,168,255,0.10) 100%)',
-                            border: '1px solid rgba(248,204,28,0.30)',
-                            boxShadow: '0 0 24px rgba(248,204,28,0.18), 0 0 48px rgba(248,204,28,0.06), inset 0 1px 0 rgba(255,255,255,0.1)',
-                          }}
-                          initial={{ opacity: 0, scale: 0.86 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.86 }}
-                          transition={{ type: 'spring', stiffness: 380, damping: 24 }}
-                        />
-                      )}
-                    </AnimatePresence>
-
-                    {/* Active page underline glow */}
+                    {!isActive && isHovered && (
+                      <motion.span
+                        layoutId="nav-hover-line"
+                        style={{
+                          position: 'absolute',
+                          bottom: '3px',
+                          left: '18%',
+                          width: '64%',
+                          height: '1px',
+                          borderRadius: '999px',
+                          zIndex: 1,
+                          background:
+                            'linear-gradient(90deg, transparent, rgba(248,204,28,0.92), transparent)',
+                          boxShadow: '0 0 8px rgba(248,204,28,0.28)',
+                        }}
+                        initial={{ opacity: 0, scaleX: 0.65 }}
+                        animate={{ opacity: 1, scaleX: 1 }}
+                        exit={{ opacity: 0, scaleX: 0.8 }}
+                        transition={{ duration: 0.18, ease: 'easeOut' }}
+                      />
+                    )}
                     {isActive && (
                       <motion.span
                         layoutId="nav-active-bar"
                         style={{
-                          position: 'absolute', bottom: '2px', left: '12%', width: '76%',
-                          height: '2px', borderRadius: '2px', zIndex: 10,
-                          background: 'linear-gradient(90deg, transparent, #f8cc1c, transparent)',
-                          boxShadow: '0 0 10px #f8cc1c, 0 0 20px rgba(248,204,28,0.5)',
+                          position: 'absolute',
+                          bottom: '2px',
+                          left: '12%',
+                          width: '76%',
+                          height: '2px',
+                          borderRadius: '2px',
+                          zIndex: 10,
+                          background:
+                            'linear-gradient(90deg, transparent, #f8cc1c, transparent)',
+                          boxShadow:
+                            '0 0 10px #f8cc1c, 0 0 20px rgba(248,204,28,0.5)',
                         }}
                         transition={{ type: 'spring', stiffness: 350, damping: 32 }}
                       />
                     )}
-
-                    {/* Click ripple burst */}
                     <ClickRipple trigger={clickedPath === item.path} />
-
-                    <span style={{ position: 'relative', zIndex: 1, fontSize: '14px', fontWeight: 500 }}>
+                    <span
+                      style={{
+                        position: 'relative',
+                        zIndex: 1,
+                        fontSize: '14px',
+                        fontWeight: 500,
+                      }}
+                    >
                       <NavText text={item.name} isActive={isActive} isHovered={isHovered} />
                     </span>
                   </Component>
-                </MagneticLink>
+                </motion.div>
               </motion.div>
             );
           })}
@@ -277,60 +295,57 @@ const Navbar = () => {
             </Link>
           </motion.div> */}
 
-          {/* Mobile toggle */}
-          <motion.button
-            className="menu-btn"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            whileTap={{ scale: 0.88, rotate: 90 }}
-            style={{ marginLeft: '12px' }}
-          >
-            <AnimatePresence mode="wait">
-              {isMobileMenuOpen
-                ? <motion.span key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.18 }}><X size={24} /></motion.span>
-                : <motion.span key="men" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.18 }}><Menu size={24} /></motion.span>
-              }
-            </AnimatePresence>
-          </motion.button>
         </div>
+
+        <button
+          className={`menu-btn${isMobileMenuOpen ? ' active' : ''}`}
+          onClick={toggleMobileMenu}
+          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isMobileMenuOpen}
+          aria-controls="mobile-menu"
+          type="button"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
 
       {/* ── MOBILE MENU ── */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            className="mobile-menu open"
-            initial={{ x: '100%', opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: '100%', opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 30 }}
-          >
-            {navItems.map((item, i) => {
-              const Component = item.isHash ? NavHashLink : Link;
-              return (
-                <motion.div
-                  key={item.path}
-                  initial={{ x: 50, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: i * 0.06, type: 'spring', stiffness: 280, damping: 24 }}
-                >
-                  <Component smooth={item.isHash} to={item.path} onClick={() => setIsMobileMenuOpen(false)}>
-                    {item.name}
-                  </Component>
-                </motion.div>
-              );
-            })}
-            <motion.div
-              initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: navItems.length * 0.06 }}
-              style={{ marginTop: '24px' }}
-            >
-              <Link to="/contact" className="btn btn-primary" onClick={() => setIsMobileMenuOpen(false)}>
-                Contact Us
-              </Link>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <button
+        type="button"
+        className={`mobile-overlay${isMobileMenuOpen ? ' open' : ''}`}
+        onClick={closeMobileMenu}
+        aria-label="Close menu overlay"
+      ></button>
+
+      <div id="mobile-menu" className={`mobile-menu${isMobileMenuOpen ? ' open' : ''}`}>
+        <Link to="/#home" className="mobile-menu-logo" onClick={closeMobileMenu}>
+          <img src={logo} alt="Two Elephants" />
+          <span>Two Elephants</span>
+        </Link>
+
+        <div className="mobile-menu-links">
+          {navItems.map((item) => {
+            const Component = item.isHash ? NavHashLink : Link;
+            return (
+              <Component
+                key={item.path}
+                {...(item.isHash ? { smooth: true } : {})}
+                to={item.path}
+                className="mobile-nav-link"
+                onClick={closeMobileMenu}
+              >
+                {item.name}
+              </Component>
+            );
+          })}
+        </div>
+
+        <Link to="/contact" className="btn btn-primary mobile-menu-cta" onClick={closeMobileMenu}>
+          Contact Us
+        </Link>
+      </div>
     </motion.nav>
   );
 };

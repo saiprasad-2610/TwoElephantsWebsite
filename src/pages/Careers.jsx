@@ -4,16 +4,16 @@ import { ChevronRight, ArrowRight } from "lucide-react";
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ParticleBackground from '../components/ParticleBackground';
+<<<<<<< HEAD
 import "./Careers.css";
+=======
+import '../styles/careers.css';
+>>>>>>> newFeatures
 
 
-// Import images from assets
-// Temporary fallbacks for moved assets
-import logo from '../assets/images/logo1.svg';
-const abhiImg = logo;
-const auImg = logo;
-const sapnaImg = logo;
-const pankajImg = logo;
+// Import tech hero images for careers bento grid
+import techHero1 from '../assets/images/tech_hero_1.png';
+import techHero2 from '../assets/images/tech_hero_2.png';
 
 const Careers = () => {
   const [activeRole, setActiveRole] = useState(0);
@@ -136,7 +136,7 @@ const Careers = () => {
             </motion.div>
             <h1>
               Start Your Career <br />
-              at <span className="text-amber">Two Elephants</span>
+              at <span className="text-amber">Two Elephants Technologies LLP</span>
             </h1>
             <p>
               Build your future with a team that values innovation,
@@ -160,6 +160,7 @@ const Careers = () => {
                  <h3 className="bento-num">65+</h3>
                  <p>Years of Industrial Legacy</p>
               </div>
+<<<<<<< HEAD
             </motion.div>
             <motion.div className="bento-box bento-img-box" variants={item}>
               <img src={auImg} alt="Culture" />
@@ -167,6 +168,15 @@ const Careers = () => {
             </motion.div>
             <motion.div className="bento-box bento-img-box" variants={item}>
               <img src={abhiImg} alt="Team" />
+=======
+            </motion.div>
+            <motion.div className="bento-box bento-img-box" variants={item}>
+              <img src={techHero1} alt="Technology workspace" />
+              <div className="img-overlay"></div>
+            </motion.div>
+            <motion.div className="bento-box bento-img-box" variants={item}>
+              <img src={techHero2} alt="Server infrastructure" />
+>>>>>>> newFeatures
               <div className="img-overlay"></div>
             </motion.div>
             <motion.div className="bento-box bento-text-box bento-dark" variants={item}>
@@ -197,7 +207,7 @@ const Careers = () => {
               <div className="eyebrow dark justify-center mb-6">THINKING AT SCALE</div>
               <h2 className="h2-title text-4xl mb-6">We move with <em>Strength</em> and execute with <em>Honesty</em>.</h2>
               <p className="body-text text-lg leading-relaxed text-slate-600">
-                Two Elephants is not just an IT company; it's a legacy of 65 years transitioning into the digital age.
+                Two Elephants Technologies LLP is not just an IT company; it's a legacy of 65 years transitioning into the digital age.
                 We are looking for engineers who want to build the infrastructure that tomorrow's global markets will depend on.
               </p>
             </motion.div>
@@ -215,7 +225,7 @@ const Careers = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
             >
-              <div className="eyebrow dark justify-center mb-4">LIFE AT TWO ELEPHANTS</div>
+              <div className="eyebrow dark justify-center mb-4">LIFE AT Two Elephants Technologies LLP</div>
               <h3 className="h2-title text-3xl">A career where impact, growth, and momentum meet.</h3>
             </motion.div>
           </div>
