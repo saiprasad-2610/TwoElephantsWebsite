@@ -76,11 +76,7 @@
 }
 
 .blog-title {
-<<<<<<< HEAD
-  font-family: 'Cormorant Garamond', serif;
-=======
   font-family: 'Ubuntu Sans', 'DM Sans', sans-serif;
->>>>>>> newFeatures
   font-size: 22px;
   font-weight: 700;
   color: #080E1C;
@@ -118,8 +114,6 @@
 
 .blog-card:hover .read-more {
   gap: 14px;
-<<<<<<< HEAD
-=======
 }
 
 /* ═══════════════════════════════════════════
@@ -192,5 +186,4 @@
   color: var(--color-text-primary, #0f172a);
   margin-bottom: 26px;
   font-weight: 500;
->>>>>>> newFeatures
 }

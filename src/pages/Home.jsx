@@ -1,14 +1,11 @@
+
 import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight,
   ExternalLink,
   Linkedin,
-<<<<<<< HEAD
-  Twitter,
-=======
   Send,
->>>>>>> newFeatures
   Mail,
   MapPin,
   Phone,
@@ -30,10 +27,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/blog.css';
 import '../styles/team.css';
-<<<<<<< HEAD
-=======
 // import '../assets/images';
->>>>>>> newFeatures
 
 const MotionLink = motion(Link);
 
@@ -66,12 +60,6 @@ const loomsImg = looms;
 // HeroFallback removed - using enhanced dual elephant system
 
 
-<<<<<<< HEAD
-// HeroFallback removed - using enhanced dual elephant system
-
-
-=======
->>>>>>> newFeatures
 const Hero = () => {
   const [text, setText] = useState('');
   const phrases = [
@@ -175,11 +163,7 @@ const Hero = () => {
                   animate={{ opacity: 1 }}
                   style={{
                     width: '100%',
-<<<<<<< HEAD
-                    maxWidth: '420px',
-=======
                     maxWidth: 'min(78vw, 420px)',
->>>>>>> newFeatures
                     userSelect: 'none'
                   }}
                   whileHover={{
@@ -200,26 +184,11 @@ const Hero = () => {
               >
                 <div className="slogan-top">TWO ELEPHANTS TECHNOLOGIES LLP</div>
                 <div className="slogan-bottom">
-<<<<<<< HEAD
-                  One Promise: <span className="s-amber">Strength</span> <span className="slogan-bottom">Care</span> <span className="s-amber">Honesty</span>
-=======
                   One Promise: <span className="s-amber">Strength</span> Care <span className="s-amber">Honesty</span>
->>>>>>> newFeatures
                 </div>
               </motion.div>
             </motion.div>
 
-<<<<<<< HEAD
-            <motion.div
-              className="legacy-badge"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1 }}
-              style={{ right: '5%', bottom: '10%', left: 'auto' }}
-            >
-            </motion.div>
-=======
->>>>>>> newFeatures
           </motion.div>
         </div>
       </div>
@@ -326,11 +295,7 @@ const Story = () => {
           >
             <div className="image-stack">
               <motion.img
-<<<<<<< HEAD
-                src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85"
-=======
                 src={loomsImg}
->>>>>>> newFeatures
                 alt="Pushpa Textile"
                 className="story-img-main"
                 whileHover={{ scale: 1.03, rotate: 1 }}
@@ -345,11 +310,7 @@ const Story = () => {
                 <span className="card-text">Legacy Begins</span>
               </motion.div>
               <motion.img
-<<<<<<< HEAD
-                src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=85"
-=======
                 src={labsImg}
->>>>>>> newFeatures
                 alt="Modern tech"
                 className="story-img-fg"
                 animate={{ y: [0, 12, 0] }}
@@ -434,20 +395,6 @@ const Story = () => {
         {/* ══════════ COMPACT HORIZONTAL TIMELINE ══════════ */}
         <div className="htl-wrap">
           <div className="htl-header">
-<<<<<<< HEAD
-            <div className="eyebrow amber">MILESTONES</div>
-            <h3>From textile heritage to enterprise-scale technology.</h3>
-          </div>
-
-          <div className="htl-track">
-            {/* Animated progress line */}
-            <motion.div
-              className="htl-line"
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-=======
             <div className="eyebrow dark">MILESTONES</div>
             <h3>From textile heritage to enterprise-scale technology.</h3>
           </div>
@@ -467,18 +414,14 @@ const Story = () => {
                   : undefined
               }
               transition={{ type: 'spring', stiffness: 260, damping: 28 }}
->>>>>>> newFeatures
             />
 
             {milestones.map((m, i) => (
               <motion.div
                 key={i}
                 className="htl-item"
-<<<<<<< HEAD
-=======
                 onMouseEnter={() => setHoveredMilestone(i)}
                 onFocus={() => setHoveredMilestone(i)}
->>>>>>> newFeatures
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -705,13 +648,8 @@ const TeamModal = ({ member, onClose }) => {
             <p className="modal-bio">{member.bio}</p>
 
             <div className="modal-social-inline">
-<<<<<<< HEAD
-              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><Linkedin size={20} fill="currentColor" className="brand-fill" /></a>
-              <a href="#" className="m-social-btn twitter-btn"><Twitter size={20} fill="currentColor" className="brand-fill" /></a>
-=======
               <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><Linkedin size={20} /></a>
               <a href="#" className="m-social-btn twitter-btn"><Send size={20} /></a>
->>>>>>> newFeatures
               <a href="#" className="m-social-btn mail-btn"><Mail size={20} strokeWidth={2.5} /></a>
             </div>
 
@@ -771,22 +709,6 @@ const Team = () => {
       linkedin: "https://www.linkedin.com/in/pankajsureshrathi/"
     },
     {
-<<<<<<< HEAD
-      name: "Saurabh Kulkarni",
-      role: "Tech Lead - Cyber Security",
-      img: saurabhImg,
-      bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.",
-      // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
-    }, {
-      name: "Prashant Bollu",
-      role: "...",
-      img: prashantBolluImg,
-      bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
-      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
-    },
-    {
-=======
->>>>>>> newFeatures
       name: "Arpita Kulkarni",
       role: "Technology Leader - IT Product and Services",
       img: arpitaImg,

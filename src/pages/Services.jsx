@@ -114,10 +114,7 @@ const services = [
 
 
 
-<<<<<<< HEAD
-=======
 
->>>>>>> newFeatures
 // 3D Apple-Style Perspective Hover Card Component
 const ServiceCard3D = ({ service, idx }) => {
   const x = useMotionValue(0);
@@ -140,10 +137,7 @@ const ServiceCard3D = ({ service, idx }) => {
 
   return (
     <motion.div
-<<<<<<< HEAD
-=======
       className="service-detail-card-wrap"
->>>>>>> newFeatures
       style={{ perspective: 1200 }}
       initial={{ opacity: 0, scale: 0.9, y: 50 }}
       whileInView={{ opacity: 1, scale: 1, y: 0 }}

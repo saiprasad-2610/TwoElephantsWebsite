@@ -4,11 +4,7 @@ import { ChevronRight, ArrowRight } from "lucide-react";
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ParticleBackground from '../components/ParticleBackground';
-<<<<<<< HEAD
-import "./Careers.css";
-=======
 import '../styles/careers.css';
->>>>>>> newFeatures
 
 
 // Import tech hero images for careers bento grid
@@ -160,15 +156,6 @@ const Careers = () => {
                  <h3 className="bento-num">65+</h3>
                  <p>Years of Industrial Legacy</p>
               </div>
-<<<<<<< HEAD
-            </motion.div>
-            <motion.div className="bento-box bento-img-box" variants={item}>
-              <img src={auImg} alt="Culture" />
-              <div className="img-overlay"></div>
-            </motion.div>
-            <motion.div className="bento-box bento-img-box" variants={item}>
-              <img src={abhiImg} alt="Team" />
-=======
             </motion.div>
             <motion.div className="bento-box bento-img-box" variants={item}>
               <img src={techHero1} alt="Technology workspace" />
@@ -176,7 +163,6 @@ const Careers = () => {
             </motion.div>
             <motion.div className="bento-box bento-img-box" variants={item}>
               <img src={techHero2} alt="Server infrastructure" />
->>>>>>> newFeatures
               <div className="img-overlay"></div>
             </motion.div>
             <motion.div className="bento-box bento-text-box bento-dark" variants={item}>

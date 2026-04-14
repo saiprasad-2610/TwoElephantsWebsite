@@ -298,14 +298,10 @@ import {
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-<<<<<<< HEAD
-import './Contact.css';
-=======
 import '../styles/contact.css';
 
 const CONTACT_RECEIVER_EMAIL =
   import.meta.env.VITE_CONTACT_RECEIVER_EMAIL || 'support@twoelephants.tech';
->>>>>>> newFeatures
 
 const Contact = () => {
   const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success, error
@@ -430,13 +426,9 @@ const Contact = () => {
                     <div className="cc-icon"><Mail size={20} /></div>
                     <div className="cc-body">
                       <div className="cc-label">Email</div>
-<<<<<<< HEAD
-                      <div className="cc-value"><a href="mailto:hello@twoelephants.tech">support@twoelephants.tech</a></div>
-=======
                       <div className="cc-value">
                         <a href="mailto:support@twoelephants.tech">support@twoelephants.org</a>
                       </div>
->>>>>>> newFeatures
                       <div className="cc-sub">Response within 24 business hours</div>
                     </div>
                   </div>
@@ -454,9 +446,6 @@ const Contact = () => {
                     <div className="cc-icon"><Globe size={20} /></div>
                     <div className="cc-body">
                       <div className="cc-label">LinkedIn</div>
-<<<<<<< HEAD
-                      <div className="cc-value"><a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" target="_blank" rel="noreferrer">two-elephants-technologies-llp</a></div>
-=======
                       <div className="cc-value">
                         <a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" 
                            target="_blank" rel="noreferrer">
@@ -464,7 +453,6 @@ const Contact = () => {
                           Two Elephants Technologies LLP
                         </a>
                       </div>
->>>>>>> newFeatures
                       <div className="cc-sub">Follow us for updates</div>
                     </div>
                   </div>
@@ -529,16 +517,6 @@ const Contact = () => {
                             </div>
                           </div>
 
-<<<<<<< HEAD
-                          <div className="form-row">
-                            <div className="form-group">
-                              <label htmlFor="email">Work Email *</label>
-                              <input type="email" id="email" required placeholder="rajesh@company.com" onChange={handleChange} />
-                            </div>
-                            <div className="form-group">
-                              <label htmlFor="location">Location / City *</label>
-                              <input type="text" id="location" required placeholder="Solapur, India" onChange={handleChange} />
-=======
                           <div className="form-row grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="form-group">
                               <label htmlFor="email">Work Email *</label>
@@ -561,7 +539,6 @@ const Contact = () => {
                                 onChange={handleChange} 
                                 value={formData.location} 
                               />
->>>>>>> newFeatures
                             </div>
                           </div>
 
