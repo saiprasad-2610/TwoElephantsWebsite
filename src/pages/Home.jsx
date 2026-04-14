@@ -1,23 +1,21 @@
-import React, { useEffect, useState, Suspense, lazy } from 'react';
+
+import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
-import { 
-  ArrowRight, 
-  ExternalLink, 
-  Linkedin, 
-  Twitter, 
-  Mail, 
-  MapPin, 
-  Phone, 
-  CheckCircle2, 
+import {
+  ArrowRight,
+  ExternalLink,
+  Linkedin,
+  Send,
+  Mail,
+  MapPin,
+  Phone,
+  CheckCircle2,
   ChevronRight,
-  Globe,
   Layers,
   Cpu,
   Database,
   Shield,
   Zap,
-  Github,
-  Youtube,
   Clock,
   X
 } from 'lucide-react';
@@ -27,23 +25,24 @@ import { articles } from '../data/articles';
 import ParticleBackground from '../components/ParticleBackground';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import '../styles/blog.css';
+import '../styles/team.css';
+// import '../assets/images';
 
 const MotionLink = motion(Link);
-
-import ElephantModel3D from '../components/ElephantModel3D';
 
 // Import images
 import logo from '../assets/images/logo1.svg';
 import prashant1 from '../assets/images/prashant1.png'
-import pankaj from '../assets/images/pankaj.jpeg'
-import Abhi from '../assets/images/Abhi.jpeg'
-import Au from '../assets/images/Au.jpeg'
-import Sapna from '../assets/images/Sapna.jpeg'
+import pankaj from '../assets/images/pankaj.png'
+import Abhi from '../assets/images/Abhi.png'
+import Au from '../assets/images/Au.png'
+import Sapna from '../assets/images/Sapna.png'
 import saurabh from '../assets/images/saurabh1.png'
 import prashant_bollu from '../assets/images/prashant_bollu.jpeg'
 import arpita from '../assets/images/arpita.jpg'
-
-
+import looms from '../assets/images/looms.jpg';
+import labs from '../assets/images/labs.jpg';
 
 // Temporary fallbacks for moved assets
 const abhiImg = Abhi;
@@ -54,20 +53,12 @@ const ptImg = prashant1;
 const saurabhImg = saurabh;
 const prashantBolluImg = prashant_bollu;
 const arpitaImg = arpita;
+const labsImg = labs;
+const loomsImg = looms;
 
 
+// HeroFallback removed - using enhanced dual elephant system
 
-
-const HeroFallback = () => (
-  <motion.img 
-    src={logo} 
-    alt="Two Elephants Logo" 
-    className="hero-svg hero-logo hero-logo-cropped"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    style={{ maxWidth: '380px', height: 'auto' }}
-  />
-);
 
 const Hero = () => {
   const [text, setText] = useState('');
@@ -101,21 +92,31 @@ const Hero = () => {
       <ParticleBackground />
       <div className="container">
         <div className="hero-grid">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="eyebrow">SOLAPUR · MAHARASHTRA · EST. 2026</div>
-            <h1 className="hero-title">
+            <motion.h1
+              className="hero-title"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            >
               From <i>Looms</i> <br />
-              <span>to Labs.</span>
-            </h1>
+              <motion.span
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
+              >to <i>Labs.</i></motion.span>
+            </motion.h1>
             <p className="hero-sub">
               The same family that mastered the precision of textile manufacturing for 65 years now builds the technology infrastructure that banks run on, oil fields depend on, and pharmaceutical supply chains trust.
             </p>
-            <div className="typewriter-container">
+            <div className="typewriter-container typewriter-enhanced">
               <div className="typewriter-text">{text}</div>
+              <span className="typewriter-cursor">|</span>
             </div>
             <div className="hero-buttons">
               <a href="#story" className="btn btn-primary">
@@ -130,27 +131,26 @@ const Hero = () => {
               <span className="badge">India · USA · Middle East</span>
             </div>
           </motion.div>
-          
-          <motion.div 
-            className="hero-visual"
-            initial={{ opacity: 0, scale: 0.8 }}
+
+          <motion.div
+            className="hero-visual md:w-[500px] md:h-[500px] flex flex-col items-center justify-center relative mx-auto"
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
+            transition={{ duration: 1.2, delay: 0.3, ease: 'easeOut' }}
           >
-            <div className="glow-outer"></div>
-            <div className="glow-inner"></div>
-            
+
+
             <motion.div
               className="hero-logo-wrapper"
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
                 width: '100%',
-                maxWidth: '600px',
-                height: '480px',
+                maxWidth: 'min(100%, 600px)',
+                height: 'clamp(300px, 62vw, 480px)',
                 position: 'relative'
               }}
             >
@@ -158,46 +158,37 @@ const Hero = () => {
                 <motion.img
                   src={logo}
                   alt="Two Elephants"
-                  style={{ 
-                    width: '100%', 
-                    maxWidth: '420px', 
-                    filter: 'drop-shadow(0 0 40px rgba(248, 204, 28, 0.35)) drop-shadow(0 0 80px rgba(0, 200, 255, 0.15))',
+                  className="hero-svg hero-logo hero-logo-cropped animate-logo-glow"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  style={{
+                    width: '100%',
+                    maxWidth: 'min(78vw, 420px)',
                     userSelect: 'none'
                   }}
-                  animate={{ 
-                    filter: [
-                      'drop-shadow(0 0 40px rgba(248, 204, 28, 0.35)) drop-shadow(0 0 80px rgba(0, 200, 255, 0.15))',
-                      'drop-shadow(0 0 60px rgba(248, 204, 28, 0.55)) drop-shadow(0 0 100px rgba(0, 200, 255, 0.25))',
-                      'drop-shadow(0 0 40px rgba(248, 204, 28, 0.35)) drop-shadow(0 0 80px rgba(0, 200, 255, 0.15))',
-                    ]
+                  whileHover={{
+                    scale: 1.05,
+                    rotateY: 8
                   }}
-                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                   draggable={false}
                 />
               </div>
-              
-              <motion.div 
-                className="hero-slogan"
+
+              <motion.div
+                className="hero-slogan slogan-shimmer"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
-                style={{ position: 'relative', zIndex: 20, marginTop: '-40px' }}
+                style={{ position: 'relative', zIndex: 20, marginTop: 'clamp(-28px, -6vw, -16px)' }}
               >
                 <div className="slogan-top">TWO ELEPHANTS TECHNOLOGIES LLP</div>
                 <div className="slogan-bottom">
-                  One Promise: <span className="s-amber">Strength</span> <span className="s-amber">Care</span> <span className="s-amber">Honesty</span>
+                  One Promise: <span className="s-amber">Strength</span> Care <span className="s-amber">Honesty</span>
                 </div>
               </motion.div>
             </motion.div>
 
-            <motion.div 
-              className="legacy-badge"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1 }}
-              style={{ right: '5%', bottom: '10%', left: 'auto' }}
-            >
-            </motion.div>
           </motion.div>
         </div>
       </div>
@@ -207,17 +198,17 @@ const Hero = () => {
 
 const Marquee = () => {
   const items = [
-    "IndiGo Airlines", "Akasa Air", "Raymond", "Jindal Steel & Power", 
-    "Jockey India", "Myntra", "Maruti Suzuki", "MG Motors", "Oil & Gas Clients (USA)", 
+    "IndiGo Airlines", "Akasa Air", "Raymond", "Jindal Steel & Power",
+    "Jockey India", "Myntra", "Maruti Suzuki", "MG Motors", "Oil & Gas Clients (USA)",
     "Serving India", "United States", "Middle East"
   ];
-  
+
   return (
     <section className="marquee-section">
       <div className="marquee-label">65 YEARS OF RELATIONSHIPS — AND COUNTING</div>
       <div className="marquee-container">
-        <motion.div 
-          className="marquee-inner"
+        <motion.div
+          className="marquee-inner marquee-glow"
           animate={{ x: [0, -1000] }}
           transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
         >
@@ -233,7 +224,7 @@ const Marquee = () => {
 const Counter = ({ value, label }) => {
   return (
     <div className="l-stat">
-      <motion.span 
+      <motion.span
         className="l-number"
         initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -247,31 +238,36 @@ const Counter = ({ value, label }) => {
 };
 
 const Story = () => {
-  const { scrollYProgress } = useScroll();
-  const timelineScale = useSpring(useTransform(scrollYProgress, [0.15, 0.45], [0, 1]), {
+  const timelineRef = useRef(null);
+  const [hoveredMilestone, setHoveredMilestone] = useState(null);
+  const { scrollYProgress: timelineScrollProgress } = useScroll({
+    target: timelineRef,
+    offset: ['start 80%', 'end 35%'],
+  });
+  const timelineScale = useSpring(useTransform(timelineScrollProgress, [0, 1], [0, 1]), {
     stiffness: 100, damping: 30, restDelta: 0.001
   });
 
   const milestones = [
-    { 
-      year: "1959", 
-      title: "Pushpa Textiles Founded", 
+    {
+      year: "1959",
+      title: "Pushpa Textile Founded",
       desc: "The Rathi family begins a legacy of manufacturing precision in Solapur.",
       icon: "🏭",
       color: "#4da8ff",
       glow: "rgba(77,168,255,0.3)"
     },
-    { 
-      year: "1980s", 
-      title: "Global Expansion", 
+    {
+      year: "1980",
+      title: "Global Expansion",
       desc: "Becoming a trusted supplier for national brands like IndiGo and Maruti Suzuki.",
       icon: "🌐",
-      color: "#f8cc1c",
+      color: "#cf0d0dff",
       glow: "rgba(248,204,28,0.3)"
     },
-    { 
-      year: "2026", 
-      title: "Two Elephants Tech", 
+    {
+      year: "2026",
+      title: "Two Elephants Technologies LLP",
       desc: "Transitioning industrial wisdom into enterprise-grade technology solutions.",
       icon: "🚀",
       color: "#7c3aed",
@@ -279,11 +275,18 @@ const Story = () => {
     }
   ];
 
+  const getMilestoneLineWidth = (index) => {
+    const trackStart = 2;
+    const trackSpan = 96;
+    const progressPoint = (index + 0.5) / milestones.length;
+    return `${trackStart + trackSpan * progressPoint}%`;
+  };
+
   return (
     <section className="story-section section-padding" id="story">
       <div className="container">
         <div className="story-grid">
-          <motion.div 
+          <motion.div
             className="story-images"
             initial={{ opacity: 0, x: -60 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -291,14 +294,14 @@ const Story = () => {
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="image-stack">
-              <motion.img 
-                src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=85" 
-                alt="Pushpa Textiles" 
+              <motion.img
+                src={loomsImg}
+                alt="Pushpa Textile"
                 className="story-img-main"
                 whileHover={{ scale: 1.03, rotate: 1 }}
                 transition={{ type: 'spring', stiffness: 200, damping: 20 }}
               />
-              <motion.div 
+              <motion.div
                 className="story-img-card card-legacy"
                 animate={{ y: [0, -12, 0], boxShadow: ['0 8px 32px rgba(77,168,255,0.2)', '0 20px 48px rgba(77,168,255,0.4)', '0 8px 32px rgba(77,168,255,0.2)'] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -306,15 +309,15 @@ const Story = () => {
                 <span className="card-year">1959</span>
                 <span className="card-text">Legacy Begins</span>
               </motion.div>
-              <motion.img 
-                src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=85" 
-                alt="Modern tech" 
+              <motion.img
+                src={labsImg}
+                alt="Modern tech"
                 className="story-img-fg"
                 animate={{ y: [0, 12, 0] }}
                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 whileHover={{ scale: 1.06 }}
               />
-              <motion.div 
+              <motion.div
                 className="story-img-card card-tech"
                 animate={{ x: [0, 6, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -324,15 +327,15 @@ const Story = () => {
               </motion.div>
             </div>
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             className="story-content"
             initial={{ opacity: 0, x: 60 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
           >
-            <motion.div 
+            <motion.div
               className="eyebrow dark"
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -340,7 +343,7 @@ const Story = () => {
               transition={{ delay: 0.2 }}
             >OUR STORY</motion.div>
             <div className="section-rule visible"></div>
-            <motion.h2 
+            <motion.h2
               className="h2-title"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -349,7 +352,7 @@ const Story = () => {
             >
               A Legacy That Earns Its <em>Next Chapter</em>
             </motion.h2>
-            <motion.p 
+            <motion.p
               className="body-text"
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -358,7 +361,7 @@ const Story = () => {
             >
               Every great technology company is built on something real. Ours is built on <strong>65 years of industrial trust.</strong>
             </motion.p>
-            <motion.p 
+            <motion.p
               className="body-text"
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -367,14 +370,14 @@ const Story = () => {
             >
               The Rathi family — known in Solapur as "Do Haathi" (Two Elephants) — has mastered the art of precision over decades. Today, we bring that same uncompromising quality to the digital world.
             </motion.p>
-            
+
             <div className="legacy-stats">
               <Counter value="65+" label="Years of Trust" />
               <Counter value="500+" label="Team Goal" />
               <Counter value="100%" label="Commitment" />
             </div>
 
-            <motion.blockquote 
+            <motion.blockquote
               className="pull-quote"
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -389,72 +392,73 @@ const Story = () => {
           </motion.div>
         </div>
 
-        {/* ══════════ PREMIUM TIMELINE ══════════ */}
-        <div className="timeline-wrap">
-          <div className="timeline-header">
-            <div className="eyebrow amber">MILESTONES</div>
-            <h3>From textile heritage to modern enterprise-scale technology.</h3>
-            <p>For the home page, this timeline narrates the transformation from trusted craftsmanship to enterprise-grade digital services.</p>
+        {/* ══════════ COMPACT HORIZONTAL TIMELINE ══════════ */}
+        <div className="htl-wrap">
+          <div className="htl-header">
+            <div className="eyebrow dark">MILESTONES</div>
+            <h3>From textile heritage to enterprise-scale technology.</h3>
           </div>
 
-          <div className="timeline-container">
-            <motion.div 
-              className="timeline-axis"
-              style={{ scaleY: timelineScale, transformOrigin: 'top center' }}
+          <div
+            className="htl-track"
+            ref={timelineRef}
+            onMouseLeave={() => setHoveredMilestone(null)}
+          >
+            {/* Animated progress line */}
+            <motion.div
+              className="htl-line"
+              style={hoveredMilestone === null ? { scaleX: timelineScale } : undefined}
+              animate={
+                hoveredMilestone !== null
+                  ? { width: getMilestoneLineWidth(hoveredMilestone), scaleX: 1 }
+                  : undefined
+              }
+              transition={{ type: 'spring', stiffness: 260, damping: 28 }}
             />
 
-            <div className="timeline-grid">
-              {milestones.map((m, i) => (
-                <motion.div 
-                  key={i} 
-                  className={`timeline-item ${i % 2 === 0 ? 'is-left' : 'is-right'}`}
-                  initial={{ opacity: 0, y: 60, scale: 0.94 }}
-                  whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                  viewport={{ once: true, margin: '-80px' }}
-                  transition={{
-                    delay: i * 0.18,
-                    type: 'spring',
-                    stiffness: 120,
-                    damping: 18,
-                  }}
+            {milestones.map((m, i) => (
+              <motion.div
+                key={i}
+                className="htl-item"
+                onMouseEnter={() => setHoveredMilestone(i)}
+                onFocus={() => setHoveredMilestone(i)}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.25, duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+              >
+                {/* Dot on the line */}
+                <motion.div
+                  className="htl-dot"
+                  style={{ background: m.color, boxShadow: `0 0 0 6px ${m.glow}` }}
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.25 + 0.4, type: 'spring', stiffness: 300 }}
+                />
+
+                {/* Card */}
+                <motion.div
+                  className="htl-card"
+                  whileHover={{ y: -8, boxShadow: '0 20px 50px rgba(0,0,0,0.12)' }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 24 }}
                 >
-                  <motion.div
-                    className="timeline-card"
-                    whileHover={{ y: -6, scale: 1.01 }}
-                    transition={{ type: 'spring', stiffness: 220, damping: 18 }}
-                  >
-                    <motion.div
-                      className="timeline-card-glow"
-                      initial={{ opacity: 0.08, scale: 0.9 }}
-                      animate={{ opacity: [0.08, 0.18, 0.08], scale: [0.94, 1.02, 0.94] }}
-                      transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: i * 0.12 }}
-                    />
-                    <div className="timeline-card-head">
-                      <motion.div
-                        className="timeline-icon"
-                        style={{ background: m.glow }}
-                        animate={{ rotate: [0, 10, -10, 0], scale: [1, 1.08, 0.98, 1] }}
-                        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: i * 0.15 }}
-                      >
-                        <span>{m.icon}</span>
-                      </motion.div>
-                      <div className="timeline-tag" style={{ color: m.color }}>
-                        {m.year}
-                      </div>
-                    </div>
-                    <h4 className="t-title">{m.title}</h4>
-                    <p className="t-desc">{m.desc}</p>
-                  </motion.div>
+                  <div className="htl-icon" style={{ background: m.glow }}>
+                    <span>{m.icon}</span>
+                  </div>
+                  <div className="htl-year" style={{ color: m.color }}>{m.year}</div>
+                  <h4 className="htl-title">{m.title}</h4>
+                  <p className="htl-desc">{m.desc}</p>
                 </motion.div>
-              ))}
-            </div>
+              </motion.div>
+            ))}
           </div>
 
-          <div className="timeline-footer">
-            <p>Our home page now leads visitors through a meaningful timeline, emphasizing why Two Elephants is the trusted intersection of industry and innovation.</p>
+          <div className="htl-footer">
             <Link to="/contact" className="btn btn-primary">Talk to our team</Link>
           </div>
         </div>
+
       </div>
     </section>
   );
@@ -464,13 +468,13 @@ const ServiceCard = ({ title, desc, cat, tags, color, img, delay }) => {
   const navigate = useNavigate();
 
   return (
-    <motion.div 
+    <motion.div
       className="service-card"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay }}
-      whileHover={{ 
+      whileHover={{
         y: -10,
         rotateX: 2,
         rotateY: 2,
@@ -510,7 +514,7 @@ const Services = () => {
       cat: "BFSI",
       tags: ["KYC", "Compliance", "Core Banking"],
       color: "blue",
-      img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1000&q=80"
+      img: "https://www.mindinventory.com/blog/wp-content/uploads/2024/04/digital-transformation-banking.webp"
     },
     {
       title: "Industrial Technology for Energy Operations",
@@ -518,7 +522,7 @@ const Services = () => {
       cat: "OIL & GAS",
       tags: ["IIoT", "Maintenance", "SCADA"],
       color: "amber",
-      img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1000&q=80"
+      img: "https://tse2.mm.bing.net/th/id/OIP.nlJXKjXI9gWDzqlmOXUA9wHaEK?pid=Api&P=0&h=220"
     },
     {
       title: "Compliance-First Technology for Pharma",
@@ -526,12 +530,12 @@ const Services = () => {
       cat: "PHARMACEUTICALS",
       tags: ["GMP", "FDA", "Serialization"],
       color: "emerald",
-      img: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1000&q=80"
+      img: "https://thetechintel.com/wp-content/uploads/2025/08/Article-31-Overcoming-Pharmaceutical-Industry-Challenges-with-SAP-Business-One_-A-Guide-to-Compliance-and-Cost-Efficiency.jpg"
     }
   ];
 
   return (
-    <section className="services-section section-padding" id="services">
+    <section className="services-section section-padding" id="services" style={{ position: 'relative' }}>
       <div className="container">
         <div className="services-header">
           <div className="eyebrow dark">WHAT WE DO</div>
@@ -539,9 +543,46 @@ const Services = () => {
           <h2 className="h2-title">Enterprise Technology for <em>Demanding Industries</em></h2>
           <p className="services-sub">We build the systems that banks stake their reputation on and oil companies stake their operations on.</p>
         </div>
-        <div className="services-grid">
+        <div className="services-stack-container">
           {services.map((svc, idx) => (
-            <ServiceCard key={idx} {...svc} delay={idx * 0.1} />
+            <motion.div
+              key={idx}
+              className="sticky-card-wrapper"
+              initial={{ opacity: 0, y: 100 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              style={{
+                position: 'sticky',
+                top: `${120 + idx * 12}px`,
+                marginBottom: '40px',
+                zIndex: idx + 1
+              }}
+            >
+              <motion.div
+                className="service-card-stack"
+                whileHover={{ scale: 1.015 }}
+                transition={{ duration: 0.4 }}
+              >
+                <div className={`svc-card-inner acc-${svc.color}`}>
+                  <div className="svc-content">
+                    <span className="svc-cat">{svc.cat}</span>
+                    <h3 className="svc-title">{svc.title}</h3>
+                    <p className="svc-desc">{svc.desc}</p>
+                    <div className="svc-tags">
+                      {svc.tags.map(tag => <span key={tag} className="s-tag">{tag}</span>)}
+                    </div>
+                    <div className={`svc-link svc-link-${svc.color}`} onClick={() => window.location.href = '/services'}>
+                      Explore Solutions <ChevronRight size={18} />
+                    </div>
+                  </div>
+                  <div className="svc-visual">
+                    <img src={svc.img} alt={svc.title} />
+                    <div className="svc-glaze"></div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -549,14 +590,15 @@ const Services = () => {
   );
 };
 
+
 const TeamMember = ({ name, role, img, delay, onClick }) => {
   return (
-    <motion.div 
+    <motion.div
       className="team-card-enhanced"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay }}
+      transition={{ delay: delay * 0.08, duration: 0.6 }}
       onClick={onClick}
       style={{ cursor: 'pointer' }}
     >
@@ -565,10 +607,9 @@ const TeamMember = ({ name, role, img, delay, onClick }) => {
           <img src={img} alt={name} className="team-img" />
         </div>
         <div className="team-info">
-          <h3 className="team-name">{name}</h3>
           <span className="team-role-tag">{role}</span>
+          <h3 className="team-name">{name}</h3>
         </div>
-        <div className="team-card-border"></div>
       </div>
     </motion.div>
   );
@@ -578,14 +619,14 @@ const TeamModal = ({ member, onClose }) => {
   if (!member) return null;
 
   return (
-    <motion.div 
+    <motion.div
       className="team-modal-overlay"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
     >
-      <motion.div 
+      <motion.div
         className="team-modal-content"
         initial={{ scale: 0.9, y: 20, opacity: 0 }}
         animate={{ scale: 1, y: 0, opacity: 1 }}
@@ -593,24 +634,25 @@ const TeamModal = ({ member, onClose }) => {
         onClick={e => e.stopPropagation()}
       >
         <button className="modal-close" onClick={onClose}><X size={24} /></button>
-        
+
         <div className="modal-body">
           <div className="modal-image-wrap">
             <img src={member.img} alt={member.name} className="modal-img" />
-            <div className="modal-social">
-              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn"><Linkedin size={20} /></a>
-              <a href="#" className="m-social-btn"><Twitter size={20} /></a>
-              <a href="#" className="m-social-btn"><Mail size={20} /></a>
-            </div>
           </div>
-          
+
           <div className="modal-text">
             <div className="eyebrow amber no-line">TEAM MEMBER</div>
             <h2 className="modal-name">{member.name}</h2>
             <div className="modal-role">{member.role}</div>
             <div className="modal-divider"></div>
             <p className="modal-bio">{member.bio}</p>
-            
+
+            <div className="modal-social-inline">
+              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><Linkedin size={20} /></a>
+              <a href="#" className="m-social-btn twitter-btn"><Send size={20} /></a>
+              <a href="#" className="m-social-btn mail-btn"><Mail size={20} strokeWidth={2.5} /></a>
+            </div>
+
             <div className="modal-stats">
               <div className="m-stat">
                 <span className="m-stat-label">Expertise</span>
@@ -635,8 +677,15 @@ const Team = () => {
       name: "Prashant Rathi",
       role: "Co-Founder & CEO",
       img: ptImg,
-      bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textiles. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
+      bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants Technologies LLP, bridging traditional business values with modern technological needs.",
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
+    },
+    {
+      name: "Sapna Rathi",
+      role: "Co-Founder",
+      img: sapnaImg,
+      bio: "Specialist in operational governance and process architecture. Expert in ISO frameworks. Sapna ensures the operational excellence and quality standards that our enterprise clients depend on.",
+      linkedin: "https://www.linkedin.com/in/sapna-rathi-44928b3b/"
     },
     {
       name: "Anuradha Biswas",
@@ -653,13 +702,6 @@ const Team = () => {
       linkedin: "https://www.linkedin.com/in/abhik/"
     },
     {
-      name: "Sapna Rathi",
-      role: "Co-Founder",
-      img: sapnaImg,
-      bio: "Specialist in operational governance and process architecture. Expert in ISO frameworks. Sapna ensures the operational excellence and quality standards that our enterprise clients depend on.",
-      linkedin: "https://www.linkedin.com/in/sapna-rathi-44928b3b/"
-    },
-    {
       name: "Pankaj Rathi",
       role: "Overseas Operations",
       img: pankajImg,
@@ -667,26 +709,27 @@ const Team = () => {
       linkedin: "https://www.linkedin.com/in/pankajsureshrathi/"
     },
     {
-      name: "Saurabh Kulkarni",
-      role: "Tech Lead - Cyber Security",
-      img: saurabhImg,
-      bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.",
-      // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
-    }, {
-      name: "Prashant Bollu",
-      role: "...",
-      img: prashantBolluImg,
-      bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textiles. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
-      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
-    },
-    {
       name: "Arpita Kulkarni",
-      role: "...",
+      role: "Technology Leader - IT Product and Services",
       img: arpitaImg,
       bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.",
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
-    }
+    },
+    {
+      name: "Prashant Bollu",
+      role: "Technology Leader - IT Product and Services",
+      img: prashantBolluImg,
+      bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
+      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
+    },
 
+    {
+      name: "Saurabh Kulkarni",
+      role: "Technology Leader - Cyber Security",
+      img: saurabhImg,
+      bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.",
+      // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
+    }
 
   ];
 
@@ -701,10 +744,10 @@ const Team = () => {
         </div>
         <div className="team-grid-enhanced">
           {members.map((member, idx) => (
-            <TeamMember 
-              key={idx} 
-              {...member} 
-              delay={idx * 0.1} 
+            <TeamMember
+              key={idx}
+              {...member}
+              delay={idx}
               onClick={() => setSelectedMember(member)}
             />
           ))}
@@ -713,9 +756,9 @@ const Team = () => {
 
       <AnimatePresence>
         {selectedMember && (
-          <TeamModal 
-            member={selectedMember} 
-            onClose={() => setSelectedMember(null)} 
+          <TeamModal
+            member={selectedMember}
+            onClose={() => setSelectedMember(null)}
           />
         )}
       </AnimatePresence>
@@ -725,7 +768,7 @@ const Team = () => {
 
 const Insights = () => {
   const navigate = useNavigate();
-  
+
   return (
     <section className="insights-section section-padding" id="insights">
       <div className="container">
@@ -735,7 +778,13 @@ const Insights = () => {
           <h2 className="h2-title">Thinking at the Intersection of <em>Industry</em></h2>
           <p className="services-sub">Deep dives into the technologies shaping the future of global enterprise.</p>
         </div>
-        <div className="insights-grid">
+        <motion.div
+          className="insights-grid"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ staggerChildren: 0.18 }}
+        >
           {articles.map((article, idx) => (
             <MotionLink
               key={idx}
@@ -763,7 +812,7 @@ const Insights = () => {
               </div>
             </MotionLink>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -801,7 +850,7 @@ const Home = () => {
         <SectionReveal><Services /></SectionReveal>
         <SectionReveal><Team /></SectionReveal>
         <SectionReveal><Insights /></SectionReveal>
-        
+
         {/* Unified CTA */}
         <SectionReveal>
           <section className="cta-merged">

@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Clock, User, Calendar, Linkedin, Twitter, Link as LinkIcon } from 'lucide-react';
+import { ArrowLeft, Clock, User, Calendar, Globe, Send, Link as LinkIcon } from 'lucide-react';
 import { articles } from '../data/articles';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import '../styles/blog.css';
 
 const ArticleDetail = () => {
   const { id } = useParams();
@@ -118,8 +119,8 @@ const ArticleDetail = () => {
                 <div className="share-box">
                   <span className="share-label">Share this insight</span>
                   <div className="share-actions">
-                    <button className="share-btn" onClick={shareOnLinkedIn}><Linkedin size={18} /></button>
-                    <button className="share-btn" onClick={shareOnTwitter}><Twitter size={18} /></button>
+                    <button className="share-btn" onClick={shareOnLinkedIn}><Globe size={18} /></button>
+                    <button className="share-btn" onClick={shareOnTwitter}><Send size={18} /></button>
                     <button className="share-btn" onClick={copyLink}><LinkIcon size={18} /></button>
                   </div>
                 </div>
