@@ -30,7 +30,6 @@ import '../styles/team.css';
 
 const MotionLink = motion(Link);
 
-
 // Import images
 import logo from '../assets/images/logo1.svg';
 import prashant1 from '../assets/images/prashant1.png'
@@ -189,14 +188,6 @@ const Hero = () => {
               </motion.div>
             </motion.div>
 
-            <motion.div
-              className="legacy-badge"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 1 }}
-              style={{ right: '5%', bottom: '10%', left: 'auto' }}
-            >
-            </motion.div>
           </motion.div>
         </div>
       </div>
@@ -522,7 +513,7 @@ const Services = () => {
       cat: "BFSI",
       tags: ["KYC", "Compliance", "Core Banking"],
       color: "blue",
-      img: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1000&q=80"
+      img: "https://www.mindinventory.com/blog/wp-content/uploads/2024/04/digital-transformation-banking.webp"
     },
     {
       title: "Industrial Technology for Energy Operations",
@@ -530,7 +521,7 @@ const Services = () => {
       cat: "OIL & GAS",
       tags: ["IIoT", "Maintenance", "SCADA"],
       color: "amber",
-      img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1000&q=80"
+      img: "https://tse2.mm.bing.net/th/id/OIP.nlJXKjXI9gWDzqlmOXUA9wHaEK?pid=Api&P=0&h=220"
     },
     {
       title: "Compliance-First Technology for Pharma",
@@ -538,7 +529,7 @@ const Services = () => {
       cat: "PHARMACEUTICALS",
       tags: ["GMP", "FDA", "Serialization"],
       color: "emerald",
-      img: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1000&q=80"
+      img: "https://thetechintel.com/wp-content/uploads/2025/08/Article-31-Overcoming-Pharmaceutical-Industry-Challenges-with-SAP-Business-One_-A-Guide-to-Compliance-and-Cost-Efficiency.jpg"
     }
   ];
 

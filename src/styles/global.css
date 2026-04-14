@@ -55,14 +55,6 @@ html {
   scroll-behavior: smooth;
 }
 
-/* body {
-  font-family: 'DM Sans', sans-serif;
-  color: var(--color-text-primary);
-  background: var(--color-off-white);
-  line-height: 1.7;
-  overflow-x: hidden;
-} */
-
 body {
   font-family: 'Ubuntu Sans', 'DM Sans', sans-serif;
   color: var(--color-text-primary);
@@ -71,6 +63,11 @@ body {
   overflow-x: hidden;
 }
 
+*:not(code):not(pre):not(.mono) {
+  font-family: 'Ubuntu Sans', 'DM Sans', sans-serif;
+}
+
+/* Ensure serif fallbacks never render as Times New Roman. */
 *:not(code):not(pre):not(.mono) {
   font-family: 'Ubuntu Sans', 'DM Sans', sans-serif;
 }
@@ -807,7 +804,7 @@ body.no-scroll {
   margin-top: -20px;
   text-align: center;
   color: rgba(255, 255, 255, 0.95);
-  background: rgba(8, 14, 28, 0.4);
+  background: rgba(8, 14, 28, 0.12);
   padding: 10px 20px;
   border-radius: 20px;
   backdrop-filter: blur(4px);
@@ -825,6 +822,7 @@ body.no-scroll {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(16px, 2.2vw, 22px);
   color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
 }
 
 .s-amber {
@@ -835,6 +833,10 @@ body.no-scroll {
   background-size: 200% 100%;
   animation: shine 3s linear infinite;
   font-weight: 700;
+}
+
+.slogan-values {
+  white-space: nowrap;
 }
 
 @keyframes shine {

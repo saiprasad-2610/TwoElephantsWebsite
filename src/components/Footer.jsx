@@ -53,7 +53,7 @@ const Footer = () => {
             <h4 className="f-col-title">Reach Us</h4>
             <p><MapPin size={16} /> 30/70, Vivekanand House, Padma Nagar, Akkalkot Road, Solapur - 413005</p>
             <p><Mail size={16} /> <a href="mailto:support@twoelephants.org" style={{ color: 'inherit' }}>support@twoelephants.org</a></p>
-            <p><Phone size={16} /> <a href="tel:+919175484351" style={{ color: 'inherit' }}>+91 9175484351</a> &nbsp;|&nbsp; <a href="tel:+917249570505" style={{ color: 'inherit' }}>7249570505</a></p>
+            <p><Phone size={16} /> <a href="tel:+917507080000" style={{ color: 'inherit' }}>+91 7507080000</a> &nbsp;|&nbsp; <a href="tel:+917249570505" style={{ color: 'inherit' }}>9405236989</a></p>
             <div className="f-response">
               <Clock size={12} /> Response within 24 hours.
             </div>

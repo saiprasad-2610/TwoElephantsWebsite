@@ -286,6 +286,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import emailjs from '@emailjs/browser';
 import {
   Mail,
   Phone,
@@ -299,7 +300,8 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/contact.css';
 
-const API_URL = 'http://localhost:8000/api/contact/'; // Change to your production URL later
+const CONTACT_RECEIVER_EMAIL =
+  import.meta.env.VITE_CONTACT_RECEIVER_EMAIL || 'support@twoelephants.tech';
 
 const Contact = () => {
   const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success, error
@@ -324,35 +326,68 @@ const Contact = () => {
     setFormError('');
 
     try {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-      const result = await response.json();
-
-      if (response.ok) {
-        setFormStatus('success');
-        
-        // Reset form after successful submission
-        setFormData({
-          fname: '',
-          lname: '',
-          email: '',
-          location: '',
-          interest: '',
-          message: ''
-        });
-      } else {
-        throw new Error(result.message || 'Failed to send message');
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error('Missing EmailJS configuration');
       }
+
+      const fullName = `${formData.fname} ${formData.lname}`.trim();
+      const submittedAt = new Date().toLocaleString('en-IN', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+        hour12: true,
+      });
+      const interest = formData.interest || 'General inquiry';
+      const safeMessage = formData.message.trim();
+
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          to_email: CONTACT_RECEIVER_EMAIL,
+          reply_to: formData.email,
+          subject: `New Contact Inquiry - ${interest}`,
+          from_name: fullName,
+          from_email: formData.email,
+          name: fullName,
+          email: formData.email,
+          location: formData.location,
+          interest,
+          message: safeMessage,
+          time: submittedAt,
+          title: `New Contact Inquiry - ${interest}`,
+          company_name: 'Two Elephants Website',
+          submitted_at: submittedAt,
+          summary_text: [
+            `New inquiry from ${fullName}`,
+            `Email: ${formData.email}`,
+            `Location: ${formData.location}`,
+            `Interest: ${interest}`,
+            `Submitted: ${submittedAt}`,
+            '',
+            'Message:',
+            safeMessage,
+          ].join('\n'),
+        },
+        publicKey
+      );
+
+      setFormStatus('success');
+      setFormData({
+        fname: '',
+        lname: '',
+        email: '',
+        location: '',
+        interest: '',
+        message: ''
+      });
     } catch (error) {
       console.error('Submission error:', error);
       setFormStatus('error');
-      setFormError('Unable to send your message. Please try again or contact us directly.');
+      setFormError('Message could not be sent. Please try again.');
     }
   };
 
