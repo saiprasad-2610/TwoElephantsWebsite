@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   Linkedin,
-  Send,
+  Facebook,
   MapPin,
   Mail,
   Phone,
@@ -28,7 +28,7 @@ const Footer = () => {
             <p className="f-desc">Technology grounded in 65 years of industrial wisdom. Built in Solapur.</p>
             <div className="social-row">
               <a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" className="social-btn" aria-label="LinkedIn"><Linkedin size={18} /></a>
-              <a href="#" className="social-btn" aria-label="Telegram"><Send size={18} /></a>
+              <a href="#" className="social-btn" aria-label="Facebook"><Facebook size={18} /></a>
               <a href="https://www.instagram.com/twoelephantstechnologiesllp?igsh=MWw5b2psZHJhMGJ4cA%3D%3D&utm_source=qr" className="social-btn" aria-label="Instagram"><Instagram size={18} /></a>
             </div>
           </div>

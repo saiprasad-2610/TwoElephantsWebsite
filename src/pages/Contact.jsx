@@ -392,7 +392,7 @@ const Contact = () => {
                     <div className="cc-body">
                       <div className="cc-label">Email</div>
                       <div className="cc-value">
-                        <a href="mailto:support@twoelephants.tech">support@twoelephants.tech</a>
+                        <a href="mailto:support@twoelephants.tech">support@twoelephants.org</a>
                       </div>
                       <div className="cc-sub">Response within 24 business hours</div>
                     </div>
@@ -414,7 +414,8 @@ const Contact = () => {
                       <div className="cc-value">
                         <a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" 
                            target="_blank" rel="noreferrer">
-                          two-elephants-technologies-llp
+                          {/* twotechnologies-lltechnologies-llp */}
+                          Two Elephants Technologies LLP
                         </a>
                       </div>
                       <div className="cc-sub">Follow us for updates</div>

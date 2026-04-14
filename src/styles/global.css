@@ -55,20 +55,39 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
+/* body {
   font-family: 'DM Sans', sans-serif;
+  color: var(--color-text-primary);
+  background: var(--color-off-white);
+  line-height: 1.7;
+  overflow-x: hidden;
+} */
+
+body {
+  font-family: 'Ubuntu Sans', 'DM Sans', sans-serif;
   color: var(--color-text-primary);
   background: var(--color-off-white);
   line-height: 1.7;
   overflow-x: hidden;
 }
 
+*:not(code):not(pre):not(.mono) {
+  font-family: 'Ubuntu Sans', 'DM Sans', sans-serif;
+}
+
 h1,
 h2,
 h3,
 .serif {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Ubuntu Sans', 'DM Sans', sans-serif;
 }
+
+/* h1,
+h2,
+h3,
+.serif {
+  font-family: 'Cormorant Garamond', serif;
+} */
 
 .mono {
   font-family: 'JetBrains Mono', monospace;
@@ -125,7 +144,7 @@ img {
 }
 
 .eyebrow.amber {
-  color:  var(--color-blue-glow);
+  color: var(--color-blue-glow);
   font-size: 20px;
 }
 
@@ -1541,7 +1560,7 @@ body.no-scroll {
 }
 
 .services-section {
-  padding-top: clamp(20px, 6vw, 20px);
+  padding-top: 0px;
 }
 
 .services-header {
@@ -1580,6 +1599,10 @@ body.no-scroll {
   gap: 40px;
 }
 
+.service-detail-card-wrap {
+  height: 100%;
+}
+
 .service-detail-card {
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(15, 23, 42, 0.08);
@@ -1587,6 +1610,9 @@ body.no-scroll {
   padding: 34px;
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .service-detail-card:hover {
@@ -1650,6 +1676,8 @@ body.no-scroll {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+  flex: 1;
+  align-content: start;
 }
 
 .service-detail-list li {
@@ -1674,6 +1702,7 @@ body.no-scroll {
   flex-wrap: wrap;
   gap: 12px;
   align-items: center;
+  margin-top: auto;
 }
 
 .service-detail-footer span {
@@ -1747,7 +1776,8 @@ body.no-scroll {
   overflow: hidden;
   box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.15), 0 30px 85px rgba(15, 23, 42, 0.2);
   transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  background: #080E1C; /* Dark base for contrast */
+  background: #080E1C;
+  /* Dark base for contrast */
   cursor: pointer;
 }
 
@@ -1780,7 +1810,7 @@ body.no-scroll {
   justify-content: center;
   gap: 20px;
   z-index: 2;
-  border-right: 1px solid rgba(255,255,255,0.06);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .svc-visual {
@@ -1805,7 +1835,7 @@ body.no-scroll {
 .svc-glaze {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(8,14,28,0.95) 0%, transparent 60%);
+  background: linear-gradient(90deg, rgba(8, 14, 28, 0.95) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -1997,7 +2027,7 @@ body.no-scroll {
 footer {
   background: var(--color-dark);
   color: #fff;
-  padding: 88px 0 32px;
+  padding: 50px 0 32px;
   position: relative;
 }
 
@@ -3051,22 +3081,22 @@ canvas {
   gap: 16px;
   padding: 20px 24px;
   border-radius: 16px;
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   background: #fff;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
 }
 
 .svc-tab-item:hover {
-  border-color: rgba(248,204,28,0.3);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  border-color: rgba(248, 204, 28, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .svc-tab-item.active {
   background: #080E1C;
   border-color: #080E1C;
-  box-shadow: 0 16px 40px rgba(8,14,28,0.25);
+  box-shadow: 0 16px 40px rgba(8, 14, 28, 0.25);
 }
 
 .svc-tab-icon {
@@ -3117,8 +3147,8 @@ canvas {
   border-radius: 24px;
   overflow: hidden;
   background: #fff;
-  border: 1px solid rgba(0,0,0,0.06);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
 }
 
 .svc-panel-img-wrap {
@@ -3141,7 +3171,7 @@ canvas {
 .svc-panel-img-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, transparent 40%, rgba(8,14,28,0.7) 100%);
+  background: linear-gradient(to bottom, transparent 40%, rgba(8, 14, 28, 0.7) 100%);
 }
 
 .svc-panel-badge {
@@ -3156,9 +3186,20 @@ canvas {
   text-transform: uppercase;
 }
 
-.badge-blue   { background: rgba(59,130,246,0.15); color: #3b82f6; }
-.badge-amber  { background: rgba(245,158,11,0.15);  color: #d97706; }
-.badge-emerald{ background: rgba(16,185,129,0.15);  color: #059669; }
+.badge-blue {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.badge-amber {
+  background: rgba(245, 158, 11, 0.15);
+  color: #d97706;
+}
+
+.badge-emerald {
+  background: rgba(16, 185, 129, 0.15);
+  color: #059669;
+}
 
 .svc-panel-body {
   padding: 36px;
@@ -3188,9 +3229,9 @@ canvas {
 }
 
 .svc-panel-tags .s-tag {
-  background: rgba(8,14,28,0.05);
+  background: rgba(8, 14, 28, 0.05);
   color: #080E1C;
-  border: 1px solid rgba(0,0,0,0.08);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 20px;
 }
 
@@ -3213,7 +3254,7 @@ canvas {
   background: #f8cc1c;
   color: #080E1C;
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(248,204,28,0.3);
+  box-shadow: 0 12px 28px rgba(248, 204, 28, 0.3);
 }
 
 @media (max-width: 900px) {
@@ -3226,9 +3267,9 @@ canvas {
    COMPACT HORIZONTAL TIMELINE
 ------------------------------------------- */
 .htl-wrap {
-  margin-top: 80px;
-  padding-top: 60px;
-  border-top: 1px solid rgba(0,0,0,0.07);
+  margin-top: 10px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
 }
 
 .htl-header {
@@ -3255,7 +3296,8 @@ canvas {
 /* Animated fill line running through all dots */
 .htl-line {
   position: absolute;
-  top: 22px; /* vertically center on dots */
+  top: 22px;
+  /* vertically center on dots */
   left: 2%;
   right: 2%;
   height: 2px;
@@ -3293,11 +3335,11 @@ canvas {
 /* Card itself */
 .htl-card {
   background: #fff;
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 20px;
   padding: 28px 24px;
   width: 100%;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.4s ease, transform 0.4s ease;
   position: relative;
   overflow: hidden;
@@ -3306,7 +3348,9 @@ canvas {
 .htl-card::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 3px;
   background: var(--color-blue-core);
   opacity: 0;
@@ -3378,7 +3422,7 @@ canvas {
 .cml-wrap {
   margin-top: 80px;
   padding-top: 60px;
-  border-top: 1px solid rgba(0,0,0,0.07);
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
 }
 
 .cml-header {
@@ -3417,7 +3461,7 @@ canvas {
   bottom: 0;
   width: 2px;
   transform: translateX(-50%);
-  background: rgba(0,0,0,0.06);
+  background: rgba(0, 0, 0, 0.06);
   z-index: 0;
 }
 
@@ -3455,7 +3499,7 @@ canvas {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(60px, 8vw, 100px);
   font-weight: 900;
-  color: rgba(0,0,0,0.04);
+  color: rgba(0, 0, 0, 0.04);
   pointer-events: none;
   top: 50%;
   transform: translateY(-50%);
@@ -3465,20 +3509,25 @@ canvas {
   white-space: nowrap;
 }
 
-.cml-left .cml-ghost-year  { right: calc(50% - 20px); }
-.cml-right .cml-ghost-year { left: calc(50% - 20px); }
+.cml-left .cml-ghost-year {
+  right: calc(50% - 20px);
+}
+
+.cml-right .cml-ghost-year {
+  left: calc(50% - 20px);
+}
 
 /* The card */
 .cml-card {
   position: relative;
   background: #fff;
-  border: 1px solid rgba(0,0,0,0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 20px;
   overflow: hidden;
   padding: 28px 28px 24px;
   width: 100%;
   max-width: 380px;
-  box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
   z-index: 2;
   transition: box-shadow 0.4s ease, transform 0.4s ease;
 }
@@ -3486,7 +3535,9 @@ canvas {
 /* Coloured accent bar at top of card */
 .cml-accent-bar {
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 3px;
 }
 
@@ -3554,13 +3605,29 @@ canvas {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .cml-spine { display: none; }
-  .cml-left, .cml-right {
+  .cml-spine {
+    display: none;
+  }
+
+  .cml-left,
+  .cml-right {
     padding: 0;
     justify-content: center;
   }
-  .cml-card { max-width: 100%; }
-  .cml-ghost-year { display: none; }
-  .cml-node { display: none; }
-  .cml-list { gap: 16px; }
+
+  .cml-card {
+    max-width: 100%;
+  }
+
+  .cml-ghost-year {
+    display: none;
+  }
+
+  .cml-node {
+    display: none;
+  }
+
+  .cml-list {
+    gap: 16px;
+  }
 }

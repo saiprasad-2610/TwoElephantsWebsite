@@ -137,6 +137,7 @@ const ServiceCard3D = ({ service, idx }) => {
 
   return (
     <motion.div
+      className="service-detail-card-wrap"
       style={{ perspective: 1200 }}
       initial={{ opacity: 0, scale: 0.9, y: 50 }}
       whileInView={{ opacity: 1, scale: 1, y: 0 }}

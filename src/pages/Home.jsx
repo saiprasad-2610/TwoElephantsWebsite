@@ -1,9 +1,9 @@
-import React, { useEffect, useState, Suspense, lazy } from 'react';
+import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight,
   ExternalLink,
-  Globe,
+  Linkedin,
   Send,
   Mail,
   MapPin,
@@ -184,7 +184,7 @@ const Hero = () => {
               >
                 <div className="slogan-top">TWO ELEPHANTS TECHNOLOGIES LLP</div>
                 <div className="slogan-bottom">
-                  One Promise: <span className="s-amber">Strength</span> <span className="slogan-bottom">Care</span> <span className="s-amber">Honesty</span>
+                  One Promise: <span className="s-amber">Strength</span> Care <span className="s-amber">Honesty</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -246,8 +246,13 @@ const Counter = ({ value, label }) => {
 };
 
 const Story = () => {
-  const { scrollYProgress } = useScroll();
-  const timelineScale = useSpring(useTransform(scrollYProgress, [0.15, 0.45], [0, 1]), {
+  const timelineRef = useRef(null);
+  const [hoveredMilestone, setHoveredMilestone] = useState(null);
+  const { scrollYProgress: timelineScrollProgress } = useScroll({
+    target: timelineRef,
+    offset: ['start 80%', 'end 35%'],
+  });
+  const timelineScale = useSpring(useTransform(timelineScrollProgress, [0, 1], [0, 1]), {
     stiffness: 100, damping: 30, restDelta: 0.001
   });
 
@@ -277,6 +282,13 @@ const Story = () => {
       glow: "rgba(124,58,237,0.3)"
     }
   ];
+
+  const getMilestoneLineWidth = (index) => {
+    const trackStart = 2;
+    const trackSpan = 96;
+    const progressPoint = (index + 0.5) / milestones.length;
+    return `${trackStart + trackSpan * progressPoint}%`;
+  };
 
   return (
     <section className="story-section section-padding" id="story">
@@ -395,20 +407,29 @@ const Story = () => {
             <h3>From textile heritage to enterprise-scale technology.</h3>
           </div>
 
-          <div className="htl-track">
+          <div
+            className="htl-track"
+            ref={timelineRef}
+            onMouseLeave={() => setHoveredMilestone(null)}
+          >
             {/* Animated progress line */}
             <motion.div
               className="htl-line"
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
+              style={hoveredMilestone === null ? { scaleX: timelineScale } : undefined}
+              animate={
+                hoveredMilestone !== null
+                  ? { width: getMilestoneLineWidth(hoveredMilestone), scaleX: 1 }
+                  : undefined
+              }
+              transition={{ type: 'spring', stiffness: 260, damping: 28 }}
             />
 
             {milestones.map((m, i) => (
               <motion.div
                 key={i}
                 className="htl-item"
+                onMouseEnter={() => setHoveredMilestone(i)}
+                onFocus={() => setHoveredMilestone(i)}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -635,7 +656,7 @@ const TeamModal = ({ member, onClose }) => {
             <p className="modal-bio">{member.bio}</p>
 
             <div className="modal-social-inline">
-              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><Globe size={20} /></a>
+              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><Linkedin size={20} /></a>
               <a href="#" className="m-social-btn twitter-btn"><Send size={20} /></a>
               <a href="#" className="m-social-btn mail-btn"><Mail size={20} strokeWidth={2.5} /></a>
             </div>
