@@ -125,12 +125,12 @@ img {
 }
 
 .eyebrow.amber {
-  color: var(--accent-amber);
+  color:  var(--color-blue-glow);
   font-size: 20px;
 }
 
 .eyebrow.amber::before {
-  background: var(--accent-amber);
+  background: var(--color-blue-glow);
 }
 
 .eyebrow.emerald {
