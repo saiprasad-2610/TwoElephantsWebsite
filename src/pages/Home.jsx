@@ -697,14 +697,14 @@ const Team = () => {
     },
     {
       name: "Arpita Kulkarni",
-      role: "...",
+      role: "Technology Leader - IT Product and Services",
       img: arpitaImg,
       bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.",
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
     },
     {
       name: "Prashant Bollu",
-      role: "...",
+      role: "Technology Leader - IT Product and Services",
       img: prashantBolluImg,
       bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
@@ -712,7 +712,7 @@ const Team = () => {
 
     {
       name: "Saurabh Kulkarni",
-      role: "Tech Lead - Cyber Security",
+      role: "Technology Leader - Cyber Security",
       img: saurabhImg,
       bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.",
       // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
