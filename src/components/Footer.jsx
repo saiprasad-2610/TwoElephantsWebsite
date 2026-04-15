@@ -111,7 +111,8 @@ const Footer = () => {
               </div>
             </div>
 
-            <p className="f-tagline">Strength. Care. Honesty.</p>
+            {/* <p className="f-tagline">Strength. Care. Honesty.</p> */}
+            <br></br>
             <p className="f-desc">
               Technology grounded in 65 years of industrial wisdom. Built in Solapur.
             </p>

@@ -450,7 +450,7 @@
 
 @media (max-width: 900px) {
   .hero-grid-layout { grid-template-columns: 1fr; text-align: center; }
-  .hero-text p { margin: 0 auto 40px; }
+  .hero-text p { margin: 0 auto 40px ;  }
   .hero-bento-grid { display: none; }
   .openings-split-layout { grid-template-columns: 1fr; }
   .os-left { position: static; }

@@ -3,6 +3,8 @@ import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import ParticleBackground from '../components/ParticleBackground';
+import '../styles/tailwind.css';
 
 
 const services = [
@@ -17,7 +19,6 @@ const services = [
       'Data-driven planning built on 65 years of industrial expertise'
     ],
     tags: ['ERP', 'Manufacturing', 'Automation', 'BFSI'],
-    color: 'purple'
   },
   {
     cat: 'Cybersecurity & Compliance',
@@ -30,7 +31,6 @@ const services = [
       'Secure architecture reviews and incident readiness'
     ],
     tags: ['Security', 'VAPT', 'Compliance', 'SOC'],
-    color: 'emerald'
   },
   {
     cat: 'FinTech & Banking Solutions',
@@ -43,7 +43,6 @@ const services = [
       'Secure, auditable transaction and reporting systems'
     ],
     tags: ['FinTech', 'Banking', 'NBFC', 'Payments'],
-    color: 'cyan'
   },
   {
     cat: 'AI / ML & Intelligent Automation',
@@ -56,7 +55,6 @@ const services = [
       'Operational intelligence dashboards and insights'
     ],
     tags: ['AI', 'ML', 'RPA', 'Automation'],
-    color: 'cyan'
   },
   {
     cat: 'Business Process Management (BPM)',
@@ -69,7 +67,6 @@ const services = [
       'BPM tooling integration and governance frameworks'
     ],
     tags: ['BPM', 'Workflow', 'Automation', 'Governance'],
-    color: 'amber'
   },
   {
     cat: 'Digital Transformation',
@@ -82,7 +79,6 @@ const services = [
       'Digital experience platforms for internal and external users'
     ],
     tags: ['Automation', 'Cloud', 'Workflow', 'Modernization'],
-    color: 'blue'
   },
   {
     cat: 'Cloud & Data Engineering',
@@ -95,7 +91,6 @@ const services = [
       'Analytics and BI platforms for enterprise decision-making'
     ],
     tags: ['Cloud', 'Data', 'Analytics', 'Pipelines'],
-    color: 'teal'
   },
   {
     cat: 'Product Engineering',
@@ -108,7 +103,6 @@ const services = [
       'Quality-driven release and deployment practices'
     ],
     tags: ['UX', 'APIs', 'Microservices', 'Quality'],
-    color: 'amber'
   },
 ];
 
@@ -152,7 +146,7 @@ const ServiceCard3D = ({ service, idx }) => {
         whileHover={{ scale: 1.03 }}
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
       >
-        <div className={`service-detail-badge badge-${service.color}`}>{service.cat}</div>
+        <div className="service-detail-badge badge-blue">{service.cat}</div>
         <h2>{service.title}</h2>
         <p className="body-text">{service.desc}</p>
         <ul className="service-detail-list">
@@ -182,29 +176,33 @@ const Services = () => {
     <div className="page-wrapper">
       <Navbar />
       <main>
-        <section className="services-page-hero section-padding">
-          <div className="container" style={{ position: 'relative', zIndex: 10 }}>
-            <motion.div 
-              className="services-header"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="eyebrow dark">SOFTWARE SERVICES</div>
-              <div className="section-rule visible"></div>
+        <section className="services-page-hero">
+          <div className="services-hero-bg" />
+          <div className="container relative z-10">
+            <div className="services-header" style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <motion.div 
+                className="eyebrow amber no-line"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                style={{ zIndex: 10, justifyContent: 'center' }}
+              >
+                SOFTWARE SERVICES
+              </motion.div>
               <motion.h1 
-                className="h2-title"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ color: '#fff', fontSize: 'clamp(40px, 6vw, 72px)', marginBottom: '24px' }}
               >
                 Our Services And Works
               </motion.h1>
               <motion.p 
                 className="services-sub"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
+                style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: 'clamp(18px, 2vw, 22px)', margin: '0 auto 32px' }}
               >
                 Modernizing processes and building scalable digital systems for enterprise, industrial, and pharma operations.
               </motion.p>
@@ -214,40 +212,12 @@ const Services = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
-                <Link to="/contact" className="btn btn-primary">Talk to an expert</Link>
+                <Link to="/contact" className="btn btn-yellow">Talk to an expert</Link>
               </motion.div>
-            </motion.div>
-            
-            {/* Animated BG elements for Hero */}
-            <motion.div 
-              className="c-blob"
-              animate={{ 
-                x: [0, 50, 0], 
-                y: [0, 30, 0],
-                rotate: [0, 10, -10, 0]
-              }}
-              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-              style={{
-                position: 'absolute', top: '-100px', right: '-10%', 
-                width: '400px', height: '400px', 
-                background: 'radial-gradient(circle, rgba(96, 165, 250, 0.15), transparent 60%)', 
-                zIndex: -1 
-              }}
-            />
-            <motion.div 
-              className="c-blob"
-              animate={{ 
-                x: [0, -50, 0], 
-                y: [0, -40, 0] 
-              }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              style={{
-                position: 'absolute', bottom: '-50px', left: '-10%', 
-                width: '350px', height: '350px', 
-                background: 'radial-gradient(circle, rgba(248, 204, 28, 0.1), transparent 60%)', 
-                zIndex: -1 
-              }}
-            />
+            </div>
+          </div>
+          <div className="absolute inset-0 pointer-events-none opacity-30">
+            <ParticleBackground />
           </div>
         </section>
 

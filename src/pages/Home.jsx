@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import {
   ArrowRight,
@@ -16,7 +16,8 @@ import {
   Database,
   Shield,
   Zap,
-  Clock
+  Clock,
+  X
 } from 'lucide-react';
 import { FaLinkedin } from "react-icons/fa";
 import { useNavigate, Link } from 'react-router-dom';
@@ -476,40 +477,106 @@ const Services = () => {
 
 
 const TeamMember = ({ name, role, img, bio, linkedin, delay }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Prevent scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [isOpen]);
+
   return (
-    <motion.div
-      className="team-card-horizontal"
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: delay * 0.1, duration: 0.6 }}
-    >
-      <div className="team-card-aside">
-        <div className="circle-image-container">
-          <img src={img} alt={name} className="circle-img" loading="lazy" />
-          <div className="circle-border-accent"></div>
-        </div>
-      </div>
-      <div className="team-card-main">
-        <div className="team-card-header">
-          <div>
-            <h3 className="circle-name">{name}</h3>
-            <p className="circle-role">{role}</p>
+    <>
+      <motion.div
+        className="team-card-horizontal"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: delay * 0.1, duration: 0.6 }}
+        onClick={() => setIsOpen(true)}
+        style={{ cursor: 'pointer' }}
+      >
+        <div className="team-card-aside">
+          <div className="circle-image-container">
+            <img src={img} alt={name} className="circle-img" loading="lazy" />
+            <div className="circle-border-accent"></div>
           </div>
-          {linkedin && (
-            <a href={linkedin} target="_blank" rel="noopener noreferrer" className="circle-linkedin-link">
-              <FaLinkedin size={20} />
-            </a>
-          )}
         </div>
-        <div className="circle-divider"></div>
-        <p className="circle-bio">{bio}</p>
-      </div>
-    </motion.div>
+        <div className="team-card-main">
+          <div className="team-card-header">
+            <div>
+              <h3 className="circle-name">{name}</h3>
+              <p className="circle-role">{role}</p>
+            </div>
+            {linkedin && (
+              <a 
+                href={linkedin} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="circle-linkedin-link"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <FaLinkedin size={20} />
+              </a>
+            )}
+          </div>
+          <div className="circle-divider"></div>
+          <p className="click-for-more">Click to read more <ArrowRight size={12} /></p>
+        </div>
+      </motion.div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <div className="team-modal-overlay" onClick={() => setIsOpen(false)}>
+            <motion.div 
+              className="team-modal-content"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button className="modal-close-btn" onClick={() => setIsOpen(false)}>
+                <X size={24} />
+              </button>
+              
+              <div className="modal-body">
+                <div className="modal-aside">
+                  <div className="modal-img-container">
+                    <img src={img} alt={name} className="modal-img" />
+                  </div>
+                  {linkedin && (
+                    <a href={linkedin} target="_blank" rel="noopener noreferrer" className="modal-linkedin">
+                      <FaLinkedin size={24} /> <span>LinkedIn Profile</span>
+                    </a>
+                  )}
+                </div>
+                
+                <div className="modal-main">
+                  <h2 className="modal-name">{name}</h2>
+                  <p className="modal-role">{role}</p>
+                  <div className="modal-divider"></div>
+                  <div className="modal-bio">
+                    {bio.split('\n').map((paragraph, i) => (
+                      <p key={i}>{paragraph}</p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
 const Team = () => {
+  const [showAll, setShowAll] = useState(false);
+  
   const members = [
     {
       name: "Prashant Rathi",
@@ -526,12 +593,13 @@ const Team = () => {
       linkedin: "https://www.linkedin.com/in/sapna-rathi-44928b3b/"
     },
     {
-      name: "Pankaj Rathi",
-      role: "Overseas Operations",
-      img: pankajImg,
-      bio: "Based in Houston, Texas. Leads global shipping and logistics for enterprise clients. Pankaj manages our international presence and ensures seamless coordination for our global projects.",
-      linkedin: "https://www.linkedin.com/in/pankajsureshrathi/"
+      name: "Abhik Biswas",
+      role: "Technology Advisor",
+      img: abhiImg,
+      bio: "30+ years of engineering leadership at TCS, Cisco, and VeriFone. Expert in large-scale systems. Abhik provides technical guidance for complex enterprise architectures and innovative software solutions.",
+      linkedin: "https://www.linkedin.com/in/abhik/"
     },
+    
     {
       name: "Anuradha Biswas",
       role: "Advisor & Mentor",
@@ -539,30 +607,31 @@ const Team = () => {
       bio: "20+ years of leadership at Infosys, VeriFone, and CA Technologies. Architect of global delivery units. Anuradha brings deep industry knowledge in building and scaling high-performance engineering teams.",
       linkedin: "https://www.linkedin.com/in/anubiswas/"
     },
+    
     {
-      name: "Abhik Biswas",
-      role: "Technology Advisor",
-      img: abhiImg,
-      bio: "30+ years of engineering leadership at TCS, Cisco, and VeriFone. Expert in large-scale systems. Abhik provides technical guidance for complex enterprise architectures and innovative software solutions.",
-      linkedin: "https://www.linkedin.com/in/abhik/"
+      name: "Pankaj Rathi",
+      role: "Overseas Operations",
+      img: pankajImg,
+      bio: "Based in Houston, Texas. Leads global shipping and logistics for enterprise clients. Pankaj manages our international presence and ensures seamless coordination for our global projects.",
+      linkedin: "https://www.linkedin.com/in/pankajsureshrathi/"
     },
     {
       name: "Arpita Kulkarni",
-      role: "Tech Leader - Products & Services",
+      role: "Technology Leader - Products & Services",
       img: arpitaImg,
       bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.",
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
     },
     {
       name: "Prashant Bollu",
-      role: "Tech Leader - Products & Services",
+      role: "Technology Leader - Products & Services",
       img: prashantBolluImg,
       bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
     },
     {
       name: "Saurabh Kulkarni",
-      role: "Tech Leader - Cyber Security",
+      role: "Technology Leader - Cyber Security",
       img: saurabhImg,
       bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.",
       linkedin: "https://www.linkedin.com/in/saurabh-kulkarni-249a5726/"
@@ -580,7 +649,7 @@ const Team = () => {
         </div>
 
         <div className="team-grid-enhanced">
-          {members.map((member, idx) => (
+          {(showAll ? members : members.slice(0, 4)).map((member, idx) => (
             <TeamMember
               key={idx}
               {...member}
@@ -588,6 +657,23 @@ const Team = () => {
             />
           ))}
         </div>
+
+        {members.length > 4 && (
+          <div className="team-view-more">
+            <button 
+              className="view-more-btn"
+              onClick={() => setShowAll(!showAll)}
+            >
+              {showAll ? "Show Less" : "View Full Team"}
+              <motion.span
+                animate={{ rotate: showAll ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronRight size={18} />
+              </motion.span>
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -696,7 +782,7 @@ const Home = () => {
         <SectionReveal><Insights articles={articles} /></SectionReveal>
 
         {/* Unified CTA */}
-        <SectionReveal>
+        {/* <SectionReveal>
           <section className="cta-merged">
             <div className="cta-merged-bg" />
             <div className="container">
@@ -716,7 +802,7 @@ const Home = () => {
               </div>
             </div>
           </section>
-        </SectionReveal>
+        </SectionReveal> */}
       </main>
       <Footer />
     </div>

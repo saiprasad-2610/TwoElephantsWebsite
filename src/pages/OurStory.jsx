@@ -4,6 +4,7 @@ import { ArrowRight, Zap, Shield, Heart, Award, Building2, Users, Globe } from '
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import ParticleBackground from '../components/ParticleBackground';
 import loomsImg from '../assets/images/looms.jpg';
 import labsImg from '../assets/images/labs.jpg';
 import '../styles/OurStory.css';
@@ -25,35 +26,74 @@ const OurStory = () => {
   const milestones = [
     {
       year: "1960",
-      title: "Pushpa Textile Founded",
-      desc: "The iconic 'Do Haathi' brand is born in Solapur, setting quality standards that would endure generations.",
+      title: "The Beginning",
+      desc: "Pushpa Textiles founded in Solapur under Mr. Prashant Rathi — weaving values of trust and craftsmanship.",
       icon: "🏭",
       color: "#4da8ff",
       glow: "rgba(77,168,255,0.3)"
     },
     {
-      year: "2010s",
-      title: "International Logistics",
-      desc: "Expansion into Houston, Texas, building global trust in the demanding Oil & Gas sector.",
+      year: "Global",
+      title: "Global Trust",
+      desc: "Earned partnerships with IndiGo, Akasa Air, Myntra, and international clients like the Sultanate of Brunei.",
       icon: "🌐",
       color: "#cf0d0dff",
-      glow: "rgba(248,204,28,0.3)"
+      glow: "rgba(207,13,13,0.2)"
     },
     {
-      year: "2016s",
-      title: "National Scale",
-      desc: "Operating 5 factories producing 20,000+ premium pieces monthly for brands like IndiGo and Maruti Suzuki.",
-      icon: "📈",
+      year: "Texas",
+      title: "Crossing Borders",
+      desc: "Expanded into international logistics from Houston, Texas — led by Mr. Pankaj Rathi for the Oil & Gas sector.",
+      icon: "🛳️",
       color: "#10b981",
       glow: "rgba(16,185,129,0.3)"
     },
     {
-      year: "2026",
-      title: "Two Elephants Technologies LLP",
-      desc: "Transitioning six decades of industrial wisdom into enterprise-grade technology solutions for the modern era.",
+      year: "Today",
+      title: "The Next Chapter",
+      desc: "Two Elephants Technologies LLP is founded — bringing industrial principles into digital transformation.",
       icon: "🚀",
       color: "#7c3aed",
       glow: "rgba(124,58,237,0.3)"
+    }
+  ];
+
+  const values = [
+    {
+      title: "Strength",
+      desc: "Six decades of industrial backbone. We build systems that endure, and stand behind every solution we deliver.",
+      icon: <Shield size={40} />,
+      color: "var(--color-blue-core)"
+    },
+    {
+      title: "Care",
+      desc: "We take the time to understand how your business truly operates, before we build a single line of code.",
+      icon: <Heart size={40} />,
+      color: "#ef4444"
+    },
+    {
+      title: "Honesty",
+      desc: "Clear, practical advice. No unnecessary jargon. Quiet confidence, not loud claims. We say what we mean.",
+      icon: <Award size={40} />,
+      color: "var(--accent-amber)"
+    },
+    {
+      title: "Domain Depth",
+      desc: "We don't study your industry — we've lived in it. Our solutions are built from operational understanding first.",
+      icon: <Building2 size={40} />,
+      color: "#10b981"
+    },
+    {
+      title: "Long-term Thinking",
+      desc: "Relationships over transactions. We measure success in businesses that grow because of what we built.",
+      icon: <Globe size={40} />,
+      color: "#6366f1"
+    },
+    {
+      title: "Guided Growth",
+      desc: "We mentor as we build — supporting both our clients' evolution and the careers of our engineers.",
+      icon: <Users size={40} />,
+      color: "#f59e0b"
     }
   ];
 
@@ -64,21 +104,47 @@ const OurStory = () => {
       <main>
         {/* ── HERO SECTION ── */}
         <section className="story-hero">
-          <div className="container">
+          <div className="story-hero-bg" />
+          <div className="container relative z-10">
             <div className="story-hero-content">
-              <div className="eyebrow">OUR LEGACY</div>
-              <h1>60+ Years of Trust & <i>Excellence</i></h1>
-              <p className="lead">
-                From Solapur's historic looms to global IT labs — Two Elephants Technologies LLP carries forward 
-                six decades of industrial integrity and quality craftsmanship into the digital age.
-              </p>
+              <motion.div 
+                className="eyebrow amber no-line"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                OUR STORY
+              </motion.div>
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                From threads to technology — <i>a legacy in motion.</i>
+              </motion.h1>
+              <motion.p 
+                className="lead"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                Every business begins with an idea. Ours began with a legacy.
+              </motion.p>
             </div>
+          </div>
+          <div className="absolute inset-0 pointer-events-none opacity-30">
+            <ParticleBackground />
           </div>
         </section>
 
-        {/* ── LEGACY VISUAL ── */}
-        <section className="section-padding">
+        {/* ── CHAPTER 01: THE ORIGIN ── */}
+        <section className="chapter-section section-padding">
           <div className="container">
+            <div className="chapter-header">
+              <span className="chapter-num">Chapter 01</span>
+              <h2 className="chapter-title">The Origin</h2>
+            </div>
+            
             <div className="story-grid">
               <div className="story-images">
                 <div className="image-stack">
@@ -90,47 +156,24 @@ const OurStory = () => {
                   <img src={labsImg} alt="Modern Technology Labs" className="story-img-fg" />
                   <div className="story-img-card card-tech">
                     <Zap size={16} color="var(--color-blue-glow)" />
-                    <span>Tech Evolution</span>
+                    <span>Digital Era</span>
                   </div>
                 </div>
               </div>
 
               <div className="story-content">
-                <div className="eyebrow dark">SIX DECADES OF TRUST</div>
-                <h2 className="h2-title">A Legacy That Earns Its <em>Next Chapter</em></h2>
+                <h3 className="h2-title">Six decades of building trust</h3>
                 <p className="body-text">
-                  The Rathi family — known in Solapur as "Do Haathi" (Two Elephants) — has mastered the art of 
-                  precision over six decades. Founded as Pushpa Textile in 1960, our journey has spanned 
-                  manufacturing excellence, global Oil & Gas logistics, and national-scale expansion.
+                  For over sixty years, the Rathi family has built its foundation on something more enduring than products — trust, resilience, and an unwavering commitment to excellence. What began as a textile venture under the visionary leadership of Mr. Prashant Rathi became Pushpa Textiles — a name that became synonymous with quality across India and beyond.
                 </p>
                 <p className="body-text" style={{ marginTop: '20px' }}>
-                  Today, we are reinventing this family legacy for the enterprise era, bringing the same 
-                  uncompromising industrial integrity to BFSI, Pharma, and Manufacturing technology.
+                  From the looms of Solapur to global markets, the journey has been one of constant evolution. Today, their advanced manufacturing units produce over 20,000 premium corporate products every month — each thread carrying a promise of precision, consistency, and pride.
                 </p>
-
-                <div className="legacy-stats">
-                  <Counter value="60+" label="Years of Excellence" />
-                  <Counter value="5" label="Factories at Peak" />
-                  <Counter value="20K+" label="Pieces / Month" />
-                </div>
-
-                <blockquote className="pull-quote">
-                  "Our legacy is not a footnote — it is our strongest credential."
-                </blockquote>
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* ── MILESTONES SECTION ── */}
-        <section className="milestones-section section-padding">
-          <div className="container">
+            {/* Horizontal Timeline */}
             <div className="htl-wrap">
-              <div className="htl-header">
-                <div className="eyebrow dark">MILESTONES</div>
-                <h2>From textile heritage to enterprise-scale technology.</h2>
-              </div>
-
               <div className="htl-track">
                 <div className="htl-line"></div>
                 {milestones.map((m, i) => (
@@ -151,139 +194,134 @@ const OurStory = () => {
           </div>
         </section>
 
-        {/* ── CORE VALUES ── */}
-        <section className="values-section section-padding">
+        {/* ── CHAPTER 02: THE NAME ── */}
+        <section className="chapter-section section-padding bg-light">
           <div className="container">
-            <div className="text-center">
-              <div className="eyebrow dark">OUR VALUES</div>
-              <h2 className="h2-title">The Foundation of <i>Everything</i> We Build</h2>
+            <div className="chapter-header">
+              <span className="chapter-num">Chapter 02</span>
+              <h2 className="chapter-title">The Name</h2>
             </div>
-            
-            <div className="values-grid">
-              <div className="value-card">
-                <div className="value-icon"><Shield size={48} color="var(--color-blue-core)" /></div>
-                <h3>Strength</h3>
-                <p>Six decades of operational discipline forged in India's most demanding industries. We build robust systems that stand the test of time.</p>
-              </div>
-              
-              <div className="value-card">
-                <div className="value-icon"><Heart size={48} color="#ef4444" /></div>
-                <h3>Care</h3>
-                <p>Every client relationship is treated with the same devotion as family business — always. Your success is our personal commitment.</p>
-              </div>
-              
-              <div className="value-card">
-                <div className="value-icon"><Award size={48} color="var(--accent-amber)" /></div>
-                <h3>Honesty</h3>
-                <p>Transparent delivery, accountable leadership, and no-surprise engagements. We believe in building trust through radical transparency.</p>
-              </div>
-            </div>
-          </div>
-        </section>
 
-        {/* ── WHY SOLAPUR? ── */}
-        <section className="solapur-section section-padding">
-          <div className="container">
-            <div className="solapur-grid">
-              <div className="solapur-content">
-                <div className="eyebrow dark">BUILDING THE FUTURE</div>
-                <h2>Why Solapur? <br /><i>Looms to Labs</i></h2>
+            <div className="story-grid alt">
+              <div className="story-content">
+                <h3 className="h2-title">Why Two Elephants?</h3>
                 <p className="body-text">
-                  Solapur has long been India's textile powerhouse. Now, it is poised to become the country's 
-                  next breakthrough IT hub — combining engineering talent, cost advantages, and industrial discipline.
+                  The name was never arbitrary. Elephants stand for wisdom, strength, and reliability — values woven into every decision the Rathi family has made over generations.
                 </p>
                 <p className="body-text" style={{ marginTop: '20px' }}>
-                  "When people think of Solapur, they think of looms. I want the next generation to think of labs." 
-                  <br /><strong>— Prashant Rathi, CEO</strong>
+                  Two elephants represent something more specific: the partnership between tradition and innovation, between experience and agility, between a legacy built over decades and a future being shaped today.
+                </p>
+                <p className="body-text" style={{ marginTop: '20px' }}>
+                  In our logo, the mother elephant embodies authority, experience, and protection — the six decades of industrial wisdom we carry forward. The baby elephant represents growth, learning, and possibility — the digital future we are helping businesses step into.
                 </p>
                 
-                <div className="solapur-stats">
-                  <div className="s-stat-card">
-                    <span className="s-stat-num">18</span>
-                    <span className="s-stat-label">Engineering Colleges</span>
-                  </div>
-                  <div className="s-stat-card">
-                    <span className="s-stat-num">3K+</span>
-                    <span className="s-stat-label">Graduates per Year</span>
-                  </div>
-                </div>
+                <blockquote className="pull-quote">
+                  "This isn't just a new venture. It is a continuation of a story — one built over generations and now ready to shape the future."
+                </blockquote>
+                
+                <p className="body-text">
+                  Together, they are a symbol of guided growth — the kind of mentorship and long-term thinking that defines how we work with every client, every engineer, every partner we bring into our ecosystem.
+                </p>
               </div>
               
-              <div className="solapur-visual">
-                <div className="highlight-card" style={{ background: 'var(--color-navy)', color: '#fff', padding: '40px' }}>
-                  <h3 style={{ color: 'var(--color-blue-glow)', marginBottom: '20px' }}>Structural Advantage</h3>
-                  <ul style={{ listStyle: 'none', padding: 0 }}>
-                    <li style={{ marginBottom: '20px', display: 'flex', gap: '15px' }}>
-                      <Building2 size={24} color="var(--color-blue-glow)" />
-                      <span>Office rent at ₹15–20/sqft vs. ₹100–150 in metros.</span>
-                    </li>
-                    <li style={{ marginBottom: '20px', display: 'flex', gap: '15px' }}>
-                      <Users size={24} color="var(--color-blue-glow)" />
-                      <span>Hire 5-7x more engineers for the same budget.</span>
-                    </li>
-                    <li style={{ display: 'flex', gap: '15px' }}>
-                      <Globe size={24} color="var(--color-blue-glow)" />
-                      <span>Strategically located between Pune and Hyderabad.</span>
-                    </li>
-                  </ul>
-                </div>
+              <div className="name-visual">
+                 <div className="elephant-emblem-card">
+                    <img src="/logo1.svg" alt="Two Elephants Logo" className="large-emblem" />
+                    <div className="emblem-label">Guided Growth</div>
+                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── TALENT STRATEGY ── */}
-        <section className="talent-section section-padding">
+        {/* ── CHAPTER 03: OUR PURPOSE ── */}
+        <section className="chapter-section section-padding">
           <div className="container">
-            <div className="talent-header">
-              <div className="eyebrow">OUR ROADMAP</div>
-              <h2>Architectured Talent Strategy</h2>
-              <p>Creating a sustainable, scalable workforce rooted in Solapur. Target: 500 job-ready professionals by FY30.</p>
+            <div className="chapter-header">
+              <span className="chapter-num">Chapter 03</span>
+              <h2 className="chapter-title">Our Purpose</h2>
             </div>
-            
-            <div className="talent-steps">
-              <div className="talent-step">
-                <span className="step-num">01</span>
-                <h3>Initiation</h3>
-                <ul>
-                  <li>MoUs with 8 Engineering Colleges</li>
-                  <li>Intensive domain training: BFSI, O&G, Pharma</li>
-                  <li>Live project exposure from Day 1</li>
-                </ul>
+
+            <div className="purpose-grid">
+              <div className="purpose-block">
+                <h3 className="h3-title blue-accent">Technology that understands business</h3>
+                <p className="body-text">
+                  Businesses today are surrounded by technology — yet many still struggle to find solutions that truly understand how they operate. Especially for small and mid-sized enterprises, technology is often too generic, built without the ground-level insight needed to align with real workflows and growth realities.
+                </p>
+                <p className="body-text" style={{ marginTop: '20px' }}>
+                  At Two Elephants Technologies, we see this as an opportunity to build differently. We believe technology should not just be advanced — it should be relevant, practical, and deeply aligned with the way businesses actually function.
+                </p>
+                <p className="body-text" style={{ marginTop: '20px' }}>
+                  With leadership grounded in real entrepreneurial experience and a team shaped by expertise from leading technology organisations, we deliver solutions that businesses can truly rely on — from cybersecurity and ERP systems to digital platforms and intelligent automation.
+                </p>
               </div>
-              
-              <div className="talent-step">
-                <span className="step-num">02</span>
-                <h3>Integration</h3>
-                <ul>
-                  <li>Experienced professionals + fresh engineers</li>
-                  <li>Real-world industry experience on live projects</li>
-                  <li>Mentorship structures to accelerate readiness</li>
-                </ul>
-              </div>
-              
-              <div className="talent-step">
-                <span className="step-num">03</span>
-                <h3>Realization</h3>
-                <ul>
-                  <li>Scale to 500 job-ready professionals</li>
-                  <li>Structured training programs & mentorship</li>
-                  <li>Domain-specific client standards deployment</li>
-                </ul>
+
+              <div className="purpose-block">
+                <h3 className="h3-title amber-accent">Creating opportunity, close to home</h3>
+                <p className="body-text">
+                  Every year, thousands of capable engineers graduate from Solapur — full of ambition, skill, and potential. Yet many are forced to leave in search of the right opportunities, not because the talent is lacking, but because the ecosystem around them hasn't evolved fast enough.
+                </p>
+                <p className="body-text" style={{ marginTop: '20px' }}>
+                  We believe this can change. We are deeply committed to strengthening the talent ecosystem in Solapur — creating careers where skilled individuals can work on real-world problems, contribute to global solutions, and build meaningful livelihoods without leaving their roots behind.
+                </p>
+                <p className="body-text" style={{ marginTop: '20px' }}>
+                  We are not just building a company. We are building a platform where businesses evolve and talent thrives — together.
+                </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── FINAL CTA ── */}
-        <section className="section-padding text-center">
+        {/* ── CHAPTER 04: WHAT WE STAND FOR ── */}
+        <section className="chapter-section section-padding bg-dark">
           <div className="container">
-            <h2 className="h2-title">Be Part of Our <i>Next Chapter</i></h2>
-            <p className="body-text" style={{ maxWidth: '600px', margin: '0 auto 40px' }}>
-              Whether you're a client looking for industrial-grade IT solutions or a talent 
-              wanting to build a career in Solapur, let's talk.
+            <div className="chapter-header light">
+              <span className="chapter-num">Chapter 04</span>
+              <h2 className="chapter-title">What We Stand For</h2>
+                <h3 className="chapter-title">Principles carried across generations</h3>
+          
+            </div>
+
+           
+            <div className="principles-grid">
+              {values.map((v, i) => (
+                <motion.div 
+                  key={i} 
+                  className="principle-card"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                >
+                  <div className="principle-icon" style={{ color: v.color }}>{v.icon}</div>
+                  <div className="principle-info">
+                    <h4>{v.title}</h4>
+                    <p>{v.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── FINAL CLOSING ── */}
+        <section className="closing-section section-padding">
+          <div className="container">
+            <div className="eyebrow amber no-line">FROM LEGACY TO TECHNOLOGY</div>
+            <h2 className="h2-title">From trust to transformation.</h2>
+            <p className="body-text">
+              This is who we are. This is what we carry forward.
             </p>
-            <div style={{ display: 'flex', gap: '20px', justifyContent: 'center' }}>
+            
+            <div className="promise-line">
+               <span>Strength</span>
+               <span className="dot"></span>
+               <span>Care</span>
+               <span className="dot"></span>
+               <span>Honesty</span>
+            </div>
+
+            <div className="closing-actions">
               <Link to="/contact" className="btn btn-primary">Partner With Us</Link>
               <Link to="/careers" className="btn btn-outline">Join the Team</Link>
             </div>
