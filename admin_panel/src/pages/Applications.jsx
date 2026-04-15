@@ -1,17 +1,23 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { FileText, Download, Eye, Search, User, Mail, Phone, MapPin, Briefcase, Calendar, DollarSign, Globe, Filter } from 'lucide-react';
+import { 
+  FileText, Download, Search, User, Mail, Phone, MapPin, 
+  Briefcase, Calendar, DollarSign, Globe, Filter, ChevronDown, 
+  ChevronRight, Users, ShieldCheck, X, Linkedin, Github, ExternalLink,
+  Clock, CreditCard, Building, MessageSquare
+} from 'lucide-react';
 
 const API_BASE = 'http://localhost:8000/api';
+const BACKEND_BASE = 'http://localhost:8000';
 
 const STATUS_COLORS = {
-  new: { bg: 'bg-yellow-500/20', text: 'text-yellow-400', label: 'New' },
-  reviewing: { bg: 'bg-blue-500/20', text: 'text-blue-400', label: 'Under Review' },
-  shortlisted: { bg: 'bg-green-500/20', text: 'text-green-400', label: 'Shortlisted' },
-  rejected: { bg: 'bg-red-500/20', text: 'text-red-400', label: 'Rejected' },
-  accepted: { bg: 'bg-emerald-500/20', text: 'text-emerald-400', label: 'Accepted' },
+  new: { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200', gradient: 'from-amber-500 to-orange-500', label: 'New Arrival' },
+  reviewing: { bg: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-200', gradient: 'from-blue-500 to-indigo-500', label: 'In Review' },
+  shortlisted: { bg: 'bg-emerald-50', text: 'text-emerald-600', border: 'border-emerald-200', gradient: 'from-emerald-500 to-teal-500', label: 'Shortlisted' },
+  rejected: { bg: 'bg-rose-50', text: 'text-rose-600', border: 'border-rose-200', gradient: 'from-rose-500 to-red-500', label: 'Rejected' },
+  accepted: { bg: 'bg-violet-50', text: 'text-violet-600', border: 'border-violet-200', gradient: 'from-violet-500 to-purple-500', label: 'Accepted' },
 };
 
 export default function Applications() {
@@ -22,6 +28,13 @@ export default function Applications() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [jobFilter, setJobFilter] = useState('all');
   const [selectedApp, setSelectedApp] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  function openFullDossier(app) {
+    console.log('Opening dossier for:', app.first_name);
+    setSelectedApp(app);
+    setIsModalOpen(true);
+  }
 
   useEffect(() => {
     fetchData();
@@ -45,222 +58,562 @@ export default function Applications() {
   const updateStatus = async (id, newStatus) => {
     try {
       await axios.patch(`${API_BASE}/applications/${id}/`, { status: newStatus });
-      setApplications(applications.map((app) => (app.id === id ? { ...app, status: newStatus } : app)));
-      if (selectedApp) setSelectedApp({ ...selectedApp, status: newStatus });
-      toast.success('Status updated');
+      const updatedApps = applications.map((app) => (app.id === id ? { ...app, status: newStatus } : app));
+      setApplications(updatedApps);
+      if (selectedApp?.id === id) {
+        setSelectedApp({ ...selectedApp, status: newStatus });
+      }
+      toast.success(`Status updated to ${STATUS_COLORS[newStatus].label}`);
     } catch (error) {
       toast.error('Failed to update status');
     }
   };
 
   const filteredApps = applications.filter((app) => {
-    const matchesSearch =
-      `${app.first_name} ${app.last_name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const fullName = `${app.first_name} ${app.last_name}`.toLowerCase();
+    const email = app.email.toLowerCase();
+    const search = searchTerm.toLowerCase();
+    
+    const matchesSearch = fullName.includes(search) || email.includes(search);
     const matchesStatus = statusFilter === 'all' || app.status === statusFilter;
-    const matchesJob = jobFilter === 'all' || (app.role && app.role === parseInt(jobFilter));
+    const matchesJob = jobFilter === 'all' || (app.role && app.role.toString() === jobFilter.toString());
+    
     return matchesSearch && matchesStatus && matchesJob;
   });
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-IN', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    });
+    if (!dateString) return 'Pending';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'N/A';
+    return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  };
+
+  const getResumeUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith('http')) return path;
+    return `${BACKEND_BASE}${path}`;
   };
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-['Ubuntu_Sans']">
-      <div className="flex items-center justify-between mb-10">
+    <motion.div 
+      initial={{ opacity: 0, y: 8 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      className="font-['Inter'] max-w-[1600px] mx-auto pb-20"
+    >
+      {/* Header Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10"
+      >
         <div>
-          <h1 className="text-4xl font-black text-white mb-2 tracking-tight">Talent Pipeline</h1>
-          <p className="text-gray-500 font-medium">Review and manage job applications from candidates</p>
+          <h1 className="text-3xl font-black text-gray-900 mb-1 tracking-tight bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
+            Talent Pipeline
+          </h1>
+          <p className="text-gray-500 font-medium">Curating the next generation of industry leaders</p>
         </div>
-        <div className="bg-[#0B1526] border border-white/5 rounded-[24px] px-6 py-4 shadow-xl">
-          <span className="text-3xl font-black text-blue-400">{applications.length}</span>
-          <span className="text-gray-500 text-[10px] font-bold uppercase tracking-widest ml-3">Candidates</span>
-        </div>
-      </div>
+        <motion.div 
+          whileHover={{ scale: 1.05 }}
+          className="flex items-center gap-4 bg-white border border-gray-200 rounded-2xl px-5 py-3 shadow-lg shadow-blue-500/10"
+        >
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white shadow-lg">
+            <Users size={18} />
+          </div>
+          <div>
+            <span className="text-xl font-black text-gray-900 block leading-none">{applications.length}</span>
+            <span className="text-gray-400 text-[9px] font-semibold uppercase tracking-wider">Total Candidates</span>
+          </div>
+        </motion.div>
+      </motion.div>
 
-      <div className="flex flex-col md:flex-row gap-6 mb-10">
-        <div className="relative flex-1 group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors" size={20} />
+      {/* Filter Bar */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="grid grid-cols-1 xl:grid-cols-4 gap-4 mb-8"
+      >
+        <div className="xl:col-span-2 relative group">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={18} />
           <input
             type="text"
-            placeholder="Search by name or email..."
+            placeholder="Search candidates..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-6 py-4 bg-[#0B1526] border border-white/5 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all font-semibold"
+            className="w-full pl-12 pr-5 py-3.5 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all font-medium text-sm shadow-sm hover:shadow-md"
           />
         </div>
-        <div className="flex gap-4">
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-6 py-4 bg-[#0B1526] border border-white/5 rounded-2xl text-white focus:outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all font-semibold appearance-none min-w-[180px]"
-          >
-            <option value="all">Status: All</option>
-            {Object.keys(STATUS_COLORS).map(status => (
-              <option key={status} value={status}>{STATUS_COLORS[status].label}</option>
-            ))}
-          </select>
-          <select
-            value={jobFilter}
-            onChange={(e) => setJobFilter(e.target.value)}
-            className="px-6 py-4 bg-[#0B1526] border border-white/5 rounded-2xl text-white focus:outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all font-semibold appearance-none min-w-[220px]"
-          >
-            <option value="all">Position: All</option>
-            {jobs.map(job => (
-              <option key={job.id} value={job.id}>{job.title}</option>
-            ))}
-          </select>
+        <div className="flex gap-3 xl:col-span-2">
+          <div className="relative flex-1">
+            <Filter className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={15} />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-xl text-gray-700 focus:outline-none focus:border-blue-400 transition-all font-semibold text-xs uppercase tracking-wider appearance-none cursor-pointer shadow-sm hover:shadow-md"
+            >
+              <option value="all">All Phases</option>
+              {Object.keys(STATUS_COLORS).map(status => (
+                <option key={status} value={status}>{STATUS_COLORS[status].label}</option>
+              ))}
+            </select>
+          </div>
+          <div className="relative flex-1">
+            <Briefcase className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={15} />
+            <select
+              value={jobFilter}
+              onChange={(e) => setJobFilter(e.target.value)}
+              className="w-full pl-11 pr-4 py-3.5 bg-white border border-gray-200 rounded-xl text-gray-700 focus:outline-none focus:border-blue-400 transition-all font-semibold text-xs uppercase tracking-wider appearance-none cursor-pointer shadow-sm hover:shadow-md"
+            >
+              <option value="all">All Roles</option>
+              {jobs.map(job => (
+                <option key={job.id} value={job.id}>{job.title}</option>
+              ))}
+            </select>
+          </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <div className="lg:col-span-2">
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Candidate List */}
+        <div className="lg:col-span-7 xl:col-span-8 space-y-3">
           {loading ? (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-24 bg-white/5 rounded-[24px] animate-pulse" />
+                <div key={i} className="h-[90px] bg-gray-100 rounded-2xl animate-pulse border border-gray-100" />
               ))}
             </div>
           ) : filteredApps.length > 0 ? (
-            <div className="space-y-5">
-              {filteredApps.map((app) => (
+            <div className="grid grid-cols-1 gap-3">
+              {filteredApps.map((app, idx) => (
                 <motion.div
                   key={app.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  onClick={() => setSelectedApp(app)}
-                  className={`bg-[#0B1526] border rounded-[28px] p-6 cursor-pointer transition-all duration-300 group ${
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.05 }}
+                  whileHover={{ scale: 1.01, y: -2 }}
+                  whileTap={{ scale: 0.99 }}
+                  onClick={() => openFullDossier(app)}
+                  className={`relative group cursor-pointer transition-all duration-300 rounded-2xl p-4 border-2 ${
                     selectedApp?.id === app.id 
-                      ? 'border-blue-500/50 bg-blue-500/[0.03] shadow-lg shadow-blue-500/5' 
-                      : 'border-white/5 hover:border-white/10 hover:bg-white/[0.02]'
+                      ? `bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-lg shadow-blue-500/10` 
+                      : 'bg-white border-gray-100 hover:border-blue-200 hover:shadow-lg'
                   }`}
                 >
-                  <div className="flex items-start gap-6">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-blue-500/20">
+                  {/* Gradient Glow on Hover */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${STATUS_COLORS[app.status]?.gradient} opacity-0 group-hover:opacity-[0.03] rounded-2xl transition-opacity duration-500`} />
+                  
+                  <div className="flex items-center gap-4 relative z-10">
+                    <motion.div 
+                      whileHover={{ rotate: 6, scale: 1.1 }}
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg transition-all duration-300 ${
+                        selectedApp?.id === app.id 
+                          ? `bg-gradient-to-br ${STATUS_COLORS[app.status]?.gradient} shadow-lg` 
+                          : 'bg-gradient-to-br from-gray-600 to-gray-700'
+                      }`}
+                    >
                       {app.first_name.charAt(0)}
-                    </div>
+                    </motion.div>
+                    
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-4 mb-2">
-                        <h3 className="text-white font-black text-lg group-hover:text-blue-400 transition-colors tracking-tight">{app.first_name} {app.last_name}</h3>
-                        <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${STATUS_COLORS[app.status]?.bg} ${STATUS_COLORS[app.status]?.text}`}>
+                      <div className="flex items-center gap-2.5 mb-1">
+                        <h3 className="text-base font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                          {app.first_name} {app.last_name}
+                        </h3>
+                        <span className={`px-2.5 py-1 rounded-full text-[8px] font-bold uppercase tracking-wide border ${STATUS_COLORS[app.status]?.bg} ${STATUS_COLORS[app.status]?.text} ${STATUS_COLORS[app.status]?.border}`}>
                           {STATUS_COLORS[app.status]?.label}
                         </span>
                       </div>
-                      <p className="text-gray-500 text-sm font-bold mb-3">{app.email}</p>
-                      <div className="flex flex-wrap gap-x-6 gap-y-2 text-[10px] font-bold text-gray-600 uppercase tracking-wider">
-                        {app.role_name && <span className="flex items-center gap-2"><Briefcase size={14} className="text-blue-500/50" /> {app.role_name}</span>}
-                        {app.years_experience && <span className="flex items-center gap-2"><Calendar size={14} className="text-blue-500/50" /> {app.years_experience} Exp</span>}
-                        {app.location && <span className="flex items-center gap-2"><MapPin size={14} className="text-blue-500/50" /> {app.location}</span>}
+                      
+                      <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-gray-400 font-medium text-[11px]">
+                        <span className="flex items-center gap-1.5 group-hover:text-gray-600 transition-colors">
+                          <Mail size={11} className="text-blue-400" /> {app.email}
+                        </span>
+                        <span className="flex items-center gap-1.5 group-hover:text-gray-600 transition-colors">
+                          <Briefcase size={11} className="text-blue-400" /> {app.role_title || 'General'}
+                        </span>
+                        {app.location && (
+                          <span className="flex items-center gap-1.5 group-hover:text-gray-600 transition-colors">
+                            <MapPin size={11} className="text-blue-400" /> {app.location}
+                          </span>
+                        )}
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-gray-600 text-[10px] font-black uppercase tracking-widest">{formatDate(app.created_at)}</p>
+                    
+                    <div className="hidden sm:flex flex-col items-end gap-1.5">
+                       <p className="text-gray-300 text-[9px] font-semibold uppercase tracking-wider">{formatDate(app.applied_at)}</p>
+                       <motion.div 
+                        whileHover={{ scale: 1.1 }}
+                        className={`w-6 h-6 rounded-full flex items-center justify-center border transition-all duration-300 ${
+                          selectedApp?.id === app.id ? `bg-gradient-to-br ${STATUS_COLORS[app.status]?.gradient} border-transparent text-white` : 'border-gray-200 text-gray-300 group-hover:border-blue-300 group-hover:text-blue-400'
+                        }`}
+                       >
+                         <ChevronRight size={14} />
+                       </motion.div>
                     </div>
                   </div>
                 </motion.div>
               ))}
             </div>
           ) : (
-            <div className="bg-[#0B1526] border border-white/5 rounded-[32px] p-20 text-center shadow-xl">
-              <FileText size={48} className="mx-auto text-gray-700 mb-6" />
-              <p className="text-gray-500 font-bold uppercase tracking-widest text-sm">No applications matching your criteria</p>
+            <div className="bg-white border border-gray-100 rounded-2xl p-16 text-center shadow-sm">
+              <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <FileText size={32} className="text-gray-300" />
+              </div>
+              <h3 className="text-base font-bold text-gray-700 mb-1">No Candidates Found</h3>
+              <p className="text-gray-400 font-medium uppercase tracking-wider text-[10px]">Adjust filters to see more dossiers</p>
             </div>
           )}
         </div>
 
-        <div className="lg:col-span-1">
+        {/* Selected Summary Panel */}
+        <div className="lg:col-span-5 xl:col-span-4">
           {selectedApp ? (
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="bg-[#0B1526] border border-white/5 rounded-[40px] p-10 sticky top-32 shadow-2xl overflow-hidden group"
+              key={selectedApp.id}
+              initial={{ opacity: 0, scale: 0.95, x: 20 }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              className="bg-white border border-gray-100 rounded-2xl p-6 sticky top-32 shadow-lg overflow-hidden relative group"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/5 rounded-full blur-3xl -z-10" />
+              {/* Animated Gradient */}
+              <div className={`absolute top-0 right-0 w-40 h-40 bg-gradient-to-br ${STATUS_COLORS[selectedApp.status]?.gradient} opacity-[0.05] rounded-full blur-[60px] group-hover:opacity-[0.1] transition-opacity duration-700`} />
               
-              <div className="mb-10 text-center">
-                <div className="w-24 h-24 rounded-[32px] bg-gradient-to-tr from-blue-600 to-indigo-500 mx-auto flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-blue-500/20 mb-6">
-                  {selectedApp.first_name.charAt(0)}
-                </div>
-                <h4 className="text-white font-black text-2xl tracking-tight mb-2">{selectedApp.first_name} {selectedApp.last_name}</h4>
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/5">
-                   <Briefcase size={12} className="text-blue-400" />
-                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{selectedApp.role_name || 'General Application'}</p>
+              <div className="text-center mb-6 relative z-10">
+                <motion.div 
+                  whileHover={{ rotate: 6, scale: 1.05 }}
+                  className="relative inline-block mb-4"
+                >
+                  <div className={`w-20 h-20 rounded-2xl bg-gradient-to-tr ${STATUS_COLORS[selectedApp.status]?.gradient} flex items-center justify-center text-white text-3xl font-black shadow-xl`}>
+                    {selectedApp.first_name.charAt(0)}
+                  </div>
+                  <div className={`absolute -bottom-1 -right-1 w-7 h-7 rounded-lg border-2 border-white bg-gradient-to-br ${STATUS_COLORS[selectedApp.status]?.gradient} flex items-center justify-center`}>
+                    <ShieldCheck size={14} className="text-white" />
+                  </div>
+                </motion.div>
+                
+                <h2 className="text-lg font-bold text-gray-900 mb-1.5">{selectedApp.first_name} {selectedApp.last_name}</h2>
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-50 rounded-full border border-gray-100">
+                   <Briefcase size={12} className="text-blue-500" />
+                   <p className="text-[10px] font-bold text-gray-600 uppercase tracking-wider">{selectedApp.role_title || 'General Application'}</p>
                 </div>
               </div>
 
-              <div className="space-y-6 mb-10">
-                <div className="flex items-center gap-4 group/item">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-500 group-hover/item:text-blue-400 transition-colors">
-                    <Mail size={18} />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-0.5">Contact Email</p>
-                    <a href={`mailto:${selectedApp.email}`} className="text-white font-bold text-sm truncate block hover:text-blue-400 transition-colors">{selectedApp.email}</a>
-                  </div>
-                </div>
-                {selectedApp.phone && (
-                  <div className="flex items-center gap-4 group/item">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-500 group-hover/item:text-blue-400 transition-colors">
-                      <Phone size={18} />
+              <div className="space-y-2.5 mb-6">
+                {selectedApp.email && (
+                  <motion.div whileHover={{ x: 4 }} className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-50 hover:border-gray-100 hover:bg-blue-50/30 transition-all">
+                    <div className="w-9 h-9 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-400">
+                      <Mail size={15} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-0.5">Phone Number</p>
-                      <p className="text-white font-bold text-sm">{selectedApp.phone}</p>
+                      <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Email</p>
+                      <a href={`mailto:${selectedApp.email}`} className="text-gray-900 font-semibold text-xs truncate block hover:text-blue-600 transition-colors">{selectedApp.email}</a>
                     </div>
-                  </div>
+                  </motion.div>
+                )}
+                {selectedApp.phone && (
+                  <motion.div whileHover={{ x: 4 }} className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-50 hover:border-gray-100 hover:bg-blue-50/30 transition-all">
+                    <div className="w-9 h-9 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-400">
+                      <Phone size={15} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Phone</p>
+                      <p className="text-gray-900 font-semibold text-xs">{selectedApp.phone}</p>
+                    </div>
+                  </motion.div>
                 )}
                 {selectedApp.location && (
-                  <div className="flex items-center gap-4 group/item">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-500 group-hover/item:text-blue-400 transition-colors">
-                      <MapPin size={18} />
+                  <motion.div whileHover={{ x: 4 }} className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-50 hover:border-gray-100 hover:bg-blue-50/30 transition-all">
+                    <div className="w-9 h-9 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-400">
+                      <MapPin size={15} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-0.5">Location</p>
-                      <p className="text-white font-bold text-sm">{selectedApp.location}</p>
+                      <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Location</p>
+                      <p className="text-gray-900 font-semibold text-xs">{selectedApp.location}</p>
                     </div>
-                  </div>
+                  </motion.div>
+                )}
+                {selectedApp.years_experience && (
+                  <motion.div whileHover={{ x: 4 }} className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-50 hover:border-gray-100 hover:bg-blue-50/30 transition-all">
+                    <div className="w-9 h-9 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-400">
+                      <Calendar size={15} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Experience</p>
+                      <p className="text-gray-900 font-semibold text-xs">{selectedApp.years_experience} Years</p>
+                    </div>
+                  </motion.div>
                 )}
               </div>
 
-              <div className="mb-10 p-6 bg-black/20 rounded-3xl border border-white/5">
-                <label className="text-[10px] font-black text-gray-500 uppercase tracking-[2px] mb-4 block">Application Status</label>
-                <select
-                  value={selectedApp.status}
-                  onChange={(e) => updateStatus(selectedApp.id, e.target.value)}
-                  className="w-full px-5 py-4 bg-[#0B1526] border border-white/5 rounded-2xl text-white font-black text-xs uppercase tracking-widest focus:outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all appearance-none"
-                >
-                  {Object.keys(STATUS_COLORS).map((status) => (
-                    <option key={status} value={status}>{STATUS_COLORS[status].label}</option>
-                  ))}
-                </select>
-              </div>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setIsModalOpen(true)}
+                className="w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all mb-2.5 text-[10px] uppercase tracking-wider"
+              >
+                View Full Dossier
+              </motion.button>
 
               {selectedApp.resume && (
                 <a
-                  href={`${BACKEND_BASE}${selectedApp.resume}`}
+                  href={getResumeUrl(selectedApp.resume)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-3 w-full py-4.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black rounded-2xl shadow-xl shadow-blue-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-widest text-xs"
+                  className="flex items-center justify-center gap-2 w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/30 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wider text-[10px]"
                 >
-                  <Download size={18} />
-                  Download Dossier
+                  <Download size={14} />
+                  Download Resume
                 </a>
               )}
             </motion.div>
           ) : (
-            <div className="bg-[#0B1526] border border-white/5 rounded-[40px] p-20 text-center sticky top-32 shadow-xl border-dashed">
-              <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                 <User size={40} className="text-gray-700" />
+            <div className="bg-white border border-dashed border-gray-200 rounded-2xl p-12 text-center sticky top-32 shadow-sm">
+              <div className="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+                 <User size={28} className="text-gray-300" />
               </div>
-              <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">Select a candidate dossier to begin review</p>
+              <h3 className="text-sm font-bold text-gray-600 mb-1">Review Pending</h3>
+              <p className="text-gray-300 font-medium uppercase tracking-wider text-[9px]">Select a candidate dossier to begin</p>
             </div>
           )}
         </div>
+      </div>
+
+      {/* Full Detail Modal */}
+      <AnimatePresence>
+        {isModalOpen && selectedApp && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="relative w-full max-w-[1200px] h-full max-h-[85vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col lg:flex-row"
+            >
+              {/* Gradient Header Bar */}
+              <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${STATUS_COLORS[selectedApp.status]?.gradient}`} />
+              
+              {/* Modal Close Button */}
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-6 right-6 w-9 h-9 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center text-gray-500 transition-all z-[110]"
+              >
+                <X size={18} />
+              </button>
+
+              {/* Left Column: Full Details */}
+              <div className="flex-1 overflow-y-auto p-6 md:p-8 border-r border-gray-100">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center gap-5 mb-8"
+                >
+                  <div className={`w-20 h-20 rounded-2xl bg-gradient-to-tr ${STATUS_COLORS[selectedApp.status]?.gradient} flex items-center justify-center text-white text-3xl font-black shadow-xl`}>
+                    {selectedApp.first_name.charAt(0)}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2.5 mb-1.5">
+                      <h2 className="text-xl md:text-2xl font-bold text-gray-900">{selectedApp.first_name} {selectedApp.last_name}</h2>
+                      <span className={`px-2.5 py-1 rounded-full text-[8px] font-bold uppercase tracking-wide border ${STATUS_COLORS[selectedApp.status]?.bg} ${STATUS_COLORS[selectedApp.status]?.text} ${STATUS_COLORS[selectedApp.status]?.border}`}>
+                        {STATUS_COLORS[selectedApp.status]?.label}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-3">
+                       <div className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 rounded-lg border border-gray-100">
+                         <Briefcase size={12} className="text-blue-500" />
+                         <span className="text-[10px] font-bold text-gray-600 uppercase tracking-wider">{selectedApp.role_title || 'General Application'}</span>
+                       </div>
+                       <div className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 rounded-lg border border-gray-100">
+                         <Clock size={12} className="text-indigo-400" />
+                         <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Applied: {formatDate(selectedApp.applied_at)}</span>
+                       </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
+                  <section>
+                    <h3 className="text-[9px] font-bold text-gray-400 uppercase tracking-[2px] mb-4 flex items-center gap-2">
+                      <User size={11} /> Contact Information
+                    </h3>
+                    <div className="space-y-2.5">
+                      <DetailRow icon={Mail} label="Professional Email" value={selectedApp.email} isLink link={`mailto:${selectedApp.email}`} />
+                      <DetailRow icon={Phone} label="Direct Contact" value={selectedApp.phone} />
+                      <DetailRow icon={MapPin} label="Current Location" value={selectedApp.location} />
+                    </div>
+                  </section>
+
+                  <section>
+                    <h3 className="text-[9px] font-bold text-gray-400 uppercase tracking-[2px] mb-4 flex items-center gap-2">
+                      <Building size={11} /> Career Overview
+                    </h3>
+                    <div className="space-y-2.5">
+                      <DetailRow icon={Calendar} label="Years of Experience" value={`${selectedApp.years_experience} Years`} />
+                      <DetailRow icon={Clock} label="Notice Period" value={selectedApp.notice_period} />
+                      <div className="grid grid-cols-2 gap-2.5">
+                        <DetailRow icon={CreditCard} label="Current CTC" value={selectedApp.current_ctc} />
+                        <DetailRow icon={DollarSign} label="Expected CTC" value={selectedApp.expected_ctc} />
+                      </div>
+                    </div>
+                  </section>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
+                   <section>
+                    <h3 className="text-[9px] font-bold text-gray-400 uppercase tracking-[2px] mb-4 flex items-center gap-2">
+                      <Globe size={11} /> Social & Web Presence
+                    </h3>
+                    <div className="space-y-2.5">
+                      {selectedApp.linkedin && (
+                        <a href={selectedApp.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 bg-[#0A66C2]/5 border border-[#0A66C2]/20 rounded-xl group/link hover:bg-[#0A66C2]/10 transition-all">
+                          <div className="flex items-center gap-2.5">
+                            <Linkedin className="text-[#0A66C2]" size={16} />
+                            <span className="text-xs font-bold text-gray-700">LinkedIn Profile</span>
+                          </div>
+                          <ExternalLink size={13} className="text-gray-400 group-hover/link:text-gray-600 transition-colors" />
+                        </a>
+                      )}
+                      {selectedApp.github && (
+                        <a href={selectedApp.github} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 bg-gray-50 border border-gray-100 rounded-xl group/link hover:bg-gray-100 transition-all">
+                          <div className="flex items-center gap-2.5">
+                            <Github className="text-gray-700" size={16} />
+                            <span className="text-xs font-bold text-gray-700">GitHub Repository</span>
+                          </div>
+                          <ExternalLink size={13} className="text-gray-400 group-hover/link:text-gray-600 transition-colors" />
+                        </a>
+                      )}
+                      {selectedApp.portfolio && (
+                        <a href={selectedApp.portfolio} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 bg-blue-50 border border-blue-100 rounded-xl group/link hover:bg-blue-100 transition-all">
+                          <div className="flex items-center gap-2.5">
+                            <Globe className="text-blue-500" size={16} />
+                            <span className="text-xs font-bold text-gray-700">Personal Portfolio</span>
+                          </div>
+                          <ExternalLink size={13} className="text-gray-400 group-hover/link:text-gray-600 transition-colors" />
+                        </a>
+                      )}
+                    </div>
+                  </section>
+
+                  <section>
+                    <h3 className="text-[9px] font-bold text-gray-400 uppercase tracking-[2px] mb-4 flex items-center gap-2">
+                      <ShieldCheck size={11} /> Status Management
+                    </h3>
+                    <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                       <label className="text-[9px] font-semibold text-gray-400 uppercase tracking-[2px] mb-3 block">Workflow Phase</label>
+                       <div className="relative">
+                        <select
+                          value={selectedApp.status}
+                          onChange={(e) => updateStatus(selectedApp.id, e.target.value)}
+                          className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-700 font-bold text-[10px] uppercase tracking-wider focus:outline-none focus:border-blue-400 transition-all appearance-none cursor-pointer"
+                        >
+                          {Object.keys(STATUS_COLORS).map((status) => (
+                            <option key={status} value={status}>{STATUS_COLORS[status].label}</option>
+                          ))}
+                        </select>
+                        <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={15} />
+                      </div>
+                    </div>
+                  </section>
+                </div>
+
+                {selectedApp.cover_letter && (
+                  <section className="mb-6">
+                    <h3 className="text-[9px] font-bold text-gray-400 uppercase tracking-[2px] mb-4 flex items-center gap-2">
+                      <MessageSquare size={11} /> Candidate Statement
+                    </h3>
+                    <div className="p-5 bg-gradient-to-br from-gray-50 to-blue-50/30 rounded-2xl border border-gray-100">
+                      <p className="text-gray-600 text-[13px] font-medium leading-relaxed whitespace-pre-wrap italic">
+                        "{selectedApp.cover_letter}"
+                      </p>
+                    </div>
+                  </section>
+                )}
+              </div>
+
+              {/* Right Column: Resume View */}
+              <div className="w-full lg:w-[450px] xl:w-[550px] bg-gradient-to-br from-gray-50 to-blue-50/20 flex flex-col">
+                <div className="p-5 border-b border-gray-200 flex items-center justify-between bg-white/50">
+                   <h3 className="text-[11px] font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                     <FileText size={15} className="text-blue-500" /> Resume Dossier
+                   </h3>
+                   <div className="flex items-center gap-3">
+                     <a
+                      href={getResumeUrl(selectedApp.resume)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] font-bold text-blue-600 uppercase tracking-wider hover:text-blue-700 transition-colors flex items-center gap-1.5"
+                    >
+                      <ExternalLink size={13} /> Open
+                    </a>
+                     <a
+                      href={getResumeUrl(selectedApp.resume)}
+                      download
+                      className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 uppercase tracking-wider hover:text-emerald-700 transition-colors"
+                    >
+                      <Download size={13} /> Download
+                    </a>
+                   </div>
+                </div>
+                
+                <div className="flex-1 bg-white relative overflow-hidden">
+                  {selectedApp.resume ? (
+                    <object
+                      data={getResumeUrl(selectedApp.resume)}
+                      type="application/pdf"
+                      className="w-full h-full"
+                    >
+                      <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-gray-50">
+                         <FileText size={40} className="text-gray-300 mb-3" />
+                         <p className="text-gray-400 font-semibold uppercase tracking-wider text-[10px] mb-4">PDF Preview not supported</p>
+                         <a
+                          href={getResumeUrl(selectedApp.resume)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-5 py-2.5 bg-blue-600 text-white font-bold rounded-xl uppercase tracking-wider text-[10px] hover:bg-blue-700 transition-all"
+                        >
+                          Open Document Externally
+                        </a>
+                      </div>
+                    </object>
+                  ) : (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
+                       <FileText size={48} className="text-gray-200 mb-3" />
+                       <p className="text-gray-400 font-semibold uppercase tracking-wider text-xs">Resume not found in system</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
+function DetailRow({ icon: Icon, label, value, isLink, link }) {
+  return (
+    <motion.div 
+      whileHover={{ x: 4 }}
+      className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-50 hover:border-gray-100 hover:bg-blue-50/30 transition-all group/row"
+    >
+      <div className="w-9 h-9 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-400 group-hover/row:text-blue-500 group-hover/row:bg-blue-50 transition-all">
+        <Icon size={15} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">{label}</p>
+        {isLink ? (
+          <a href={link} className="text-gray-900 font-semibold text-xs truncate block hover:text-blue-600 transition-colors">{value}</a>
+        ) : (
+          <p className="text-gray-900 font-semibold text-xs truncate">{value || 'N/A'}</p>
+        )}
       </div>
     </motion.div>
   );

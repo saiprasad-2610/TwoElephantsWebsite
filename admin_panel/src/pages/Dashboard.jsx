@@ -6,10 +6,10 @@ import axios from 'axios';
 const API_BASE = 'http://localhost:8000/api';
 
 const statCards = [
-  { label: 'Contact Inquiries', icon: Mail, color: 'from-blue-500 to-cyan-500', key: 'contacts' },
-  { label: 'Job Roles', icon: Briefcase, color: 'from-purple-500 to-pink-500', key: 'jobs' },
-  { label: 'Applications', icon: FileText, color: 'from-orange-500 to-red-500', key: 'applications' },
-  { label: 'Articles', icon: Newspaper, color: 'from-green-500 to-emerald-500', key: 'articles' },
+  { label: 'Contact Inquiries', icon: Mail, gradient: 'from-blue-500 to-cyan-500', shadow: 'shadow-blue-500/30', key: 'contacts', delay: 0 },
+  { label: 'Job Roles', icon: Briefcase, gradient: 'from-purple-500 to-pink-500', shadow: 'shadow-purple-500/30', key: 'jobs', delay: 0.1 },
+  { label: 'Applications', icon: FileText, gradient: 'from-orange-500 to-red-500', shadow: 'shadow-orange-500/30', key: 'applications', delay: 0.2 },
+  { label: 'Articles', icon: Newspaper, gradient: 'from-emerald-500 to-teal-500', shadow: 'shadow-emerald-500/30', key: 'articles', delay: 0.3 },
 ];
 
 export default function Dashboard() {
@@ -48,123 +48,207 @@ export default function Dashboard() {
 
   const container = {
     hidden: { opacity: 0 },
-    show: { opacity: 1, transition: { staggerChildren: 0.1 } },
+    show: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
   };
 
   const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 100, damping: 15 } },
   };
 
   return (
-    <motion.div variants={container} initial="hidden" animate="show" className="font-['Ubuntu_Sans']">
+    <motion.div variants={container} initial="hidden" animate="show" className="font-['Inter']">
       <motion.div variants={item} className="mb-8">
-        <h1 className="text-4xl font-black text-white mb-2 tracking-tight">System Overview</h1>
+        <h1 className="text-3xl font-black text-gray-900 mb-1 tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+          System Overview
+        </h1>
         <p className="text-gray-500 font-medium">Welcome back! Here's a snapshot of your platform's activity.</p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
         {statCards.map((stat, index) => {
           const Icon = stat.icon;
           return (
             <motion.div
               key={stat.key}
               variants={item}
-              whileHover={{ y: -8, transition: { duration: 0.3 } }}
-              className="bg-[#0B1526] border border-white/5 rounded-2xl p-7 relative overflow-hidden group animated-gradient-border"
+              whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.3 } }}
+              className="relative bg-white border border-gray-100 rounded-2xl p-6 overflow-hidden group shadow-sm hover:shadow-xl transition-shadow duration-300"
             >
-              <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500`} />
+              {/* Animated Gradient Background */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500`} />
+              
+              {/* Corner Glow */}
+              <div className={`absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br ${stat.gradient} rounded-full blur-[60px] opacity-0 group-hover:opacity-40 transition-opacity duration-700`} />
+              
               <div className="relative z-10">
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-6 shadow-lg shadow-black/20`}>
-                  <Icon size={28} className="text-white" />
-                </div>
-                <h3 className="text-4xl font-black text-white mb-2 tracking-tighter">{stats[stat.key]}</h3>
-                <p className="text-gray-500 text-xs font-bold uppercase tracking-widest">{stat.label}</p>
+                <motion.div 
+                  whileHover={{ rotate: 6, scale: 1.1 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
+                  className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center mb-5 shadow-lg ${stat.shadow}`}
+                >
+                  <Icon size={22} className="text-white" />
+                </motion.div>
+                <h3 className="text-3xl font-black text-gray-900 mb-1 tracking-tight">{stats[stat.key]}</h3>
+                <p className="text-gray-400 text-[10px] font-semibold uppercase tracking-wider">{stat.label}</p>
               </div>
+
+              {/* Bottom Gradient Line */}
+              <motion.div 
+                className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${stat.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+              />
             </motion.div>
           );
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <motion.div variants={item} className="bg-[#0B1526] border border-white/5 rounded-3xl p-8 shadow-xl">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-xl font-bold text-white tracking-tight">Recent Inquiries</h2>
-            <div className="p-2.5 bg-blue-500/10 rounded-xl">
-               <Mail size={20} className="text-blue-400" />
+      {/* Activity Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Inquiries */}
+        <motion.div variants={item} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm overflow-hidden relative group">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-500/5 to-purple-500/5 rounded-full blur-[60px] -mr-20 -mt-20 group-hover:blur-[80px] transition-all duration-700" />
+          
+          <div className="flex items-center justify-between mb-6 relative">
+            <div className="flex items-center gap-3">
+              <motion.div 
+                whileHover={{ rotate: 6, scale: 1.1 }}
+                className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/30"
+              >
+                <Mail size={18} className="text-white" />
+              </motion.div>
+              <h2 className="text-lg font-bold text-gray-900 tracking-tight">Recent Inquiries</h2>
+            </div>
+            <div className="px-3 py-1.5 bg-blue-50 rounded-full border border-blue-100">
+              <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider">New</span>
             </div>
           </div>
-          <div className="space-y-4">
+          
+          <div className="space-y-3">
             {loading ? (
-              <div className="animate-pulse space-y-4">
+              <div className="animate-pulse space-y-3">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-20 bg-white/5 rounded-2xl" />
+                  <div key={i} className="h-[72px] bg-gray-50 rounded-xl" />
                 ))}
               </div>
             ) : recentContacts.length > 0 ? (
-              recentContacts.map((contact) => (
-                <div key={contact.id} className="group p-5 bg-white/5 hover:bg-white/[0.08] border border-white/5 rounded-2xl transition-all duration-300">
+              recentContacts.map((contact, idx) => (
+                <motion.div 
+                  key={contact.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="group/item p-4 bg-gradient-to-r from-gray-50 to-white hover:from-blue-50 hover:to-indigo-50 border border-gray-50 hover:border-blue-100 rounded-xl transition-all duration-300 cursor-pointer"
+                >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center text-white font-black text-sm">
+                    <div className="flex items-center gap-3.5">
+                      <motion.div 
+                        whileHover={{ rotate: 6, scale: 1.1 }}
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-md ${
+                          !contact.is_read 
+                            ? 'bg-gradient-to-br from-blue-500 to-indigo-500' 
+                            : 'bg-gradient-to-br from-gray-400 to-gray-500'
+                        }`}
+                      >
                         {contact.fname.charAt(0)}
-                      </div>
+                      </motion.div>
                       <div>
-                        <p className="text-sm font-bold text-white mb-1">{contact.fname} {contact.lname}</p>
-                        <p className="text-[11px] font-semibold text-gray-500">{contact.email}</p>
+                        <p className="text-sm font-bold text-gray-900 mb-0.5 flex items-center gap-2">
+                          {contact.fname} {contact.lname}
+                          {!contact.is_read && (
+                            <motion.span 
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="w-2 h-2 bg-blue-500 rounded-full"
+                            />
+                          )}
+                        </p>
+                        <p className="text-[11px] font-medium text-gray-400">{contact.email}</p>
                       </div>
                     </div>
-                    <div className={`flex items-center gap-2 px-3 py-1 rounded-full border ${contact.is_read ? 'bg-black/20 border-white/5' : 'bg-blue-500/10 border-blue-500/20'}`}>
-                      <div className={`w-1.5 h-1.5 rounded-full ${contact.is_read ? 'bg-gray-600' : 'bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.5)]'}`} />
-                      <span className={`text-[10px] font-bold uppercase tracking-wider ${contact.is_read ? 'text-gray-500' : 'text-blue-400'}`}>
+                    <motion.div 
+                      whileHover={{ scale: 1.1 }}
+                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border ${
+                        contact.is_read 
+                          ? 'bg-gray-50 border-gray-100' 
+                          : 'bg-blue-50 border-blue-100'
+                      }`}
+                    >
+                      <div className={`w-1.5 h-1.5 rounded-full ${contact.is_read ? 'bg-gray-300' : 'bg-blue-500 animate-pulse'}`} />
+                      <span className={`text-[9px] font-bold uppercase tracking-wider ${contact.is_read ? 'text-gray-400' : 'text-blue-500'}`}>
                         {contact.is_read ? 'Read' : 'New'}
                       </span>
-                    </div>
+                    </motion.div>
                   </div>
-                </div>
+                </motion.div>
               ))
             ) : (
-              <p className="text-center py-10 text-gray-600 font-medium">No recent inquiries found.</p>
+              <div className="text-center py-8">
+                <p className="text-gray-400 font-medium text-sm">No recent inquiries found.</p>
+              </div>
             )}
           </div>
         </motion.div>
 
-        <motion.div variants={item} className="bg-[#0B1526] border border-white/5 rounded-3xl p-8 shadow-xl">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-xl font-bold text-white tracking-tight">Latest Applications</h2>
-            <div className="p-2.5 bg-indigo-500/10 rounded-xl">
-               <FileText size={20} className="text-indigo-400" />
+        {/* Latest Applications */}
+        <motion.div variants={item} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm overflow-hidden relative group">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-full blur-[60px] -mr-20 -mt-20 group-hover:blur-[80px] transition-all duration-700" />
+          
+          <div className="flex items-center justify-between mb-6 relative">
+            <div className="flex items-center gap-3">
+              <motion.div 
+                whileHover={{ rotate: 6, scale: 1.1 }}
+                className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30"
+              >
+                <FileText size={18} className="text-white" />
+              </motion.div>
+              <h2 className="text-lg font-bold text-gray-900 tracking-tight">Latest Applications</h2>
+            </div>
+            <div className="px-3 py-1.5 bg-indigo-50 rounded-full border border-indigo-100">
+              <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider">Pipeline</span>
             </div>
           </div>
-          <div className="space-y-4">
+          
+          <div className="space-y-3">
             {loading ? (
-              <div className="animate-pulse space-y-4">
+              <div className="animate-pulse space-y-3">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="h-20 bg-white/5 rounded-2xl" />
+                  <div key={i} className="h-[72px] bg-gray-50 rounded-xl" />
                 ))}
               </div>
             ) : recentApplications.length > 0 ? (
-              recentApplications.map((app) => (
-                <div key={app.id} className="group p-5 bg-white/5 hover:bg-white/[0.08] border border-white/5 rounded-2xl transition-all duration-300">
+              recentApplications.map((app, idx) => (
+                <motion.div 
+                  key={app.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="group/item p-4 bg-gradient-to-r from-gray-50 to-white hover:from-indigo-50 hover:to-purple-50 border border-gray-50 hover:border-indigo-100 rounded-xl transition-all duration-300 cursor-pointer"
+                >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-black text-sm">
-                        {app.first_name.charAt(0)}
-                      </div>
+                    <div className="flex items-center gap-3.5">
+                      <motion.div 
+                        whileHover={{ rotate: 6, scale: 1.1 }}
+                        className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm shadow-md"
+                      >
+                        {app.first_name ? app.first_name.charAt(0) : 'A'}
+                      </motion.div>
                       <div>
-                        <p className="text-sm font-bold text-white mb-1">{app.first_name} {app.last_name}</p>
-                        <p className="text-[11px] font-semibold text-gray-500">{app.role_name || 'General'}</p>
+                        <p className="text-sm font-bold text-gray-900 mb-0.5">{app.first_name} {app.last_name}</p>
+                        <p className="text-[11px] font-medium text-gray-400">{app.role_title || 'General'}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2 px-3 py-1 bg-black/20 rounded-full border border-white/5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 shadow-[0_0_8px_rgba(129,140,248,0.5)]" />
-                      <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider">{app.status}</span>
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 bg-indigo-50 rounded-full border border-indigo-100">
+                      <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                      <span className="text-[9px] font-bold text-indigo-500 uppercase tracking-wider">{app.status || 'New'}</span>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))
             ) : (
-              <p className="text-center py-10 text-gray-600 font-medium">No recent applications found.</p>
+              <div className="text-center py-8">
+                <p className="text-gray-400 font-medium text-sm">No recent applications found.</p>
+              </div>
             )}
           </div>
         </motion.div>

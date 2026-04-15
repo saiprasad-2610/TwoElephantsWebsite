@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { Mail, Search, Eye, Check, X, MessageSquare, MapPin, Globe } from 'lucide-react';
+import { Mail, Search, Check, X, MessageSquare, MapPin, Globe, Trash2, Clock, ChevronDown, ExternalLink } from 'lucide-react';
 
 const API_BASE = 'http://localhost:8000/api';
 
@@ -12,6 +12,7 @@ export default function Contacts() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all');
   const [selectedContact, setSelectedContact] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     fetchContacts();
@@ -33,6 +34,9 @@ export default function Contacts() {
       const contact = contacts.find((c) => c.id === id);
       await axios.patch(`${API_BASE}/contacts/${id}/`, { ...contact, is_read: true });
       setContacts(contacts.map((c) => (c.id === id ? { ...c, is_read: true } : c)));
+      if (selectedContact?.id === id) {
+        setSelectedContact({ ...selectedContact, is_read: true });
+      }
       toast.success('Marked as read');
     } catch (error) {
       toast.error('Failed to update');
@@ -45,6 +49,7 @@ export default function Contacts() {
       await axios.delete(`${API_BASE}/contacts/${id}/`);
       setContacts(contacts.filter((c) => c.id !== id));
       setSelectedContact(null);
+      setIsModalOpen(false);
       toast.success('Contact deleted');
     } catch (error) {
       toast.error('Failed to delete');
@@ -61,199 +66,426 @@ export default function Contacts() {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  };
+
+  const openFullDossier = (contact) => {
+    setSelectedContact(contact);
+    setIsModalOpen(true);
   };
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-['Ubuntu_Sans']">
-      <div className="flex items-center justify-between mb-10">
+    <motion.div 
+      initial={{ opacity: 0, y: 8 }} 
+      animate={{ opacity: 1, y: 0 }} 
+      className="font-['Inter'] max-w-[1600px] mx-auto pb-20"
+    >
+      {/* Header */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10"
+      >
         <div>
-          <h1 className="text-4xl font-black text-white mb-2 tracking-tight">Client Inquiries</h1>
+          <h1 className="text-3xl font-black text-gray-900 mb-1 tracking-tight bg-gradient-to-r from-gray-900 via-blue-800 to-gray-900 bg-clip-text text-transparent">
+            Client Inquiries
+          </h1>
           <p className="text-gray-500 font-medium">Manage all contact form submissions from your website</p>
         </div>
-        <div className="bg-[#0B1526] border border-white/5 rounded-[24px] px-6 py-4 shadow-xl">
-          <span className="text-3xl font-black text-blue-400">{contacts.filter((c) => !c.is_read).length}</span>
-          <span className="text-gray-500 text-[10px] font-bold uppercase tracking-widest ml-3">Unread</span>
-        </div>
-      </div>
+        <motion.div 
+          whileHover={{ scale: 1.05 }}
+          className="flex items-center gap-4 bg-white border border-gray-200 rounded-2xl px-5 py-3 shadow-lg shadow-blue-500/10"
+        >
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white shadow-lg">
+            <Mail size={18} />
+          </div>
+          <div>
+            <span className="text-xl font-black text-gray-900 block leading-none">{contacts.filter((c) => !c.is_read).length}</span>
+            <span className="text-gray-400 text-[9px] font-semibold uppercase tracking-wider">Unread Inquiries</span>
+          </div>
+        </motion.div>
+      </motion.div>
 
-      <div className="flex flex-col md:flex-row gap-6 mb-10">
-        <div className="relative flex-1 group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-400 transition-colors" size={20} />
+      {/* Filter Bar */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="grid grid-cols-1 xl:grid-cols-4 gap-4 mb-8"
+      >
+        <div className="xl:col-span-2 relative group">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={18} />
           <input
             type="text"
             placeholder="Search by name or email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-6 py-4 bg-[#0B1526] border border-white/5 rounded-2xl text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/50 focus:ring-4 focus:ring-blue-500/10 transition-all font-semibold"
+            className="w-full pl-12 pr-5 py-3.5 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all font-medium text-sm shadow-sm hover:shadow-md"
           />
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 xl:col-span-2">
           {['all', 'unread', 'read'].map((f) => (
-            <button
+            <motion.button
               key={f}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setFilter(f)}
-              className={`px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all ${
+              className={`flex-1 px-5 py-3.5 rounded-xl font-bold uppercase tracking-wider text-xs transition-all ${
                 filter === f 
-                  ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
-                  : 'bg-[#0B1526] text-gray-500 hover:text-white border border-white/5'
+                  ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/30' 
+                  : 'bg-white text-gray-500 hover:text-gray-700 border border-gray-200 hover:border-blue-200 hover:shadow-sm'
               }`}
             >
               {f}
-            </button>
+            </motion.button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        <div className="lg:col-span-2 space-y-5">
+      {/* Main Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Contact List */}
+        <div className="lg:col-span-7 xl:col-span-8 space-y-3">
           {loading ? (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-24 bg-white/5 rounded-[24px] animate-pulse" />
+                <div key={i} className="h-[90px] bg-gray-100 rounded-2xl animate-pulse border border-gray-100" />
               ))}
             </div>
           ) : filteredContacts.length > 0 ? (
-            filteredContacts.map((contact) => (
+            filteredContacts.map((contact, idx) => (
               <motion.div
                 key={contact.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                onClick={() => setSelectedContact(contact)}
-                className={`bg-[#0B1526] border rounded-[28px] p-6 cursor-pointer transition-all duration-300 group ${
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.05 }}
+                whileHover={{ scale: 1.01, y: -2 }}
+                whileTap={{ scale: 0.99 }}
+                onClick={() => openFullDossier(contact)}
+                className={`relative group cursor-pointer transition-all duration-300 rounded-2xl p-4 border-2 ${
                   selectedContact?.id === contact.id 
-                    ? 'border-blue-500/50 bg-blue-500/[0.03] shadow-lg shadow-blue-500/5' 
-                    : 'border-white/5 hover:border-white/10 hover:bg-white/[0.02]'
+                    ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-lg shadow-blue-500/10' 
+                    : 'bg-white border-gray-100 hover:border-blue-200 hover:shadow-lg'
                 } ${!contact.is_read ? 'border-l-4 border-l-blue-500' : ''}`}
               >
-                <div className="flex items-start gap-6">
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg ${
-                    !contact.is_read ? 'bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-blue-500/20' : 'bg-gradient-to-tr from-gray-700 to-gray-800'
-                  }`}>
+                {/* Gradient Hover Effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 to-indigo-500/0 group-hover:from-blue-500/[0.02] group-hover:to-indigo-500/[0.02] rounded-2xl transition-opacity duration-500" />
+                
+                <div className="flex items-center gap-4 relative z-10">
+                  <motion.div 
+                    whileHover={{ rotate: 6, scale: 1.1 }}
+                    className={`w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg transition-all duration-300 ${
+                      !contact.is_read 
+                        ? 'bg-gradient-to-br from-blue-500 to-indigo-500 shadow-blue-500/30 -rotate-3' 
+                        : 'bg-gradient-to-br from-gray-500 to-gray-600'
+                    }`}
+                  >
                     {contact.fname.charAt(0)}
-                  </div>
+                  </motion.div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-4 mb-2">
-                      <h3 className="text-white font-black text-lg group-hover:text-blue-400 transition-colors tracking-tight">{contact.fname} {contact.lname}</h3>
-                      {!contact.is_read && <span className="px-3 py-1 bg-blue-500/10 text-blue-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-blue-500/20">New</span>}
+                    <div className="flex items-center gap-2.5 mb-1">
+                      <h3 className="text-base font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{contact.fname} {contact.lname}</h3>
+                      {!contact.is_read && (
+                        <motion.span 
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          className="px-2.5 py-1 bg-blue-50 text-blue-600 text-[8px] font-bold uppercase tracking-wider rounded-full border border-blue-100"
+                        >
+                          New
+                        </motion.span>
+                      )}
                     </div>
-                    <p className="text-gray-500 text-sm font-bold mb-3">{contact.email}</p>
-                    <div className="flex flex-wrap gap-x-6 gap-y-2 text-[10px] font-bold text-gray-600 uppercase tracking-wider">
-                      {contact.location && <span className="flex items-center gap-2"><MapPin size={14} className="text-blue-500/50" /> {contact.location}</span>}
-                      {contact.interest && <span className="flex items-center gap-2"><Globe size={14} className="text-blue-500/50" /> {contact.interest}</span>}
+                    <p className="text-gray-400 text-[13px] font-medium mb-1.5">{contact.email}</p>
+                    <div className="flex flex-wrap gap-x-5 gap-y-1 text-[11px] font-medium text-gray-400">
+                      {contact.location && <span className="flex items-center gap-1.5"><MapPin size={11} className="text-blue-400" /> {contact.location}</span>}
+                      {contact.interest && <span className="flex items-center gap-1.5"><Globe size={11} className="text-blue-400" /> {contact.interest}</span>}
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-gray-600 text-[10px] font-black uppercase tracking-widest">{formatDate(contact.submitted_at)}</p>
+                  <div className="hidden sm:flex flex-col items-end gap-1.5">
+                    <p className="text-gray-300 text-[9px] font-semibold uppercase tracking-wider">{formatDate(contact.submitted_at)}</p>
+                    <motion.div 
+                      whileHover={{ scale: 1.1 }}
+                      className={`w-6 h-6 rounded-full flex items-center justify-center border transition-all duration-300 ${
+                        selectedContact?.id === contact.id ? 'bg-gradient-to-br from-blue-500 to-indigo-500 border-transparent text-white' : 'border-gray-200 text-gray-300 group-hover:border-blue-300 group-hover:text-blue-400'
+                      }`}
+                    >
+                      <ChevronDown size={14} className="rotate-[-90deg]" />
+                    </motion.div>
                   </div>
                 </div>
               </motion.div>
             ))
           ) : (
-            <div className="bg-[#0B1526] border border-white/5 rounded-[32px] p-20 text-center shadow-xl">
-              <Mail size={48} className="mx-auto text-gray-700 mb-6" />
-              <p className="text-gray-500 font-bold uppercase tracking-widest text-sm">No inquiries found in database</p>
+            <div className="bg-white border border-gray-100 rounded-2xl p-16 text-center shadow-sm">
+              <Mail size={32} className="mx-auto text-gray-200 mb-3" />
+              <p className="text-gray-400 font-medium uppercase tracking-wider text-[10px]">No inquiries found in database</p>
             </div>
           )}
         </div>
 
-        <div className="lg:col-span-1">
+        {/* Selected Summary Panel */}
+        <div className="lg:col-span-5 xl:col-span-4">
           {selectedContact ? (
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="bg-[#0B1526] border border-white/5 rounded-[40px] p-10 sticky top-32 shadow-2xl overflow-hidden group"
+              key={selectedContact.id}
+              initial={{ opacity: 0, scale: 0.95, x: 20 }}
+              animate={{ opacity: 1, scale: 1, x: 0 }}
+              className="bg-white border border-gray-100 rounded-2xl p-6 sticky top-32 shadow-lg overflow-hidden relative group"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/5 rounded-full blur-3xl -z-10" />
+              {/* Animated Gradient */}
+              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-full blur-[60px] group-hover:blur-[80px] transition-all duration-700" />
               
-              <div className="flex items-center justify-between mb-10">
-                <div>
-                  <h3 className="text-white font-black text-xl tracking-tight">Inquiry Details</h3>
-                  <p className="text-gray-500 text-[10px] font-bold uppercase tracking-widest mt-1">Dossier #{selectedContact.id}</p>
+              <div className="text-center mb-6 relative z-10">
+                <motion.div 
+                  whileHover={{ rotate: 6, scale: 1.05 }}
+                  className="relative inline-block mb-4"
+                >
+                  <div className={`w-20 h-20 rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-xl transition-all duration-300 ${
+                    !selectedContact.is_read 
+                      ? 'bg-gradient-to-tr from-blue-500 to-indigo-500 shadow-blue-500/30' 
+                      : 'bg-gradient-to-tr from-gray-500 to-gray-600'
+                  }`}>
+                    {selectedContact.fname.charAt(0)}
+                  </div>
+                  {!selectedContact.is_read && (
+                    <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-lg bg-blue-500 border-2 border-white flex items-center justify-center shadow-lg">
+                      <span className="text-white text-[10px] font-bold">New</span>
+                    </div>
+                  )}
+                </motion.div>
+                
+                <h2 className="text-lg font-bold text-gray-900 mb-1.5">{selectedContact.fname} {selectedContact.lname}</h2>
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-gray-50 rounded-full border border-gray-100">
+                   <Mail size={12} className="text-blue-500" />
+                   <p className="text-[10px] font-bold text-gray-600 uppercase tracking-wider">{selectedContact.email}</p>
                 </div>
-                <button onClick={() => setSelectedContact(null)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-all">
-                  <X size={20} />
-                </button>
               </div>
 
-              <div className="space-y-6 mb-10">
-                <div className="flex items-center gap-4 group/item">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-500 group-hover/item:text-blue-400 transition-colors">
-                    <User size={18} />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-0.5">Full Name</p>
-                    <p className="text-white font-bold text-sm">{selectedContact.fname} {selectedContact.lname}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 group/item">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-500 group-hover/item:text-blue-400 transition-colors">
-                    <Mail size={18} />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-0.5">Email Address</p>
-                    <a href={`mailto:${selectedContact.email}`} className="text-white font-bold text-sm hover:text-blue-400 transition-colors">{selectedContact.email}</a>
-                  </div>
-                </div>
+              <div className="space-y-2.5 mb-6">
                 {selectedContact.location && (
-                  <div className="flex items-center gap-4 group/item">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-500 group-hover/item:text-blue-400 transition-colors">
-                      <MapPin size={18} />
+                  <motion.div whileHover={{ x: 4 }} className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-50 hover:border-gray-100 hover:bg-blue-50/30 transition-all">
+                    <div className="w-9 h-9 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-400">
+                      <MapPin size={15} />
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-0.5">Location</p>
-                      <p className="text-white font-bold text-sm">{selectedContact.location}</p>
+                    <div>
+                      <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Location</p>
+                      <p className="text-gray-900 font-semibold text-xs">{selectedContact.location}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
                 {selectedContact.interest && (
-                  <div className="flex items-center gap-4 group/item">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-gray-500 group-hover/item:text-blue-400 transition-colors">
-                      <Globe size={18} />
+                  <motion.div whileHover={{ x: 4 }} className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-50 hover:border-gray-100 hover:bg-blue-50/30 transition-all">
+                    <div className="w-9 h-9 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-400">
+                      <Globe size={15} />
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest mb-0.5">Area of Interest</p>
-                      <p className="text-white font-bold text-sm">{selectedContact.interest}</p>
+                    <div>
+                      <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Area of Interest</p>
+                      <p className="text-gray-900 font-semibold text-xs">{selectedContact.interest}</p>
                     </div>
+                  </motion.div>
+                )}
+                <motion.div whileHover={{ x: 4 }} className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-50 hover:border-gray-100 hover:bg-blue-50/30 transition-all">
+                  <div className="w-9 h-9 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-400">
+                    <Clock size={15} />
+                  </div>
+                  <div>
+                    <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">Submitted</p>
+                    <p className="text-gray-900 font-semibold text-xs">{formatDate(selectedContact.submitted_at)}</p>
+                  </div>
+                </motion.div>
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setIsModalOpen(true)}
+                className="w-full py-3 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all mb-2.5 text-[10px] uppercase tracking-wider"
+              >
+                View Full Dossier
+              </motion.button>
+
+              <div className="flex gap-2.5">
+                {!selectedContact.is_read ? (
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => markAsRead(selectedContact.id)}
+                    className="flex-1 flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold rounded-xl shadow-sm transition-all uppercase tracking-wider text-[10px]"
+                  >
+                    <Check size={14} />
+                    Acknowledge
+                  </motion.button>
+                ) : (
+                  <div className="flex-1 flex items-center justify-center gap-2 py-3 bg-emerald-50 text-emerald-600 font-bold rounded-xl border border-emerald-100 uppercase tracking-wider text-[10px]">
+                    <Check size={14} />
+                    Reviewed
                   </div>
                 )}
-              </div>
-
-              <div className="mb-10">
-                <label className="text-[10px] font-black text-gray-500 uppercase tracking-[2px] mb-4 block">Message Content</label>
-                <div className="bg-black/20 rounded-[32px] p-8 border border-white/5">
-                  <p className="text-gray-300 text-sm font-medium leading-relaxed whitespace-pre-wrap italic">"{selectedContact.message}"</p>
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                {!selectedContact.is_read && (
-                  <button
-                    onClick={() => markAsRead(selectedContact.id)}
-                    className="flex-1 flex items-center justify-center gap-3 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black rounded-2xl shadow-xl shadow-blue-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] uppercase tracking-widest text-xs"
-                  >
-                    <Check size={18} />
-                    Acknowledge
-                  </button>
-                )}
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1, backgroundColor: 'rgb(239, 68, 68)', color: 'white' }}
                   onClick={() => deleteContact(selectedContact.id)}
-                  className="w-16 h-16 flex items-center justify-center bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 rounded-2xl transition-all"
+                  className="w-12 h-12 flex items-center justify-center bg-red-50 text-red-500 border border-red-100 rounded-xl transition-all"
                 >
-                  <Trash2 size={20} />
-                </button>
+                  <Trash2 size={16} />
+                </motion.button>
               </div>
             </motion.div>
           ) : (
-            <div className="bg-[#0B1526] border border-white/5 rounded-[40px] p-20 text-center sticky top-32 shadow-xl border-dashed">
-              <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                 <MessageSquare size={40} className="text-gray-700" />
+            <div className="bg-white border border-dashed border-gray-200 rounded-2xl p-12 text-center sticky top-32 shadow-sm">
+              <div className="w-14 h-14 bg-gray-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+                 <MessageSquare size={28} className="text-gray-300" />
               </div>
-              <p className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">Select an inquiry dossier to begin review</p>
+              <h3 className="text-sm font-bold text-gray-600 mb-1">Review Pending</h3>
+              <p className="text-gray-300 font-medium uppercase tracking-wider text-[9px]">Select an inquiry dossier to begin</p>
             </div>
           )}
         </div>
       </div>
+
+      {/* Full Detail Modal */}
+      <AnimatePresence>
+        {isModalOpen && selectedContact && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="relative w-full max-w-[900px] h-full max-h-[85vh] bg-white rounded-3xl shadow-2xl overflow-hidden"
+            >
+              {/* Gradient Header Bar */}
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500" />
+              
+              {/* Close Button */}
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-6 right-6 w-9 h-9 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center text-gray-500 transition-all z-[110]"
+              >
+                <X size={18} />
+              </button>
+
+              {/* Header */}
+              <div className="p-6 border-b border-gray-100">
+                <div className="flex items-center gap-5">
+                  <div className={`w-20 h-20 rounded-2xl flex items-center justify-center text-white text-3xl font-black shadow-xl transition-all duration-300 ${
+                    !selectedContact.is_read 
+                      ? 'bg-gradient-to-tr from-blue-500 to-indigo-500 shadow-blue-500/30' 
+                      : 'bg-gradient-to-tr from-gray-500 to-gray-600'
+                  }`}>
+                    {selectedContact.fname.charAt(0)}
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2.5 mb-1.5">
+                      <h2 className="text-xl md:text-2xl font-bold text-gray-900">{selectedContact.fname} {selectedContact.lname}</h2>
+                      {!selectedContact.is_read && (
+                        <span className="px-2.5 py-1 bg-blue-50 text-blue-600 text-[8px] font-bold uppercase tracking-wider rounded-full border border-blue-100">New Inquiry</span>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 rounded-lg border border-gray-100">
+                        <Mail size={12} className="text-blue-500" />
+                        <span className="text-[10px] font-bold text-gray-600 uppercase tracking-wider">{selectedContact.email}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 rounded-lg border border-gray-100">
+                        <Clock size={12} className="text-indigo-400" />
+                        <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Received: {formatDate(selectedContact.submitted_at)}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="p-6 overflow-y-auto custom-scrollbar h-[calc(100%-220px)]">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
+                  {selectedContact.location && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-4 bg-gradient-to-br from-gray-50 to-blue-50/30 rounded-xl border border-gray-100"
+                    >
+                      <label className="text-[9px] font-bold text-gray-400 uppercase tracking-[2px] mb-2 flex items-center gap-1.5">
+                        <MapPin size={11} /> Location
+                      </label>
+                      <p className="text-gray-900 font-bold text-sm">{selectedContact.location}</p>
+                    </motion.div>
+                  )}
+                  {selectedContact.interest && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 }}
+                      className="p-4 bg-gradient-to-br from-gray-50 to-indigo-50/30 rounded-xl border border-gray-100"
+                    >
+                      <label className="text-[9px] font-bold text-gray-400 uppercase tracking-[2px] mb-2 flex items-center gap-1.5">
+                        <Globe size={11} /> Area of Interest
+                      </label>
+                      <p className="text-gray-900 font-bold text-sm">{selectedContact.interest}</p>
+                    </motion.div>
+                  )}
+                </div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="mb-8"
+                >
+                  <label className="text-[9px] font-bold text-gray-400 uppercase tracking-[2px] mb-4 flex items-center gap-2">
+                    <MessageSquare size={11} /> Message Content
+                  </label>
+                  <div className="p-5 bg-gradient-to-br from-gray-50 to-blue-50/30 rounded-xl border border-gray-100">
+                    <p className="text-gray-600 text-[13px] font-medium leading-relaxed whitespace-pre-wrap">
+                      {selectedContact.message}
+                    </p>
+                  </div>
+                </motion.div>
+
+                <div className="flex gap-3">
+                  {!selectedContact.is_read ? (
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => markAsRead(selectedContact.id)}
+                      className="flex-1 flex items-center justify-center gap-2.5 py-4 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold rounded-xl shadow-lg transition-all uppercase tracking-wider text-[11px]"
+                    >
+                      <Check size={18} />
+                      Acknowledge Inquiry
+                    </motion.button>
+                  ) : (
+                    <div className="flex-1 flex items-center justify-center gap-2.5 py-4 bg-emerald-50 text-emerald-600 font-bold rounded-xl border border-emerald-100 uppercase tracking-wider text-[11px]">
+                      <Check size={18} />
+                      This Inquiry Has Been Reviewed
+                    </div>
+                  )}
+                  <a
+                    href={`mailto:${selectedContact.email}`}
+                    className="flex items-center justify-center gap-2.5 px-6 py-4 bg-gradient-to-r from-gray-50 to-white hover:from-gray-100 hover:to-gray-50 border border-gray-200 rounded-xl text-gray-700 font-bold transition-all uppercase tracking-wider text-[11px]"
+                  >
+                    <ExternalLink size={18} />
+                    Reply
+                  </a>
+                  <motion.button
+                    whileHover={{ scale: 1.1, backgroundColor: 'rgb(239, 68, 68)', color: 'white' }}
+                    onClick={() => deleteContact(selectedContact.id)}
+                    className="w-14 h-14 flex items-center justify-center bg-red-50 text-red-500 border border-red-100 rounded-xl transition-all"
+                  >
+                    <Trash2 size={18} />
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
