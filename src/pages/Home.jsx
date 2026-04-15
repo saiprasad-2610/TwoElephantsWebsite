@@ -1,6 +1,7 @@
 
 import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import axios from 'axios';
 import {
   ArrowRight,
   ExternalLink,
@@ -19,14 +20,20 @@ import {
 } from 'lucide-react';
 import { FaLinkedin } from "react-icons/fa";
 import { useNavigate, Link } from 'react-router-dom';
-import { articles } from '../data/articles';
 
 import ParticleBackground from '../components/ParticleBackground';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/blog.css';
 import '../styles/team.css';
-// import '../assets/images';
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+const getImageUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith('http')) return url;
+  return `http://localhost:8000${url}`;
+};
 
 const MotionLink = motion(Link);
 
@@ -586,7 +593,7 @@ const Team = () => {
   );
 };
 
-const Insights = () => {
+const Insights = ({ articles }) => {
   const navigate = useNavigate();
 
   return (
@@ -598,6 +605,7 @@ const Insights = () => {
           <h2 className="h2-title">Thinking at the Intersection of <em>Industry</em></h2>
           <p className="services-sub">Deep dives into the technologies shaping the future of global enterprise.</p>
         </div>
+        {articles && articles.length > 0 ? (
         <motion.div
           className="insights-grid"
           initial={{ opacity: 0 }}
@@ -607,8 +615,8 @@ const Insights = () => {
         >
           {articles.map((article, idx) => (
             <MotionLink
-              key={idx}
-              to={`/insights/${article.id}`}
+              key={article.id || idx}
+              to={`/insights/${article.slug || article.id}`}
               className="blog-card"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -617,9 +625,9 @@ const Insights = () => {
               whileHover={{ y: -10 }}
             >
               <div className="blog-img-wrap">
-                <img src={article.img} alt={article.title} className="blog-img" />
+                <img src={getImageUrl(article.img)} alt={article.title} className="blog-img" />
                 <div className="blog-overlay-info">
-                  <span>{article.readTime}</span>
+                  <span>{article.read_time}</span>
                 </div>
               </div>
               <div className="blog-content">
@@ -633,6 +641,9 @@ const Insights = () => {
             </MotionLink>
           ))}
         </motion.div>
+        ) : (
+          <p className="text-center text-gray-500 py-12">No articles available at the moment.</p>
+        )}
       </div>
     </section>
   );
@@ -658,6 +669,19 @@ const Home = () => {
     damping: 30,
     restDelta: 0.001
   });
+  const [articles, setArticles] = useState([]);
+
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/api/public/articles/`);
+        setArticles(res.data);
+      } catch (error) {
+        console.error('Failed to fetch articles:', error);
+      }
+    };
+    fetchArticles();
+  }, []);
 
   return (
     <div className="page-wrapper">
@@ -669,7 +693,7 @@ const Home = () => {
         <SectionReveal><Story /></SectionReveal>
         <SectionReveal><Services /></SectionReveal>
         <SectionReveal><Team /></SectionReveal>
-        <SectionReveal><Insights /></SectionReveal>
+        <SectionReveal><Insights articles={articles} /></SectionReveal>
 
         {/* Unified CTA */}
         <SectionReveal>

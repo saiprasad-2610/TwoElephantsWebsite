@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { NavHashLink } from 'react-router-hash-link';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 import {
   FaUser,
   FaCalendar,
@@ -12,17 +13,28 @@ import {
   FaArrowLeft
 } from "react-icons/fa";
 
-import { articles } from '../data/articles';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/blog.css';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
+const getImageUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith('http')) return url;
+  return `http://localhost:8000${url}`;
+};
+
 const ArticleDetail = () => {
-  const { id } = useParams();
-  const article = articles.find(a => a.id === id);
+  const { slug } = useParams();
+  const [article, setArticle] = useState(null);
+  const [allArticles, setAllArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    fetchData();
 
     const updateProgress = () => {
       const progressBar = document.getElementById('scroll-progress');
@@ -37,9 +49,35 @@ const ArticleDetail = () => {
     window.addEventListener('scroll', updateProgress, { passive: true });
     updateProgress();
     return () => window.removeEventListener('scroll', updateProgress);
-  }, []);
+  }, [slug]);
 
-  if (!article) {
+  const fetchData = async () => {
+    try {
+      const [articleRes, allRes] = await Promise.all([
+        axios.get(`${API_BASE}/api/public/articles/${slug}/`),
+        axios.get(`${API_BASE}/api/public/articles/`)
+      ]);
+      setArticle(articleRes.data);
+      setAllArticles(allRes.data);
+    } catch (err) {
+      console.error('Failed to fetch article:', err);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="error-page section-padding" style={{ textAlign: 'center' }}>
+        <div className="container">
+          <h2>Loading article...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !article) {
     return (
       <div className="error-page section-padding" style={{ textAlign: 'center' }}>
         <div className="container">
@@ -52,7 +90,7 @@ const ArticleDetail = () => {
     );
   }
 
-  const relatedArticles = articles.filter(a => a.cat === article.cat && a.id !== id).slice(0, 2);
+  const relatedArticles = allArticles.filter(a => a.cat === article.cat && a.slug !== slug).slice(0, 2);
   const shareUrl = window.location.href;
   const shareTitle = article.title;
 
@@ -81,14 +119,14 @@ const ArticleDetail = () => {
         <article>
           <header className="article-header-standard">
             <div className="container">
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
                 <div className="eyebrow amber no-line">{article.cat}</div>
                 <h1 className="article-title-main">{article.title}</h1>
-                
+
                 <div className="article-meta-row">
                   <div className="meta-item">
                     <FaUser size={14} />
@@ -100,28 +138,30 @@ const ArticleDetail = () => {
                   </div>
                   <div className="meta-item">
                     <FaClock size={14} />
-                    <span>{article.readTime}</span>
+                    <span>{article.read_time}</span>
                   </div>
                 </div>
               </motion.div>
             </div>
           </header>
 
-          <motion.div 
-            className="article-hero-image container"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <img src={article.img} alt={article.title} className="featured-image" />
-          </motion.div>
+          {article.img && (
+            <motion.div
+              className="article-hero-image container"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <img src={getImageUrl(article.img)} alt={article.title} className="featured-image" />
+            </motion.div>
+          )}
 
           <div className="article-content-standard section-padding">
             <div className="container-narrow">
               <p className="article-lead">{article.excerpt}</p>
-              
+
               <div className="article-body-text">
-                {article.content.map((paragraph, index) => (
+                {article.content && article.content.map((paragraph, index) => (
                   <p key={index}>{paragraph}</p>
                 ))}
               </div>
@@ -142,60 +182,30 @@ const ArticleDetail = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="article-navigation">
                 <NavHashLink smooth to="/#insights" className="btn btn-outline-dark">
                   <FaArrowLeft size={14} /> Back to All Insights
                 </NavHashLink>
               </div>
+
+              {relatedArticles.length > 0 && (
+                <div className="related-articles">
+                  <h3>Related Articles</h3>
+                  <div className="related-grid">
+                    {relatedArticles.map((rel) => (
+                      <Link key={rel.slug} to={`/insights/${rel.slug}`} className="related-card">
+                        {rel.img && <img src={getImageUrl(rel.img)} alt={rel.title} />}
+                        <span className="blog-cat">{rel.cat}</span>
+                        <h4>{rel.title}</h4>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </article>
-
-        {relatedArticles.length > 0 && (
-          <section className="related-articles section-padding">
-            <div className="container">
-              <motion.div 
-                className="section-header text-center"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-              >
-                <h2 className="section-title">Related Insights</h2>
-                <p className="section-subtitle">Explore more articles in {article.cat}</p>
-              </motion.div>
-
-              <div className="related-articles-grid">
-                {relatedArticles.map((relatedArticle, index) => (
-                  <motion.div 
-                    key={relatedArticle.id}
-                    className="related-article-card"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                  >
-                    <Link to={`/insights/${relatedArticle.id}`} className="related-article-link">
-                      <div className="related-article-image">
-                        <img src={relatedArticle.img} alt={relatedArticle.title} />
-                      </div>
-                      <div className="related-article-content">
-                        <div className="eyebrow amber">{relatedArticle.cat}</div>
-                        <h3>{relatedArticle.title}</h3>
-                        <p>{relatedArticle.excerpt}</p>
-                        <div className="related-article-meta">
-                          <span>{relatedArticle.author}</span>
-                          <span>{relatedArticle.readTime}</span>
-                        </div>
-                      </div>
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
       </main>
 
       <Footer />

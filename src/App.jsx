@@ -10,13 +10,13 @@ import NotFound from './pages/NotFound'
 
 function App() {
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/story" element={<OurStory />} />
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/insights/:id" element={<ArticleDetail />} />
+        <Route path="/insights/:slug" element={<ArticleDetail />} />
         <Route path="/careers" element={<Careers />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

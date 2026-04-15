@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import emailjs from '@emailjs/browser';
+import axios from 'axios';
 import {
   Mail,
   Phone,
@@ -16,6 +17,8 @@ import '../styles/Contact.css';
 
 const CONTACT_RECEIVER_EMAIL =
   import.meta.env.VITE_CONTACT_RECEIVER_EMAIL || 'support@twoelephants.tech';
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 const Contact = () => {
   const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success, error
@@ -40,54 +43,61 @@ const Contact = () => {
     setFormError('');
 
     try {
+      await axios.post(`${API_BASE}/api/public/contact/`, {
+        fname: formData.fname,
+        lname: formData.lname,
+        email: formData.email,
+        location: formData.location,
+        interest: formData.interest,
+        message: formData.message
+      });
+
       const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
       const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-      if (!serviceId || !templateId || !publicKey) {
-        throw new Error('Missing EmailJS configuration');
+      if (serviceId && templateId && publicKey) {
+        const fullName = `${formData.fname} ${formData.lname}`.trim();
+        const submittedAt = new Date().toLocaleString('en-IN', {
+          dateStyle: 'medium',
+          timeStyle: 'short',
+          hour12: true,
+        });
+        const interest = formData.interest || 'General inquiry';
+        const safeMessage = formData.message.trim();
+
+        await emailjs.send(
+          serviceId,
+          templateId,
+          {
+            to_email: CONTACT_RECEIVER_EMAIL,
+            reply_to: formData.email,
+            subject: `New Contact Inquiry - ${interest}`,
+            from_name: fullName,
+            from_email: formData.email,
+            name: fullName,
+            email: formData.email,
+            location: formData.location,
+            interest,
+            message: safeMessage,
+            time: submittedAt,
+            title: `New Contact Inquiry - ${interest}`,
+            company_name: 'Two Elephants Website',
+            submitted_at: submittedAt,
+            summary_text: [
+              `New inquiry from ${fullName}`,
+              `Email: ${formData.email}`,
+              `Location: ${formData.location}`,
+              `Interest: ${interest}`,
+              `Submitted: ${submittedAt}`,
+              '',
+              'Message:',
+              safeMessage,
+            ].join('\n'),
+          },
+          publicKey
+        );
       }
-
-      const fullName = `${formData.fname} ${formData.lname}`.trim();
-      const submittedAt = new Date().toLocaleString('en-IN', {
-        dateStyle: 'medium',
-        timeStyle: 'short',
-        hour12: true,
-      });
-      const interest = formData.interest || 'General inquiry';
-      const safeMessage = formData.message.trim();
-
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          to_email: CONTACT_RECEIVER_EMAIL,
-          reply_to: formData.email,
-          subject: `New Contact Inquiry - ${interest}`,
-          from_name: fullName,
-          from_email: formData.email,
-          name: fullName,
-          email: formData.email,
-          location: formData.location,
-          interest,
-          message: safeMessage,
-          time: submittedAt,
-          title: `New Contact Inquiry - ${interest}`,
-          company_name: 'Two Elephants Website',
-          submitted_at: submittedAt,
-          summary_text: [
-            `New inquiry from ${fullName}`,
-            `Email: ${formData.email}`,
-            `Location: ${formData.location}`,
-            `Interest: ${interest}`,
-            `Submitted: ${submittedAt}`,
-            '',
-            'Message:',
-            safeMessage,
-          ].join('\n'),
-        },
-        publicKey
-      );
 
       setFormStatus('success');
       setFormData({

@@ -183,12 +183,12 @@
 }
 
 .pull-quote {
-  font-size: 20px;
+  font-size: 19px;
   font-style: italic;
   color: var(--color-text-secondary);
   border-left: 4px solid var(--accent-amber);
-  padding-left: 24px;
-  margin: 32px 0;
+  padding-left: 20px;
+  margin: 20px 0 16px;
   line-height: 1.5;
 }
 
