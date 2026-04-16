@@ -231,7 +231,7 @@ const Careers = () => {
               transition={{ duration: 0.8 }}
             >
               <div className="eyebrow dark justify-center mb-6">THINKING AT SCALE</div>
-              <h2 className="h2-title text-4xl mb-6">We move with <em>Strength</em> and execute with <em>Honesty</em>.</h2>
+              <h2 className="h2-title text-4xl mb-6">We move with <span className="careerHead">Strength</span> and execute with <span className="careerHead">Honesty</span>.</h2>
               <p className="body-text text-lg leading-relaxed text-slate-600">
                 Two Elephants Technologies LLP is not just an IT company; it's a legacy of 65 years transitioning into the digital age.
                 We are looking for engineers who want to build the infrastructure that tomorrow's global markets will depend on.
@@ -349,7 +349,7 @@ const Careers = () => {
                           ))}
                         </ul>
 
-                        <button onClick={() => handleApply(selectedRole)} className="apply-btn-massive">
+                        <button onClick={() => handleApply(selectedRole)} className="explore-more-btn">
                           Submit Application <FaArrowRight size={20} className="ml-2" />
                         </button>
                       </div>

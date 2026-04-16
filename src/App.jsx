@@ -6,6 +6,7 @@ import Contact from './pages/Contact'
 import ArticleDetail from './pages/ArticleDetail'
 import Careers from './pages/Careers'
 import Services from './pages/Services'
+import Insights from './pages/Insights'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/story" element={<OurStory />} />
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/insights" element={<Insights />} />
         <Route path="/insights/:slug" element={<ArticleDetail />} />
         <Route path="/careers" element={<Careers />} />
         <Route path="*" element={<NotFound />} />

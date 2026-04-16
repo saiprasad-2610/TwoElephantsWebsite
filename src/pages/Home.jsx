@@ -17,7 +17,8 @@ import {
   Shield,
   Zap,
   Clock,
-  X
+  X,
+  ThumbsUp
 } from 'lucide-react';
 import { FaLinkedin } from "react-icons/fa";
 import { useNavigate, Link } from 'react-router-dom';
@@ -26,7 +27,7 @@ import ParticleBackground from '../components/ParticleBackground';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/blog.css';
-import '../styles/team.css';
+import '../styles/team.css'; 
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
@@ -50,6 +51,8 @@ import prashant_bollu from '../assets/images/prashant_bollu.jpeg'
 import arpita from '../assets/images/arpita.jpg'
 import looms from '../assets/images/looms.jpg';
 import labs from '../assets/images/labs.jpg';
+import service1 from '../assets/images/service1.avif';
+
 
 // Temporary fallbacks for moved assets
 const abhiImg = Abhi;
@@ -62,6 +65,8 @@ const prashantBolluImg = prashant_bollu;
 const arpitaImg = arpita;
 const labsImg = labs;
 const loomsImg = looms;
+// const service1 = service1;
+
 
 
 // HeroFallback removed - using enhanced dual elephant system
@@ -346,9 +351,37 @@ const Story = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.6 }}
-              whileHover={{ borderLeftWidth: "8px", paddingLeft: "36px", color: 'var(--color-blue-glow)' }}
+              whileHover={{ 
+                borderLeftWidth: "8px", 
+                paddingLeft: "36px", 
+                color: 'var(--color-blue-glow)',
+                scale: 1.02,
+                textShadow: '0 0 20px rgba(77,168,255,0.3)',
+                backgroundColor: 'rgba(77,168,255,0.05)',
+                transition: { duration: 0.01, ease: "linear" }
+              }}
+              animate={{
+                transition: { duration: 0.01, ease: "linear" }
+              }}
             >
-              "We didn't move into technology. We extended who we already were."
+              "When people think of Solapur, they think of Looms. I want the next generation to think of Labs."
+              <motion.div 
+                className="quote-author"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.8 }}
+                whileHover={{ 
+                  color: 'var(--color-blue-glow)',
+                  x: 5,
+                  transition: { duration: 0.01 }
+                }}
+                animate={{
+                  transition: { duration: 0.01 }
+                }}
+              >
+                — Prashant Rathi
+              </motion.div>
             </motion.blockquote>
             <Link to="/story" className="text-link">Explore More <ArrowRight size={16} /></Link>
           </motion.div>
@@ -408,7 +441,7 @@ const Services = () => {
       cat: "BFSI",
       tags: ["KYC", "Compliance", "Core Banking"],
       color: "blue",
-      img: "https://www.mindinventory.com/blog/wp-content/uploads/2024/04/digital-transformation-banking.webp"
+      img : "https://tse2.mm.bing.net/th/id/OIP.CYgk6l_Jd7zN9IO8wAhskAHaEA?pid=Api&P=0&h=180"
     },
     {
       title: "Industrial Technology for Energy Operations",
@@ -575,7 +608,6 @@ const TeamMember = ({ name, role, img, bio, linkedin, delay }) => {
 };
 
 const Team = () => {
-  const [showAll, setShowAll] = useState(false);
   
   const members = [
     {
@@ -627,16 +659,16 @@ const Team = () => {
       role: "Technology Leader - Products & Services",
       img: prashantBolluImg,
       bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
-      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
+      // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
     },
     {
       name: "Saurabh Kulkarni",
       role: "Technology Leader - Cyber Security",
       img: saurabhImg,
       bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.",
-      linkedin: "https://www.linkedin.com/in/saurabh-kulkarni-249a5726/"
-    }
-  ];
+      // linkedin: "https://www.linkedin.com/in/saurabh-kulkarni-249a5726/"
+    },
+    ];
 
   return (
     <section className="team-section section-padding" id="team">
@@ -649,7 +681,7 @@ const Team = () => {
         </div>
 
         <div className="team-grid-enhanced">
-          {(showAll ? members : members.slice(0, 4)).map((member, idx) => (
+          {members.map((member, idx) => (
             <TeamMember
               key={idx}
               {...member}
@@ -657,23 +689,6 @@ const Team = () => {
             />
           ))}
         </div>
-
-        {members.length > 4 && (
-          <div className="team-view-more">
-            <button 
-              className="view-more-btn"
-              onClick={() => setShowAll(!showAll)}
-            >
-              {showAll ? "Show Less" : "View Full Team"}
-              <motion.span
-                animate={{ rotate: showAll ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <ChevronRight size={18} />
-              </motion.span>
-            </button>
-          </div>
-        )}
       </div>
     </section>
   );
@@ -681,6 +696,10 @@ const Team = () => {
 
 const Insights = ({ articles }) => {
   const navigate = useNavigate();
+  
+  // Limit to only 3 articles on home page
+  const limitedArticles = articles ? articles.slice(0, 3) : [];
+  const hasMoreArticles = articles && articles.length > 3;
 
   return (
     <section className="insights-section section-padding" id="insights">
@@ -691,7 +710,7 @@ const Insights = ({ articles }) => {
           <h2 className="h2-title">Thinking at the Intersection of <em>Industry</em></h2>
           <p className="services-sub">Deep dives into the technologies shaping the future of global enterprise.</p>
         </div>
-        {articles && articles.length > 0 ? (
+        {limitedArticles && limitedArticles.length > 0 ? (
         <motion.div
           className="insights-grid"
           initial={{ opacity: 0 }}
@@ -699,7 +718,7 @@ const Insights = ({ articles }) => {
           viewport={{ once: true }}
           transition={{ staggerChildren: 0.18 }}
         >
-          {articles.map((article, idx) => (
+          {limitedArticles.map((article, idx) => (
             <MotionLink
               key={article.id || idx}
               to={`/insights/${article.slug || article.id}`}
@@ -729,6 +748,24 @@ const Insights = ({ articles }) => {
         </motion.div>
         ) : (
           <p className="text-center text-gray-500 py-12">No articles available at the moment.</p>
+        )}
+        
+        {/* Explore More Button */}
+        {hasMoreArticles && (
+          <div className="explore-more-container">
+            <motion.button
+              className="explore-more-btn"
+              onClick={() => navigate('/insights')}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Explore More Articles
+              <ThumbsUp size={16} />
+            </motion.button>
+          </div>
         )}
       </div>
     </section>

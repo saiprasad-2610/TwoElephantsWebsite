@@ -8,6 +8,8 @@ import ParticleBackground from '../components/ParticleBackground';
 import loomsImg from '../assets/images/looms.jpg';
 import labsImg from '../assets/images/labs.jpg';
 import '../styles/OurStory.css';
+import logo1 from '../assets/images/logo1.svg';
+
 
 const Counter = ({ value, label }) => {
   return (
@@ -226,8 +228,8 @@ const OurStory = () => {
               
               <div className="name-visual">
                  <div className="elephant-emblem-card">
-                    <img src="/logo1.svg" alt="Two Elephants Logo" className="large-emblem" />
-                    <div className="emblem-label">Guided Growth</div>
+                    <img src= {logo1} alt="Two Elephants Logo" className="large-emblem" />
+                    {/* <div className="emblem-label">Guided Growth</div> */}
                  </div>
               </div>
             </div>
@@ -320,10 +322,9 @@ const OurStory = () => {
                <span className="dot"></span>
                <span>Honesty</span>
             </div>
-
             <div className="closing-actions">
               <Link to="/contact" className="btn btn-primary">Partner With Us</Link>
-              <Link to="/careers" className="btn btn-outline">Join the Team</Link>
+              <Link to="/careers" className="btn btn-primary">Join the Team</Link>
             </div>
           </div>
         </section>

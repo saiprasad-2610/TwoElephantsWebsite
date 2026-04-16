@@ -531,7 +531,6 @@
   border-radius: 100px;
   font-weight: 700;
   font-size: 15px;
-  
   text-decoration: none;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -550,8 +549,8 @@
 }
 
 .btn-outline {
-  background: transparent;
-  color: var(--story-dark);
+  background: var(--story-dark);
+  color: #fff;
   border: 2px solid rgba(0,0,0,0.15);
 }
 

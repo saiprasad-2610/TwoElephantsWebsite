@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { Mail, Search, Check, X, MessageSquare, MapPin, Globe, Trash2, Clock, ChevronDown, ExternalLink } from 'lucide-react';
+import { Mail, Search, Check, X, MessageSquare, MapPin, Globe, Trash2, Clock, ChevronDown, ExternalLink, Send } from 'lucide-react';
 
 const API_BASE = 'http://localhost:8000/api';
 
@@ -13,6 +13,9 @@ export default function Contacts() {
   const [filter, setFilter] = useState('all');
   const [selectedContact, setSelectedContact] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
+  const [replyMessage, setReplyMessage] = useState('');
+  const [replySubject, setReplySubject] = useState('');
 
   useEffect(() => {
     fetchContacts();
@@ -72,6 +75,19 @@ export default function Contacts() {
   const openFullDossier = (contact) => {
     setSelectedContact(contact);
     setIsModalOpen(true);
+  };
+
+  const openReplyModal = () => {
+    setReplySubject(`Re: Your inquiry from ${formatDate(selectedContact.submitted_at)}`);
+    setReplyMessage(`Dear ${selectedContact.fname} ${selectedContact.lname},\n\nThank you for your interest in ${selectedContact.interest || 'our services'}. We have received your message and will get back to you shortly.\n\nBest regards,\nTwo Elephants Team`);
+    setIsReplyModalOpen(true);
+  };
+
+  const sendEmail = () => {
+    const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(selectedContact.email)}&su=${encodeURIComponent(replySubject)}&body=${encodeURIComponent(replyMessage)}`;
+    window.open(gmailComposeUrl, '_blank');
+    setIsReplyModalOpen(false);
+    toast.success('Gmail compose opened with your message');
   };
 
   return (
@@ -466,19 +482,122 @@ export default function Contacts() {
                       This Inquiry Has Been Reviewed
                     </div>
                   )}
-                  <a
-                    href={`mailto:${selectedContact.email}`}
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={openReplyModal}
                     className="flex items-center justify-center gap-2.5 px-6 py-4 bg-gradient-to-r from-gray-50 to-white hover:from-gray-100 hover:to-gray-50 border border-gray-200 rounded-xl text-gray-700 font-bold transition-all uppercase tracking-wider text-[11px]"
                   >
                     <ExternalLink size={18} />
                     Reply
-                  </a>
+                  </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.1, backgroundColor: 'rgb(239, 68, 68)', color: 'white' }}
                     onClick={() => deleteContact(selectedContact.id)}
                     className="w-14 h-14 flex items-center justify-center bg-red-50 text-red-500 border border-red-100 rounded-xl transition-all"
                   >
                     <Trash2 size={18} />
+                  </motion.button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Reply Modal */}
+      <AnimatePresence>
+        {isReplyModalOpen && selectedContact && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-8">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsReplyModalOpen(false)}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            />
+            
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="relative w-full max-w-[600px] bg-white rounded-3xl shadow-2xl overflow-hidden"
+            >
+              {/* Gradient Header Bar */}
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500" />
+              
+              {/* Header */}
+              <div className="p-6 border-b border-gray-100">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center text-white shadow-lg">
+                      <Send size={20} />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-gray-900">Reply to Inquiry</h2>
+                      <p className="text-sm text-gray-500">Compose your message to {selectedContact.fname} {selectedContact.lname}</p>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setIsReplyModalOpen(false)}
+                    className="w-9 h-9 bg-gray-100 hover:bg-gray-200 rounded-xl flex items-center justify-center text-gray-500 transition-all"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                <div className="space-y-4 mb-6">
+                  <div>
+                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block">To</label>
+                    <div className="px-4 py-3 bg-gray-50 rounded-xl border border-gray-100">
+                      <p className="text-sm font-semibold text-gray-700">{selectedContact.email}</p>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block">Subject</label>
+                    <input
+                      type="text"
+                      value={replySubject}
+                      onChange={(e) => setReplySubject(e.target.value)}
+                      className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all font-medium text-sm"
+                      placeholder="Enter subject..."
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block">Message</label>
+                    <textarea
+                      value={replyMessage}
+                      onChange={(e) => setReplyMessage(e.target.value)}
+                      rows={8}
+                      className="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all font-medium text-sm resize-none"
+                      placeholder="Type your message here..."
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={sendEmail}
+                    className="flex-1 flex items-center justify-center gap-2.5 py-3.5 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all uppercase tracking-wider text-[11px]"
+                  >
+                    <Send size={16} />
+                    Open Gmail
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setIsReplyModalOpen(false)}
+                    className="flex-1 flex items-center justify-center gap-2.5 py-3.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-gray-700 font-bold transition-all uppercase tracking-wider text-[11px]"
+                  >
+                    Cancel
                   </motion.button>
                 </div>
               </div>

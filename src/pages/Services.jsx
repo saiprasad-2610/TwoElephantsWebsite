@@ -212,7 +212,7 @@ const Services = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
-                <Link to="/contact" className="btn btn-yellow">Talk to an expert</Link>
+                {/* <Link to="/contact" className="btn btn-yellow">Talk to an expert</Link> */}
               </motion.div>
             </div>
           </div>
