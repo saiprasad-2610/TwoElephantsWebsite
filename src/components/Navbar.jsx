@@ -15,7 +15,7 @@ const NavText = ({ text, isActive, isHovered }) => (
         isHovered
           ? { color: 'rgba(255,255,255,0.96)' }
           : isActive
-            ? { color: '#f8cc1c' }
+            ? { color: '#60A5FA' }
             : { color: 'rgba(255,255,255,0.80)' }
       }
       transition={{ duration: 0.2 }}
@@ -36,7 +36,7 @@ const NavText = ({ text, isActive, isHovered }) => (
 /** ─────────────────────────────────────────
  *  EFFECT 3: Click Ripple
  * ───────────────────────────────────────── */
-const ClickRipple = ({ trigger, color = 'rgba(248,204,28,0.5)' }) => {
+const ClickRipple = ({ trigger, color = 'rgba(96, 165, 250, 0.4)' }) => {
   const [ripples, setRipples] = useState([]);
   useEffect(() => {
     if (!trigger) return;
@@ -115,7 +115,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'Home', path: '/#home', isHash: true },
-    { name: 'Our Story', path: '/#story', isHash: true },
+    { name: 'Our Story', path: '/story', isHash: false },
     { name: 'Services', path: '/services', isHash: false },
     { name: 'Team', path: '/#team', isHash: true },
     { name: 'Insights', path: '/#insights', isHash: true },
@@ -148,7 +148,7 @@ const Navbar = () => {
           <motion.img
             src={logo}
             alt="Two Elephants"
-            style={{ height: "65px", width: "auto" }}
+            style={{ height: "50px", width: "auto" }}
             whileHover={{ scale: 1.12, rotate: -5 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 14 }}

@@ -1,47 +1,87 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ArrowRight } from "lucide-react";
+import { FaChevronRight, FaArrowRight, FaUpload, FaCheckCircle, FaTimes, FaUser, FaBriefcase, FaGraduationCap, FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub, FaGlobe } from "react-icons/fa";
+import axios from "axios";
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ParticleBackground from '../components/ParticleBackground';
 import '../styles/Careers.css';
 
-
 // Import tech hero images for careers bento grid
 import techHero1 from '../assets/images/tech_hero_1.png';
 import techHero2 from '../assets/images/tech_hero_2.png';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://twoelephantswebsitebackend.onrender.com';
+
 const Careers = () => {
   const [activeRole, setActiveRole] = useState(0);
-  
-  const openings = [
-    {
-      title: "Python Developer",
-      department: "Engineering",
-      location: "📍 On-site / Internship",
-      description: "Build the robust, scalable backend infrastructure that powers modern enterprise applications.",
-      points: [
-        "Strong knowledge of Python & backend development",
-        "Experience with Django / Flask / FastAPI",
-        "Database knowledge (PostgreSQL / MySQL)",
-        "REST API development & integrations"
-      ],
-      link: "mailto:support@twoelephants.org?subject=Application - Python Developer"
-    },
-    {
-      title: "AI / ML Intern",
-      department: "AI & Research",
-      location: "📍 On-site / Internship",
-      description: "Help push the boundaries of intelligent systems, analyzing data and training powerful predictive models.",
-      points: [
-        "Basic understanding of Python & ML fundamentals",
-        "Passion for AI, data & problem-solving",
-        "Hands-on learning with real-world projects",
-        "Mentorship from experienced engineers"
-      ],
-      link: "mailto:support@twoelephants.org?subject=Application - AI/ML Intern"
+  const [openings, setOpenings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedRole, setSelectedRole] = useState(null);
+  const [formData, setFormData] = useState({
+    first_name: '', last_name: '', email: '', phone: '', location: '',
+    linkedin: '', portfolio: '', github: '', current_company: '',
+    current_designation: '', years_experience: '', notice_period: '',
+    expected_ctc: '', current_ctc: '', cover_letter: '', resume: null
+  });
+  const [formStatus, setFormStatus] = useState('idle');
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    fetchRoles();
+  }, []);
+
+  const fetchRoles = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/public/roles/`);
+      setOpenings(res.data);
+      if (res.data.length > 0) {
+        setSelectedRole(res.data[0]);
+      }
+    } catch (error) {
+      console.error('Failed to fetch roles:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, resume: e.target.files[0] });
+  };
+
+  const handleApply = (role) => {
+    setSelectedRole(role);
+    setShowModal(true);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setFormStatus('loading');
+    try {
+      const payload = new FormData();
+      Object.keys(formData).forEach(key => {
+        if (formData[key]) payload.append(key, formData[key]);
+      });
+      if (selectedRole) payload.append('role', selectedRole.id);
+      await axios.post(`${API_BASE}/api/public/apply/`, payload, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setFormStatus('success');
+      setFormData({ first_name: '', last_name: '', email: '', phone: '', location: '',
+        linkedin: '', portfolio: '', github: '', current_company: '',
+        current_designation: '', years_experience: '', notice_period: '',
+        expected_ctc: '', current_ctc: '', cover_letter: '', resume: null });
+    } catch (error) {
+      console.error('Failed to submit application:', error);
+      setFormStatus('error');
+    }
+  };
 
   const container = {
     hidden: { opacity: 0 },
@@ -140,7 +180,7 @@ const Careers = () => {
             </p>
             <div className="flex gap-4">
               <a href="#openings" className="btn-yellow">
-                Explore Roles <ChevronRight size={18} />
+                Explore Roles <FaChevronRight size={18} />
               </a>
             </div>
           </motion.div>
@@ -191,7 +231,7 @@ const Careers = () => {
               transition={{ duration: 0.8 }}
             >
               <div className="eyebrow dark justify-center mb-6">THINKING AT SCALE</div>
-              <h2 className="h2-title text-4xl mb-6">We move with <em>Strength</em> and execute with <em>Honesty</em>.</h2>
+              <h2 className="h2-title text-4xl mb-6">We move with <span className="careerHead">Strength</span> and execute with <span className="careerHead">Honesty</span>.</h2>
               <p className="body-text text-lg leading-relaxed text-slate-600">
                 Two Elephants Technologies LLP is not just an IT company; it's a legacy of 65 years transitioning into the digital age.
                 We are looking for engineers who want to build the infrastructure that tomorrow's global markets will depend on.
@@ -240,80 +280,262 @@ const Careers = () => {
       {/* OPENINGS SECTION */}
       <section id="openings" className="openings-section">
         <div className="openings-container container">
-          <div className="text-center mb-16">
+          <div className="max-w-3xl mx-auto text-center mb-20">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="h2-title text-4xl mb-4">Current Openings</h2>
-              <p className="text-slate-600">
+              <div className="eyebrow dark justify-center mb-6">OPPORTUNITIES</div>
+              <h2 className="h2-title text-5xl mb-6">Current Openings</h2>
+              <p className="text-slate-600 text-lg leading-relaxed">
                 Join our growing team in Solapur and work on cutting-edge solutions.<br />
-                Send your resume to <a href="mailto:support@twoelephants.org" className="text-amber font-bold">support@twoelephants.org</a>
+                We're looking for passionate individuals to help build the future.
               </p>
             </motion.div>
           </div>
 
           <div className="openings-split-layout">
-            {/* LEFT SIDE: JOB LIST */}
-            <div className="os-left">
-              {openings.map((role, idx) => (
-                <div 
-                  key={idx} 
-                  className={`os-tab ${activeRole === idx ? 'active' : ''}`}
-                  onMouseEnter={() => setActiveRole(idx)}
-                >
-                  <span className="os-tab-dept">{role.department}</span>
-                  <div className="os-tab-bottom">
+            {loading ? (
+              <div className="os-left">
+                {[1, 2].map(i => (
+                  <div key={i} className="os-tab active">
+                    <span className="os-tab-dept">Loading...</span>
+                    <div className="os-tab-bottom">
+                      <h3 className="os-tab-title">Fetching roles...</h3>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : openings.length > 0 ? (
+              <>
+              <div className="os-left">
+                {openings.map((role, idx) => (
+                  <div
+                    key={role.id || idx}
+                    className={`os-tab ${activeRole === idx ? 'active' : ''}`}
+                    onClick={() => { setActiveRole(idx); setSelectedRole(role); }}
+                  >
+                    <span className="os-tab-dept">{role.department}</span>
                     <h3 className="os-tab-title">{role.title}</h3>
-                    <motion.div 
-                      className="os-indicator"
-                      animate={{ scale: activeRole === idx ? 1 : 0, opacity: activeRole === idx ? 1 : 0 }}
-                    >
-                      <ArrowRight size={24} />
-                    </motion.div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            {/* RIGHT SIDE: FAST DETAILS */}
-            <div className="os-right">
-              <AnimatePresence mode="wait">
-                <motion.div 
-                  key={activeRole}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
-                  className="os-detail-card"
-                >
-                  <div className="os-glow-blob"></div>
-                  
-                  <div className="os-detail-content">
-                    <span className="os-detail-location">{openings[activeRole].location}</span>
-                    <h2 className="os-detail-hero">{openings[activeRole].title}</h2>
-                    <p className="os-detail-desc">{openings[activeRole].description}</p>
-                    
-                    <div className="os-rule"></div>
-                    
-                    <div className="os-requirements-label">What you'll bring:</div>
-                    <ul className="os-detail-points">
-                      {openings[activeRole].points.map((pt, i) => (
-                        <li key={i}>{pt}</li>
-                      ))}
-                    </ul>
-                    
-                    <a href={openings[activeRole].link} className="apply-btn-massive">
-                      Submit Application <ArrowRight size={20} className="ml-2" />
-                    </a>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+              <div className="os-right">
+                <AnimatePresence mode="wait">
+                  {selectedRole && (
+                    <motion.div
+                      key={selectedRole.id || activeRole}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
+                      className="os-detail-card"
+                    >
+                      <div className="os-glow-blob"></div>
+
+                      <div className="os-detail-content">
+                        <span className="os-detail-location">{selectedRole.location}</span>
+                        <h2 className="os-detail-hero">{selectedRole.title}</h2>
+                        <p className="os-detail-desc">{selectedRole.description}</p>
+
+                        <div className="os-rule"></div>
+
+                        <div className="os-requirements-label">What you'll bring:</div>
+                        <ul className="os-detail-points">
+                          {selectedRole.points && selectedRole.points.map((pt, i) => (
+                            <li key={i}>{pt}</li>
+                          ))}
+                        </ul>
+
+                        <button onClick={() => handleApply(selectedRole)} className="explore-more-btn">
+                          Submit Application <FaArrowRight size={20} className="ml-2" />
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+              </>
+            ) : (
+              <div className="text-center py-16 w-full">
+                <p className="text-slate-500 text-lg">No openings available at the moment. Check back soon!</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
+
+      {showModal && selectedRole && (
+        <div className="career-modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="career-modal-content" onClick={e => e.stopPropagation()}>
+            <button onClick={() => setShowModal(false)} className="close-modal-btn">
+              <FaTimes />
+            </button>
+
+            {formStatus === 'success' ? (
+              <div className="success-container">
+                <div className="success-icon-wrap">
+                  <FaCheckCircle />
+                </div>
+                <h3>Application Received!</h3>
+                <p>Thank you for applying for the <strong>{selectedRole.title}</strong> role. Our team will review your profile and get back to you soon.</p>
+                <button onClick={() => setShowModal(false)} className="submit-application-btn" style={{ margin: '32px auto 0' }}>
+                  Close Window
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="modal-header-premium">
+                  <div className="modal-header-content">
+                    <h2>Apply for {selectedRole.title}</h2>
+                    <p>{selectedRole.department} • {selectedRole.location}</p>
+                  </div>
+                </div>
+
+                <div className="career-form-scrollable">
+                  <form id="career-application-form" onSubmit={handleSubmit}>
+                    <div className="form-section-title">
+                      <FaUser /> Personal Information
+                    </div>
+                    <div className="career-form-grid">
+                      <div className="form-group">
+                        <label>First Name *</label>
+                        <input type="text" name="first_name" placeholder="John" value={formData.first_name} onChange={handleInputChange} required className="form-control-premium" />
+                      </div>
+                      <div className="form-group">
+                        <label>Last Name *</label>
+                        <input type="text" name="last_name" placeholder="Doe" value={formData.last_name} onChange={handleInputChange} required className="form-control-premium" />
+                      </div>
+                      <div className="form-group">
+                        <label>Email Address *</label>
+                        <input type="email" name="email" placeholder="john.doe@example.com" value={formData.email} onChange={handleInputChange} required className="form-control-premium" />
+                      </div>
+                      <div className="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" name="phone" placeholder="+91 98765 43210" value={formData.phone} onChange={handleInputChange} required className="form-control-premium" />
+                      </div>
+                      <div className="form-group full-width">
+                        <label>Current Location *</label>
+                        <input type="text" name="location" placeholder="City, State, Country" value={formData.location} onChange={handleInputChange} required className="form-control-premium" />
+                      </div>
+                    </div>
+
+                    <div className="form-section-title">
+                      <FaGlobe /> Online Presence
+                    </div>
+                    <div className="career-form-grid">
+                      <div className="form-group">
+                        <label>LinkedIn URL</label>
+                        <input type="url" name="linkedin" placeholder="https://linkedin.com/in/username" value={formData.linkedin} onChange={handleInputChange} className="form-control-premium" />
+                      </div>
+                      <div className="form-group">
+                        <label>Portfolio / Website</label>
+                        <input type="url" name="portfolio" placeholder="https://yourportfolio.com" value={formData.portfolio} onChange={handleInputChange} className="form-control-premium" />
+                      </div>
+                      <div className="form-group full-width">
+                        <label>GitHub Profile</label>
+                        <input type="url" name="github" placeholder="https://github.com/username" value={formData.github} onChange={handleInputChange} className="form-control-premium" />
+                      </div>
+                    </div>
+
+                    <div className="form-section-title">
+                      <FaBriefcase /> Professional Details
+                    </div>
+                    <div className="career-form-grid">
+                      <div className="form-group">
+                        <label>Current Company</label>
+                        <input type="text" name="current_company" placeholder="Previous or current employer" value={formData.current_company} onChange={handleInputChange} className="form-control-premium" />
+                      </div>
+                      <div className="form-group">
+                        <label>Current Designation</label>
+                        <input type="text" name="current_designation" placeholder="Your current role" value={formData.current_designation} onChange={handleInputChange} className="form-control-premium" />
+                      </div>
+                      <div className="form-group">
+                        <label>Years of Experience *</label>
+                        <select name="years_experience" value={formData.years_experience} onChange={handleInputChange} required className="form-control-premium">
+                          <option value="">Select Experience</option>
+                          <option value="Fresher">Fresher (0 years)</option>
+                          <option value="1-3 years">1-3 years</option>
+                          <option value="3-5 years">3-5 years</option>
+                          <option value="5-10 years">5-10 years</option>
+                          <option value="10+ years">10+ years</option>
+                        </select>
+                      </div>
+                      <div className="form-group">
+                        <label>Notice Period</label>
+                        <select name="notice_period" value={formData.notice_period} onChange={handleInputChange} className="form-control-premium">
+                          <option value="">Select Notice Period</option>
+                          <option value="Immediate Joiner">Immediate Joiner</option>
+                          <option value="15 days or less">15 days or less</option>
+                          <option value="30 days">30 days</option>
+                          <option value="45 days">45 days</option>
+                          <option value="60+ days">60+ days</option>
+                        </select>
+                      </div>
+                      <div className="form-group">
+                        <label>Current CTC (LPA)</label>
+                        <input type="text" name="current_ctc" placeholder="e.g. 8.5" value={formData.current_ctc} onChange={handleInputChange} className="form-control-premium" />
+                      </div>
+                      <div className="form-group">
+                        <label>Expected CTC (LPA) *</label>
+                        <input type="text" name="expected_ctc" placeholder="e.g. 12.0" value={formData.expected_ctc} onChange={handleInputChange} required className="form-control-premium" />
+                      </div>
+                    </div>
+
+                    <div className="form-section-title">
+                      <FaUpload /> Documents
+                    </div>
+                    <div className="form-group full-width mb-8">
+                      <label>Resume / CV * (PDF only, Max 5MB)</label>
+                      <div className="file-upload-zone">
+                        <div className="upload-icon">
+                          <FaUpload />
+                        </div>
+                        <div className="upload-text">
+                          {formData.resume ? (
+                            <span className="file-selected-name">{formData.resume.name}</span>
+                          ) : (
+                            <>Drop your resume here or <span>Click to Browse</span></>
+                          )}
+                        </div>
+                        <input type="file" name="resume" onChange={handleFileChange} accept=".pdf" required />
+                      </div>
+                    </div>
+
+                    <div className="form-group full-width">
+                      <label>Cover Letter / Additional Notes</label>
+                      <textarea name="cover_letter" value={formData.cover_letter} onChange={handleInputChange} rows={5} placeholder="Tell us why you're a great fit for this role..." className="form-control-premium textarea-premium"></textarea>
+                    </div>
+
+                    {formStatus === 'error' && (
+                      <div style={{ marginTop: '24px', padding: '16px', background: '#fef2f2', color: '#dc2626', borderRadius: '12px', fontSize: '14px', fontWeight: '600', textAlign: 'center' }}>
+                        Failed to submit application. Please check all required fields and try again.
+                      </div>
+                    )}
+                  </form>
+                </div>
+
+                <div className="form-footer-sticky">
+                  <button
+                    type="submit"
+                    form="career-application-form"
+                    disabled={formStatus === 'loading'}
+                    className="submit-application-btn"
+                  >
+                    {formStatus === 'loading' ? (
+                      <>Processing...</>
+                    ) : (
+                      <>Submit Application <FaArrowRight /></>
+                    )}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>

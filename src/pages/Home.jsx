@@ -1,7 +1,10 @@
-
 import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
+<<<<<<< HEAD
 import { FaLinkedinIn } from 'react-icons/fa6';
+=======
+import axios from 'axios';
+>>>>>>> withBackend
 import {
   ArrowRight,
   ExternalLink,
@@ -17,17 +20,30 @@ import {
   Shield,
   Zap,
   Clock,
-  X
+  X,
+  ThumbsUp
 } from 'lucide-react';
+import { FaLinkedin } from "react-icons/fa";
 import { useNavigate, Link } from 'react-router-dom';
-import { articles } from '../data/articles';
+// import { useEffect } from "react";
+
 
 import ParticleBackground from '../components/ParticleBackground';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/blog.css';
 import '../styles/team.css';
-// import '../assets/images';
+import '../styles/global.css';
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://twoelephantswebsitebackend.onrender.com';
+
+const getImageUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith('http')) return url;
+  return `https://twoelephantswebsitebackend.onrender.com${url}`;
+};
+
+
 
 const MotionLink = motion(Link);
 
@@ -41,8 +57,10 @@ import Sapna from '../assets/images/Sapna.png'
 import saurabh from '../assets/images/saurabh1.png'
 import prashant_bollu from '../assets/images/prashant_bollu.jpeg'
 import arpita from '../assets/images/arpita.jpg'
-import looms from '../assets/images/looms.jpg';
+import story from '../assets/images/story.png';
 import labs from '../assets/images/labs.jpg';
+import service1 from '../assets/images/service1.avif';
+
 
 // Temporary fallbacks for moved assets
 const abhiImg = Abhi;
@@ -54,7 +72,9 @@ const saurabhImg = saurabh;
 const prashantBolluImg = prashant_bollu;
 const arpitaImg = arpita;
 const labsImg = labs;
-const loomsImg = looms;
+const storyImg = story;
+// const service1 = service1;
+
 
 
 // HeroFallback removed - using enhanced dual elephant system
@@ -119,9 +139,9 @@ const Hero = () => {
               <span className="typewriter-cursor">|</span>
             </div>
             <div className="hero-buttons">
-              <a href="#story" className="btn btn-primary">
+              <Link to="/story" className="btn btn-primary">
                 Explore Our Story <ArrowRight size={18} />
-              </a>
+              </Link>
               <a href="#services" className="btn btn-outline">
                 Our Services
               </a>
@@ -170,7 +190,7 @@ const Hero = () => {
                     scale: 1.05,
                     rotateY: 8
                   }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
                   draggable={false}
                 />
               </div>
@@ -238,50 +258,6 @@ const Counter = ({ value, label }) => {
 };
 
 const Story = () => {
-  const timelineRef = useRef(null);
-  const [hoveredMilestone, setHoveredMilestone] = useState(null);
-  const { scrollYProgress: timelineScrollProgress } = useScroll({
-    target: timelineRef,
-    offset: ['start 80%', 'end 35%'],
-  });
-  const timelineScale = useSpring(useTransform(timelineScrollProgress, [0, 1], [0, 1]), {
-    stiffness: 100, damping: 30, restDelta: 0.001
-  });
-
-  const milestones = [
-    {
-      year: "1959",
-      title: "Pushpa Textile Founded",
-      desc: "The Rathi family begins a legacy of manufacturing precision in Solapur.",
-      icon: "🏭",
-      color: "#4da8ff",
-      glow: "rgba(77,168,255,0.3)"
-    },
-    {
-      year: "1980",
-      title: "Global Expansion",
-      desc: "Becoming a trusted supplier for national brands like IndiGo and Maruti Suzuki.",
-      icon: "🌐",
-      color: "#cf0d0dff",
-      glow: "rgba(248,204,28,0.3)"
-    },
-    {
-      year: "2026",
-      title: "Two Elephants Technologies LLP",
-      desc: "Transitioning industrial wisdom into enterprise-grade technology solutions.",
-      icon: "🚀",
-      color: "#7c3aed",
-      glow: "rgba(124,58,237,0.3)"
-    }
-  ];
-
-  const getMilestoneLineWidth = (index) => {
-    const trackStart = 2;
-    const trackSpan = 96;
-    const progressPoint = (index + 0.5) / milestones.length;
-    return `${trackStart + trackSpan * progressPoint}%`;
-  };
-
   return (
     <section className="story-section section-padding" id="story">
       <div className="container">
@@ -295,18 +271,18 @@ const Story = () => {
           >
             <div className="image-stack">
               <motion.img
-                src={loomsImg}
+                src={storyImg}
                 alt="Pushpa Textile"
                 className="story-img-main"
                 whileHover={{ scale: 1.03, rotate: 1 }}
-                transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
               />
               <motion.div
                 className="story-img-card card-legacy"
                 animate={{ y: [0, -12, 0], boxShadow: ['0 8px 32px rgba(77,168,255,0.2)', '0 20px 48px rgba(77,168,255,0.4)', '0 8px 32px rgba(77,168,255,0.2)'] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               >
-                <span className="card-year">1959</span>
+                <span className="card-year">1960</span>
                 <span className="card-text">Legacy Begins</span>
               </motion.div>
               <motion.img
@@ -350,7 +326,7 @@ const Story = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.3, duration: 0.7 }}
             >
-              A Legacy That Earns Its <em>Next Chapter</em>
+              A Legacy That Earns Its <span className="careerHead">Next Chapter</span>
             </motion.h2>
             <motion.p
               className="body-text"
@@ -383,82 +359,42 @@ const Story = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.6 }}
-              whileHover={{ borderLeftWidth: "8px", paddingLeft: "36px", color: '#f8cc1c' }}
-              transition2={{ duration: 0.3 }}
+              whileHover={{
+                borderLeftWidth: "8px",
+                paddingLeft: "36px",
+                color: 'var(--color-blue-glow)',
+                scale: 1.01,
+                backgroundColor: 'rgba(77,168,255,0.05)',
+              }}
+              transition={{ duration: 0.1, ease: "easeOut" }}
             >
-              "We didn't move into technology. We extended who we already were."
+              "When people think of Solapur, they think of Looms. I want the next generation to think of Labs."
+              <motion.div 
+                className="quote-author "
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.8 }}
+                style={{ 
+                  fontWeight: '900', 
+                  fontSize: '1.4rem', 
+                  marginTop: '16px',
+                  color: 'var(--color-dark)',
+                  display: 'block'
+                }}
+                whileHover={{ 
+                  color: 'var(--color-blue-core)',
+                  x: 5,
+                  scale: 1.05
+                }}
+                // transition={{ duration: 0.1 }}
+              >
+                — Prashant Rathi
+              </motion.div>
             </motion.blockquote>
-            <Link to="/contact" className="text-link">Partner with us <ArrowRight size={16} /></Link>
+            <Link to="/story" className="text-link">Explore More <ArrowRight size={16} /></Link>
           </motion.div>
         </div>
-
-        {/* ══════════ COMPACT HORIZONTAL TIMELINE ══════════ */}
-        <div className="htl-wrap">
-          <div className="htl-header">
-            <div className="eyebrow dark">MILESTONES</div>
-            <h3>From textile heritage to enterprise-scale technology.</h3>
-          </div>
-
-          <div
-            className="htl-track"
-            ref={timelineRef}
-            onMouseLeave={() => setHoveredMilestone(null)}
-          >
-            {/* Animated progress line */}
-            <motion.div
-              className="htl-line"
-              style={hoveredMilestone === null ? { scaleX: timelineScale } : undefined}
-              animate={
-                hoveredMilestone !== null
-                  ? { width: getMilestoneLineWidth(hoveredMilestone), scaleX: 1 }
-                  : undefined
-              }
-              transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-            />
-
-            {milestones.map((m, i) => (
-              <motion.div
-                key={i}
-                className="htl-item"
-                onMouseEnter={() => setHoveredMilestone(i)}
-                onFocus={() => setHoveredMilestone(i)}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.25, duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
-              >
-                {/* Dot on the line */}
-                <motion.div
-                  className="htl-dot"
-                  style={{ background: m.color, boxShadow: `0 0 0 6px ${m.glow}` }}
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.25 + 0.4, type: 'spring', stiffness: 300 }}
-                />
-
-                {/* Card */}
-                <motion.div
-                  className="htl-card"
-                  whileHover={{ y: -8, boxShadow: '0 20px 50px rgba(0,0,0,0.12)' }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-                >
-                  <div className="htl-icon" style={{ background: m.glow }}>
-                    <span>{m.icon}</span>
-                  </div>
-                  <div className="htl-year" style={{ color: m.color }}>{m.year}</div>
-                  <h4 className="htl-title">{m.title}</h4>
-                  <p className="htl-desc">{m.desc}</p>
-                </motion.div>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="htl-footer">
-            <Link to="/contact" className="btn btn-primary">Talk to our team</Link>
-          </div>
-        </div>
-
       </div>
     </section>
   );
@@ -473,13 +409,12 @@ const ServiceCard = ({ title, desc, cat, tags, color, img, delay }) => {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay }}
       whileHover={{
         y: -10,
         rotateX: 2,
         rotateY: 2,
-        transition: { duration: 0.2 }
       }}
+      transition={{ delay, duration: 0.1 }}
       onClick={() => navigate('/services')}
       style={{ perspective: 1000, cursor: 'pointer' }}
       role="link"
@@ -514,7 +449,7 @@ const Services = () => {
       cat: "BFSI",
       tags: ["KYC", "Compliance", "Core Banking"],
       color: "blue",
-      img: "https://www.mindinventory.com/blog/wp-content/uploads/2024/04/digital-transformation-banking.webp"
+      img: "https://tse2.mm.bing.net/th/id/OIP.CYgk6l_Jd7zN9IO8wAhskAHaEA?pid=Api&P=0&h=180"
     },
     {
       title: "Industrial Technology for Energy Operations",
@@ -540,48 +475,39 @@ const Services = () => {
         <div className="services-header">
           <div className="eyebrow dark">WHAT WE DO</div>
           <div className="section-rule visible"></div>
-          <h2 className="h2-title">Enterprise Technology for <em>Demanding Industries</em></h2>
+          <h2 className="h2-title">Enterprise Technology for <span className="careerHead">Demanding Industries</span></h2>
           <p className="services-sub">We build the systems that banks stake their reputation on and oil companies stake their operations on.</p>
         </div>
-        <div className="services-stack-container">
+        <div className="insights-grid">
           {services.map((svc, idx) => (
             <motion.div
               key={idx}
-              className="sticky-card-wrapper"
-              initial={{ opacity: 0, y: 100 }}
+              className="blog-card"
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              style={{
-                position: 'sticky',
-                top: `${120 + idx * 12}px`,
-                marginBottom: '40px',
-                zIndex: idx + 1
-              }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 * idx, duration: 0.2 }}
+              whileHover={{ y: -8 }}
+              onClick={() => window.location.href = '/services'}
+              style={{ cursor: 'pointer' }}
             >
-              <motion.div
-                className="service-card-stack"
-                whileHover={{ scale: 1.015 }}
-                transition={{ duration: 0.4 }}
-              >
-                <div className={`svc-card-inner acc-${svc.color}`}>
-                  <div className="svc-content">
-                    <span className="svc-cat">{svc.cat}</span>
-                    <h3 className="svc-title">{svc.title}</h3>
-                    <p className="svc-desc">{svc.desc}</p>
-                    <div className="svc-tags">
-                      {svc.tags.map(tag => <span key={tag} className="s-tag">{tag}</span>)}
-                    </div>
-                    <div className={`svc-link svc-link-${svc.color}`} onClick={() => window.location.href = '/services'}>
-                      Explore Solutions <ChevronRight size={18} />
-                    </div>
-                  </div>
-                  <div className="svc-visual">
-                    <img src={svc.img} alt={svc.title} />
-                    <div className="svc-glaze"></div>
-                  </div>
+              <div className="blog-img-wrap">
+                <img src={svc.img} alt={svc.title} className="blog-img" />
+                <div className="blog-overlay-info">
+                  <span>{svc.cat}</span>
                 </div>
-              </motion.div>
+              </div>
+              <div className="blog-content">
+                <span className="blog-cat" style={{ color: svc.color === 'blue' ? 'var(--color-blue-core)' : `var(--accent-${svc.color})` }}>{svc.cat}</span>
+                <h3 className="blog-title">{svc.title}</h3>
+                <p className="blog-excerpt">{svc.desc}</p>
+                <div className="svc-tags" style={{ marginTop: '16px', marginBottom: '16px' }}>
+                  {svc.tags.map(tag => <span key={tag} className="s-tag" style={{ background: 'rgba(0,0,0,0.05)', color: '#475569', border: '1px solid rgba(0,0,0,0.08)' }}>{tag}</span>)}
+                </div>
+                <div className="blog-footer">
+                  <span className="read-more">Explore Solutions <ArrowRight size={14} /></span>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -591,54 +517,36 @@ const Services = () => {
 };
 
 
-const TeamMember = ({ name, role, img, delay, onClick }) => {
-  return (
-    <motion.div
-      className="team-card-enhanced"
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: delay * 0.08, duration: 0.6 }}
-      onClick={onClick}
-      style={{ cursor: 'pointer' }}
-    >
-      <div className="team-card-inner">
-        <div className="team-image-container">
-          <img src={img} alt={name} className="team-img" />
-        </div>
-        <div className="team-info">
-          <span className="team-role-tag">{role}</span>
-          <h3 className="team-name">{name}</h3>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
+const TeamMember = ({ name, role, img, bio, linkedin, delay }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-const TeamModal = ({ member, onClose }) => {
-  if (!member) return null;
+  // Prevent scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [isOpen]);
 
   return (
-    <motion.div
-      className="team-modal-overlay"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-    >
+    <>
       <motion.div
-        className="team-modal-content"
-        initial={{ scale: 0.9, y: 20, opacity: 0 }}
-        animate={{ scale: 1, y: 0, opacity: 1 }}
-        exit={{ scale: 0.9, y: 20, opacity: 0 }}
-        onClick={e => e.stopPropagation()}
+        className="team-card-horizontal"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: delay * 0.1, duration: 0.6 }}
+        onClick={() => setIsOpen(true)}
+        style={{ cursor: 'pointer' }}
       >
-        <button className="modal-close" onClick={onClose}><X size={24} /></button>
-
-        <div className="modal-body">
-          <div className="modal-image-wrap">
-            <img src={member.img} alt={member.name} className="modal-img" />
+        <div className="team-card-aside">
+          <div className="circle-image-container">
+            <img src={img} alt={name} className="circle-img" loading="lazy" />
+            <div className="circle-border-accent"></div>
           </div>
+<<<<<<< HEAD
 
           <div className="modal-text">
             <div className="eyebrow amber no-line">TEAM MEMBER</div>
@@ -662,16 +570,79 @@ const TeamModal = ({ member, onClose }) => {
                 <span className="m-stat-label">Location</span>
                 <span className="m-stat-val">Solapur / Global</span>
               </div>
+=======
+        </div>
+        <div className="team-card-main">
+          <div className="team-card-header">
+            <div>
+              <h3 className="circle-name">{name}</h3>
+              <p className="circle-role">{role}</p>
+>>>>>>> withBackend
             </div>
+            {linkedin && (
+              <a
+                href={linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="circle-linkedin-link"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <FaLinkedin size={20} />
+              </a>
+            )}
           </div>
+          <div className="circle-divider"></div>
+          <p className="click-for-more">Read Bio <ArrowRight size={12} /></p>
         </div>
       </motion.div>
-    </motion.div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <div className="team-modal-overlay" onClick={() => setIsOpen(false)}>
+            <motion.div
+              className="team-modal-content"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button className="modal-close-btn" onClick={() => setIsOpen(false)}>
+                <X size={24} />
+              </button>
+
+              <div className="modal-body">
+                <div className="modal-aside">
+                  <div className="modal-img-container">
+                    <img src={img} alt={name} className="modal-img" />
+                  </div>
+                  {linkedin && (
+                    <a href={linkedin} target="_blank" rel="noopener noreferrer" className="modal-linkedin">
+                      <FaLinkedin size={24} /> <span>LinkedIn Profile</span>
+                    </a>
+                  )}
+                </div>
+
+                <div className="modal-main">
+                  <h2 className="modal-name">{name}</h2>
+                  <p className="modal-role">{role}</p>
+                  <div className="modal-divider"></div>
+                  <div className="modal-bio">
+                    {bio.split('\n').map((paragraph, i) => (
+                      <p key={i}>{paragraph}</p>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
 const Team = () => {
-  const [selectedMember, setSelectedMember] = useState(null);
+
   const members = [
     {
       name: "Prashant Rathi",
@@ -688,19 +659,21 @@ const Team = () => {
       linkedin: "https://www.linkedin.com/in/sapna-rathi-44928b3b/"
     },
     {
-      name: "Anuradha Biswas",
-      role: "Advisor & Mentor",
-      img: auImg,
-      bio: "20+ years of leadership at Infosys, VeriFone, and CA Technologies. Architect of global delivery units. Anuradha brings deep industry knowledge in building and scaling high-performance engineering teams.",
-      linkedin: "https://www.linkedin.com/in/anubiswas/"
-    },
-    {
       name: "Abhik Biswas",
       role: "Technology Advisor",
       img: abhiImg,
       bio: "30+ years of engineering leadership at TCS, Cisco, and VeriFone. Expert in large-scale systems. Abhik provides technical guidance for complex enterprise architectures and innovative software solutions.",
       linkedin: "https://www.linkedin.com/in/abhik/"
     },
+
+    {
+      name: "Anuradha Biswas",
+      role: "Advisor & Mentor",
+      img: auImg,
+      bio: "20+ years of leadership at Infosys, VeriFone, and CA Technologies. Architect of global delivery units. Anuradha brings deep industry knowledge in building and scaling high-performance engineering teams.",
+      linkedin: "https://www.linkedin.com/in/anubiswas/"
+    },
+
     {
       name: "Pankaj Rathi",
       role: "Overseas Operations",
@@ -710,27 +683,25 @@ const Team = () => {
     },
     {
       name: "Arpita Kulkarni",
-      role: "Technology Leader - IT Product and Services",
+      role: "Technology Leader - Products & Services",
       img: arpitaImg,
       bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.",
       linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
     },
     {
       name: "Prashant Bollu",
-      role: "Technology Leader - IT Product and Services",
+      role: "Technology Leader - Products & Services",
       img: prashantBolluImg,
       bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
-      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
+      // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
     },
-
     {
       name: "Saurabh Kulkarni",
       role: "Technology Leader - Cyber Security",
       img: saurabhImg,
       bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.",
-      // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
-    }
-
+      // linkedin: "https://www.linkedin.com/in/saurabh-kulkarni-249a5726/"
+    },
   ];
 
   return (
@@ -739,120 +710,152 @@ const Team = () => {
         <div className="services-header">
           <div className="eyebrow dark">OUR TEAM</div>
           <div className="section-rule visible"></div>
-          <h2 className="h2-title">Leadership Rooted in <em>Legacy</em></h2>
+          <h2 className="h2-title">Leadership Forged in <span className="careerHead">Legacy</span></h2>
           <p className="services-sub">Meet the visionaries bridging industrial wisdom with digital execution.</p>
         </div>
+
         <div className="team-grid-enhanced">
           {members.map((member, idx) => (
             <TeamMember
               key={idx}
               {...member}
               delay={idx}
-              onClick={() => setSelectedMember(member)}
             />
           ))}
         </div>
       </div>
-
-      <AnimatePresence>
-        {selectedMember && (
-          <TeamModal
-            member={selectedMember}
-            onClose={() => setSelectedMember(null)}
-          />
-        )}
-      </AnimatePresence>
     </section>
   );
 };
 
-const Insights = () => {
+const Insights = ({ articles }) => {
   const navigate = useNavigate();
 
-  return (
-    <section className="insights-section section-padding" id="insights">
-      <div className="container">
-        <div className="services-header">
-          <div className="eyebrow dark">FROM OUR DESK</div>
-          <div className="section-rule visible"></div>
-          <h2 className="h2-title">Thinking at the Intersection of <em>Industry</em></h2>
-          <p className="services-sub">Deep dives into the technologies shaping the future of global enterprise.</p>
-        </div>
-        <motion.div
-          className="insights-grid"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ staggerChildren: 0.18 }}
-        >
-          {articles.map((article, idx) => (
-            <MotionLink
-              key={idx}
-              to={`/insights/${article.id}`}
-              className="blog-card"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+  // Limit to only 3 articles on home page
+  const limitedArticles = articles ? articles.slice(0, 3) : [];
+  const hasMoreArticles = articles && articles.length > 3;
+
+  
+
+    return (
+      <section className="insights-section section-padding" id="insights">
+        <div className="container">
+          <div className="services-header">
+            <div className="eyebrow dark">FROM OUR DESK</div>
+            <div className="section-rule visible"></div>
+            <h2 className="h2-title">Thinking at the Intersection of <span className="careerHead">Industry</span></h2>
+            <p className="services-sub">Deep dives into the technologies shaping the future of global enterprise.</p>
+          </div>
+          {limitedArticles && limitedArticles.length > 0 ? (
+            <motion.div
+              className="insights-grid"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.1 * idx }}
-              whileHover={{ y: -10 }}
+              transition={{ staggerChildren: 0.18 }}
             >
-              <div className="blog-img-wrap">
-                <img src={article.img} alt={article.title} className="blog-img" />
-                <div className="blog-overlay-info">
-                  <span>{article.readTime}</span>
-                </div>
-              </div>
-              <div className="blog-content">
-                <span className="blog-cat">{article.cat}</span>
-                <h3 className="blog-title">{article.title}</h3>
-                <p className="blog-excerpt">{article.excerpt}</p>
-                <div className="blog-footer">
-                  <span className="read-more">Read Full Article <ArrowRight size={14} /></span>
-                </div>
-              </div>
-            </MotionLink>
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  );
-};
+              {limitedArticles.map((article, idx) => (
+                <MotionLink
+                  key={article.id || idx}
+                  to={`/insights/${article.slug || article.id}`}
+                  className="blog-card"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 * idx, duration: 0.2 }}
+                  whileHover={{ y: -8 }}
+                >
+                  <div className="blog-img-wrap">
+                    <img src={getImageUrl(article.img)} alt={article.title} className="blog-img" />
+                    <div className="blog-overlay-info">
+                      <span>{article.read_time}</span>
+                    </div>
+                  </div>
+                  <div className="blog-content">
+                    <span className="blog-cat">{article.cat}</span>
+                    <h3 className="blog-title">{article.title}</h3>
+                    <p className="blog-excerpt">{article.excerpt}</p>
+                    <div className="blog-footer">
+                      <span className="read-more">Read Full Article <ArrowRight size={14} /></span>
+                    </div>
+                  </div>
+                </MotionLink>
+              ))}
+            </motion.div>
+          ) : (
+            <p className="text-center text-gray-500 py-12">No articles available at the moment.</p>
+          )}
 
-const SectionReveal = ({ children }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-    >
-      {children}
-    </motion.div>
-  );
-};
+          {/* Explore More Button */}
+          {hasMoreArticles && (
+            <div className="explore-more-container">
+              <motion.button
+                className="explore-more-btn"
+                onClick={() => navigate('/insights')}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Explore More Articles
+                <ThumbsUp size={16} />
+              </motion.button>
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  };
 
-const Home = () => {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
+  const SectionReveal = ({ children }) => {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        {children}
+      </motion.div>
+    );
+  };
 
-  return (
-    <div className="page-wrapper">
-      <motion.div id="scroll-progress" style={{ scaleX }} />
-      <Navbar />
-      <main>
-        <Hero />
-        <Marquee />
-        <SectionReveal><Story /></SectionReveal>
-        <SectionReveal><Services /></SectionReveal>
-        <SectionReveal><Team /></SectionReveal>
-        <SectionReveal><Insights /></SectionReveal>
+  const Home = () => {
+    const { scrollYProgress } = useScroll();
+    const scaleX = useSpring(scrollYProgress, {
+      stiffness: 100,
+      damping: 30,
+      restDelta: 0.001
+    });
+    const [articles, setArticles] = useState([]);
 
-        {/* Unified CTA */}
-        <SectionReveal>
+    useEffect(() => {
+      const fetchArticles = async () => {
+        try {
+          const res = await axios.get(`${API_BASE}/api/public/articles/`);
+          setArticles(res.data);
+        } catch (error) {
+          console.error('Failed to fetch articles:', error);
+        }
+      };
+      fetchArticles();
+    }, []);
+
+    return (
+      <div className="page-wrapper">
+        <motion.div id="scroll-progress" style={{ scaleX }} />
+        <Navbar />
+        <main>
+          <Hero />
+          <Marquee />
+          <SectionReveal><Story /></SectionReveal>
+          <SectionReveal><Services /></SectionReveal>
+          <SectionReveal><Team /></SectionReveal>
+          <SectionReveal><Insights articles={articles} /></SectionReveal>
+
+          {/* Unified CTA */}
+          {/* <SectionReveal>
           <section className="cta-merged">
             <div className="cta-merged-bg" />
             <div className="container">
@@ -872,11 +875,11 @@ const Home = () => {
               </div>
             </div>
           </section>
-        </SectionReveal>
-      </main>
-      <Footer />
-    </div>
-  );
-};
+        </SectionReveal> */}
+        </main>
+        <Footer />
+      </div>
+    );
+  };
 
-export default Home;
+  export default Home;

@@ -1467,10 +1467,6 @@ body.no-scroll {
   line-height: 1.75;
 }
 
-.services-page-hero {
-  background: linear-gradient(180deg, rgba(248, 250, 255, 0.95), rgba(235, 241, 255, 0.95));
-}
-
 .hero-actions {
   margin-top: 30px;
 }
@@ -1514,31 +1510,6 @@ body.no-scroll {
 .badge-blue {
   background: rgba(59, 130, 246, 0.12);
   color: var(--color-blue-core);
-}
-
-.badge-amber {
-  background: rgba(245, 158, 11, 0.12);
-  color: var(--accent-amber);
-}
-
-.badge-emerald {
-  background: rgba(16, 185, 129, 0.12);
-  color: var(--accent-emerald);
-}
-
-.badge-purple {
-  background: rgba(124, 58, 237, 0.12);
-  color: var(--accent-purple);
-}
-
-.badge-cyan {
-  background: rgba(6, 182, 212, 0.12);
-  color: var(--color-cyan);
-}
-
-.badge-teal {
-  background: rgba(16, 185, 129, 0.14);
-  color: var(--accent-emerald);
 }
 
 .service-detail-card h2 {

@@ -3,9 +3,66 @@
 ═══════════════════════════════════════════ */
 .insights-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 32px;
   margin-top: 48px;
+}
+
+@media (max-width: 1100px) {
+  .insights-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .insights-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.insights-section {
+  background: #f8fafc;
+}
+
+.explore-more-container {
+  text-align: center;
+  margin-top: 60px;
+}
+
+.explore-more-btn {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 100px;
+  font-weight: 700;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4), 0 0 40px rgba(59, 130, 246, 0.2);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.explore-more-btn::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.25), transparent);
+  border-radius: 100px;
+  opacity: 0.8;
+  animation: buttonGlow 2.5s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.explore-more-btn:hover {
+  background: linear-gradient(135deg, #fff, rgba(59, 130, 246, 0.1));
+  color: #080E1C;
+  box-shadow: 0 8px 20px rgba(248, 204, 28, 0.25), 0 0 30px rgba(59, 130, 246, 0.5), 0 0 60px rgba(59, 130, 246, 0.25);
 }
 
 .blog-card {
@@ -91,9 +148,16 @@
   margin-bottom: 0;
   flex: 1;
   display: -webkit-box;
+  display: -moz-box;
+  display: box;
   -webkit-line-clamp: 3;
+  -moz-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .blog-footer {

@@ -36,7 +36,8 @@ const ParticleBackground = () => {
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(96,165,250,0.6)';
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.6)'; // Sharp blue sparkle
+        ctx.shadowBlur = 0; // No blur/glow
         ctx.fill();
       }
     }
