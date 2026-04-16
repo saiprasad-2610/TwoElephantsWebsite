@@ -1124,7 +1124,7 @@ body.no-scroll {
 .story-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  gap: 60px;
   align-items: center;
   margin-bottom: 40px;
 }
@@ -2500,6 +2500,10 @@ footer {
 
 
 /* //// */
+
+.careerHead{
+  color: var(--color-blue-bright);
+}
 
 .hero-visual {
   position: relative;

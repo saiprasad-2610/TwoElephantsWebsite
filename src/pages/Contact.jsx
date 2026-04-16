@@ -367,7 +367,7 @@ const Contact = () => {
           <div className="container map-inner">
             <div className="map-text">
               <div className="eyebrow no-line" style={{ color: 'rgba(255,255,255,0.7)' }}>FIND US</div>
-              <h2>Rooted in Solapur.<br /><em style={{ color: 'var(--color-blue-glow)' }}>Reaching the World.</em></h2>
+              <h2>Rooted in Solapur.<br /><span className="careerHead">Reaching the World.</span></h2>
               <p>We believe the best technology companies don't need to be in Mumbai or Silicon Valley. They need to be somewhere that gives them an unfair advantage. For us, that's Solapur.</p>
             </div>
             <div className="map-visual">

@@ -29,6 +29,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/blog.css';
 import '../styles/team.css';
+import '../styles/global.css';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
@@ -321,7 +322,7 @@ const Story = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.3, duration: 0.7 }}
             >
-              A Legacy That Earns Its <em>Next Chapter</em>
+              A Legacy That Earns Its <span className="careerHead">Next Chapter</span>
             </motion.h2>
             <motion.p
               className="body-text"
@@ -462,7 +463,7 @@ const Services = () => {
         <div className="services-header">
           <div className="eyebrow dark">WHAT WE DO</div>
           <div className="section-rule visible"></div>
-          <h2 className="h2-title">Enterprise Technology for <em>Demanding Industries</em></h2>
+          <h2 className="h2-title">Enterprise Technology for <span className="careerHead">Demanding Industries</span></h2>
           <p className="services-sub">We build the systems that banks stake their reputation on and oil companies stake their operations on.</p>
         </div>
         <div className="insights-grid">
@@ -671,7 +672,7 @@ const Team = () => {
         <div className="services-header">
           <div className="eyebrow dark">OUR TEAM</div>
           <div className="section-rule visible"></div>
-          <h2 className="h2-title">Leadership Rooted in <em>Legacy</em></h2>
+          <h2 className="h2-title">Leadership Rooted in <span className="careerHead">Legacy</span></h2>
           <p className="services-sub">Meet the visionaries bridging industrial wisdom with digital execution.</p>
         </div>
 
@@ -704,7 +705,7 @@ const Insights = ({ articles }) => {
           <div className="services-header">
             <div className="eyebrow dark">FROM OUR DESK</div>
             <div className="section-rule visible"></div>
-            <h2 className="h2-title">Thinking at the Intersection of <em>Industry</em></h2>
+            <h2 className="h2-title">Thinking at the Intersection of <span className="careerHead">Industry</span></h2>
             <p className="services-sub">Deep dives into the technologies shaping the future of global enterprise.</p>
           </div>
           {limitedArticles && limitedArticles.length > 0 ? (

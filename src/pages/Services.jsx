@@ -502,7 +502,7 @@ const Services = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                style={{ color: '#fff', fontSize: 'clamp(40px, 6vw, 72px)', marginBottom: '24px' }}
+                style={{ color: '#fff', fontSize: 'clamp(40px, 6vw, 70px)', marginBottom: '20px' }}
               >
                 Our Services And Works
               </motion.h1>
@@ -533,6 +533,15 @@ const Services = () => {
         {/* Detailed Services Section */}
         <section className="detailed-services-container" style={{ background: '#fff', position: 'relative' }}>
           <div className="container" style={{ paddingTop: '60px' }}>
+            <motion.h1
+                            className="Services-hero-title"
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.1 }}
+                          >
+                           
+                          </motion.h1>
             <motion.div 
               className="intelligence-header"
               initial={{ opacity: 0, y: 20 }}

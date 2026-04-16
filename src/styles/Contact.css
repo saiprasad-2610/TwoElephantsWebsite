@@ -11,6 +11,10 @@
   overflow: hidden;
 }
 
+.careerHead{
+  color : #60A5FA;
+}
+
 /* Background Atmospheric Glow */
 .contact-body::before {
   content: '';
