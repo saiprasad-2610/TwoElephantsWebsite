@@ -4,7 +4,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Mail, Search, Check, X, MessageSquare, MapPin, Globe, Trash2, Clock, ChevronDown, ExternalLink, Send } from 'lucide-react';
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://twoelephantswebsitebackend.onrender.com/api';
 
 export default function Contacts() {
   const [contacts, setContacts] = useState([]);

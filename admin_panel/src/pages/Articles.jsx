@@ -4,8 +4,8 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Newspaper, Plus, Edit2, Trash2, X, Image, Calendar, User, Clock, Search } from 'lucide-react';
 
-const API_BASE = 'http://localhost:8000/api';
-const BACKEND_BASE = 'http://localhost:8000';
+const API_BASE = 'https://twoelephantswebsitebackend.onrender.com/api';
+const BACKEND_BASE = 'https://twoelephantswebsitebackend.onrender.com';
 
 const getImageUrl = (url) => {
   if (!url) return null;

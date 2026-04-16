@@ -9,8 +9,8 @@ import {
   Clock, CreditCard, Building, MessageSquare
 } from 'lucide-react';
 
-const API_BASE = 'http://localhost:8000/api';
-const BACKEND_BASE = 'http://localhost:8000';
+const API_BASE = 'https://twoelephantswebsitebackend.onrender.com/api';
+const BACKEND_BASE = 'https://twoelephantswebsitebackend.onrender.com';
 
 const STATUS_COLORS = {
   new: { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200', gradient: 'from-amber-500 to-orange-500', label: 'New Arrival' },

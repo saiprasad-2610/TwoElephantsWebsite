@@ -9,12 +9,12 @@ import Footer from '../components/Footer';
 import '../styles/blog.css';
 
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://twoelephantswebsitebackend.onrender.com';
 
 const getImageUrl = (url) => {
   if (!url) return null;
   if (url.startsWith('http')) return url;
-  return `http://localhost:8000${url}`;
+  return `https://twoelephantswebsitebackend.onrender.com${url}`;
 };
 
 const MotionLink = motion(Link);
