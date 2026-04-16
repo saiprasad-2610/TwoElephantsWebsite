@@ -203,12 +203,16 @@ const Contact = () => {
                 <h4>Our Offices</h4>
                 <div className="offices-row">
                   <div className="office-card">
-                    <div className="office-flag">🇮🇳</div>
+                    <div className="office-flag">
+                      <img src="https://flagcdn.com/w80/in.png" alt="India Flag" style={{ width: '40px', height: 'auto', borderRadius: '4px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }} />
+                    </div>
                     <div className="office-name">Solapur, India</div>
                     <div className="office-addr">Solapur, Maharashtra 413001<br />India — Headquarters</div>
                   </div>
                   <div className="office-card">
-                    <div className="office-flag">🇺🇸</div>
+                    <div className="office-flag">
+                      <img src="https://flagcdn.com/w80/us.png" alt="USA Flag" style={{ width: '40px', height: 'auto', borderRadius: '4px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }} />
+                    </div>
                     <div className="office-name">Houston, USA</div>
                     <div className="office-addr">Houston, Texas<br />USA — Oil & Gas Division</div>
                   </div>

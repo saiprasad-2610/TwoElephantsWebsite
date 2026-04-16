@@ -554,7 +554,7 @@ const TeamMember = ({ name, role, img, bio, linkedin, delay }) => {
             )}
           </div>
           <div className="circle-divider"></div>
-          <p className="click-for-more">Click to read more <ArrowRight size={12} /></p>
+          <p className="click-for-more">Read Bio <ArrowRight size={12} /></p>
         </div>
       </motion.div>
 
@@ -672,7 +672,7 @@ const Team = () => {
         <div className="services-header">
           <div className="eyebrow dark">OUR TEAM</div>
           <div className="section-rule visible"></div>
-          <h2 className="h2-title">Leadership Rooted in <span className="careerHead">Legacy</span></h2>
+          <h2 className="h2-title">Leadership Forged in <span className="careerHead">Legacy</span></h2>
           <p className="services-sub">Meet the visionaries bridging industrial wisdom with digital execution.</p>
         </div>
 

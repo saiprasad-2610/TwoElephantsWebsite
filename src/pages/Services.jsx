@@ -303,26 +303,46 @@ const DetailedService = ({ service, index }) => {
             transition={{ duration: 0.8 }}
             style={{ flex: '1', minWidth: '320px' }}
           >
-            <div className="service-id-badge" style={{ 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              gap: '12px', 
-              padding: '6px 16px', 
-              borderRadius: '99px', 
-              background: 'rgba(15, 23, 42, 0.03)', 
-              border: '1px solid rgba(15, 23, 42, 0.08)', 
-              marginBottom: '16px' 
-            }}>
-              <span style={{ color: service.color }}>{service.icon}</span>
-              <span style={{ 
-                fontSize: '11px', 
-                fontWeight: '700', 
-                letterSpacing: '0.2em', 
-                textTransform: 'uppercase', 
-                color: 'rgba(15, 23, 42, 0.5)' 
+            <div className="service-id-badge-row" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+              <div className="service-id-badge" style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '12px', 
+                padding: '6px 16px', 
+                borderRadius: '99px', 
+                background: 'rgba(15, 23, 42, 0.03)', 
+                border: '1px solid rgba(15, 23, 42, 0.08)', 
               }}>
-                Service 0{service.id}
-              </span>
+                <span style={{ color: service.color }}>{service.icon}</span>
+                <span style={{ 
+                  fontSize: '11px', 
+                  fontWeight: '700', 
+                  letterSpacing: '0.2em', 
+                  textTransform: 'uppercase', 
+                  color: 'rgba(15, 23, 42, 0.5)' 
+                }}>
+                  Service 0{service.id}
+                </span>
+              </div>
+              
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                className="coming-soon-badge"
+                style={{
+                  padding: '4px 12px',
+                  borderRadius: '99px',
+                  background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+                  color: '#fff',
+                  fontSize: '10px',
+                  fontWeight: '800',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+                }}
+              >
+                Coming Soon
+              </motion.div>
             </div>
 
             <h2 style={{ 
