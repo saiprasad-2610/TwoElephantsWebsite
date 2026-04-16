@@ -8,6 +8,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/blog.css';
 
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 const getImageUrl = (url) => {
@@ -17,6 +18,8 @@ const getImageUrl = (url) => {
 };
 
 const MotionLink = motion(Link);
+
+
 
 const Insights = () => {
   const [articles, setArticles] = useState([]);
@@ -48,6 +51,12 @@ const Insights = () => {
       </motion.div>
     );
   };
+
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
 
   return (
     <div className="page-wrapper">
@@ -81,7 +90,7 @@ const Insights = () => {
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
               >
-                Deep dives into the technologies shaping the future of global enterprise. 
+                Deep dives into the technologies shaping the future of global enterprise.
                 Explore our comprehensive collection of articles, case studies, and thought leadership.
               </motion.p>
             </div>

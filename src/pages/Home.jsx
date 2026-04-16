@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
@@ -22,12 +21,14 @@ import {
 } from 'lucide-react';
 import { FaLinkedin } from "react-icons/fa";
 import { useNavigate, Link } from 'react-router-dom';
+// import { useEffect } from "react";
+
 
 import ParticleBackground from '../components/ParticleBackground';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/blog.css';
-import '../styles/team.css'; 
+import '../styles/team.css';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
@@ -36,6 +37,8 @@ const getImageUrl = (url) => {
   if (url.startsWith('http')) return url;
   return `http://localhost:8000${url}`;
 };
+
+
 
 const MotionLink = motion(Link);
 
@@ -182,7 +185,7 @@ const Hero = () => {
                     scale: 1.05,
                     rotateY: 8
                   }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
                   draggable={false}
                 />
               </div>
@@ -267,7 +270,7 @@ const Story = () => {
                 alt="Pushpa Textile"
                 className="story-img-main"
                 whileHover={{ scale: 1.03, rotate: 1 }}
-                transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+                transition={{ duration: 0.15, ease: "easeOut" }}
               />
               <motion.div
                 className="story-img-card card-legacy"
@@ -351,34 +354,27 @@ const Story = () => {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.6 }}
-              whileHover={{ 
-                borderLeftWidth: "8px", 
-                paddingLeft: "36px", 
+              whileHover={{
+                borderLeftWidth: "8px",
+                paddingLeft: "36px",
                 color: 'var(--color-blue-glow)',
-                scale: 1.02,
-                textShadow: '0 0 20px rgba(77,168,255,0.3)',
+                scale: 1.01,
                 backgroundColor: 'rgba(77,168,255,0.05)',
-                transition: { duration: 0.01, ease: "linear" }
               }}
-              animate={{
-                transition: { duration: 0.01, ease: "linear" }
-              }}
+              transition={{ duration: 0.1, ease: "easeOut" }}
             >
               "When people think of Solapur, they think of Looms. I want the next generation to think of Labs."
-              <motion.div 
+              <motion.div
                 className="quote-author"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.8 }}
-                whileHover={{ 
+                whileHover={{
                   color: 'var(--color-blue-glow)',
                   x: 5,
-                  transition: { duration: 0.01 }
                 }}
-                animate={{
-                  transition: { duration: 0.01 }
-                }}
+                transition={{ duration: 0.1 }}
               >
                 — Prashant Rathi
               </motion.div>
@@ -400,13 +396,12 @@ const ServiceCard = ({ title, desc, cat, tags, color, img, delay }) => {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay }}
       whileHover={{
         y: -10,
         rotateX: 2,
         rotateY: 2,
-        transition: { duration: 0.2 }
       }}
+      transition={{ delay, duration: 0.1 }}
       onClick={() => navigate('/services')}
       style={{ perspective: 1000, cursor: 'pointer' }}
       role="link"
@@ -441,7 +436,7 @@ const Services = () => {
       cat: "BFSI",
       tags: ["KYC", "Compliance", "Core Banking"],
       color: "blue",
-      img : "https://tse2.mm.bing.net/th/id/OIP.CYgk6l_Jd7zN9IO8wAhskAHaEA?pid=Api&P=0&h=180"
+      img: "https://tse2.mm.bing.net/th/id/OIP.CYgk6l_Jd7zN9IO8wAhskAHaEA?pid=Api&P=0&h=180"
     },
     {
       title: "Industrial Technology for Energy Operations",
@@ -478,8 +473,8 @@ const Services = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.1 * idx }}
-              whileHover={{ y: -10 }}
+              transition={{ delay: 0.1 * idx, duration: 0.2 }}
+              whileHover={{ y: -8 }}
               onClick={() => window.location.href = '/services'}
               style={{ cursor: 'pointer' }}
             >
@@ -546,10 +541,10 @@ const TeamMember = ({ name, role, img, bio, linkedin, delay }) => {
               <p className="circle-role">{role}</p>
             </div>
             {linkedin && (
-              <a 
-                href={linkedin} 
-                target="_blank" 
-                rel="noopener noreferrer" 
+              <a
+                href={linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="circle-linkedin-link"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -565,7 +560,7 @@ const TeamMember = ({ name, role, img, bio, linkedin, delay }) => {
       <AnimatePresence>
         {isOpen && (
           <div className="team-modal-overlay" onClick={() => setIsOpen(false)}>
-            <motion.div 
+            <motion.div
               className="team-modal-content"
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -575,7 +570,7 @@ const TeamMember = ({ name, role, img, bio, linkedin, delay }) => {
               <button className="modal-close-btn" onClick={() => setIsOpen(false)}>
                 <X size={24} />
               </button>
-              
+
               <div className="modal-body">
                 <div className="modal-aside">
                   <div className="modal-img-container">
@@ -587,7 +582,7 @@ const TeamMember = ({ name, role, img, bio, linkedin, delay }) => {
                     </a>
                   )}
                 </div>
-                
+
                 <div className="modal-main">
                   <h2 className="modal-name">{name}</h2>
                   <p className="modal-role">{role}</p>
@@ -608,7 +603,7 @@ const TeamMember = ({ name, role, img, bio, linkedin, delay }) => {
 };
 
 const Team = () => {
-  
+
   const members = [
     {
       name: "Prashant Rathi",
@@ -631,7 +626,7 @@ const Team = () => {
       bio: "30+ years of engineering leadership at TCS, Cisco, and VeriFone. Expert in large-scale systems. Abhik provides technical guidance for complex enterprise architectures and innovative software solutions.",
       linkedin: "https://www.linkedin.com/in/abhik/"
     },
-    
+
     {
       name: "Anuradha Biswas",
       role: "Advisor & Mentor",
@@ -639,7 +634,7 @@ const Team = () => {
       bio: "20+ years of leadership at Infosys, VeriFone, and CA Technologies. Architect of global delivery units. Anuradha brings deep industry knowledge in building and scaling high-performance engineering teams.",
       linkedin: "https://www.linkedin.com/in/anubiswas/"
     },
-    
+
     {
       name: "Pankaj Rathi",
       role: "Overseas Operations",
@@ -668,7 +663,7 @@ const Team = () => {
       bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.",
       // linkedin: "https://www.linkedin.com/in/saurabh-kulkarni-249a5726/"
     },
-    ];
+  ];
 
   return (
     <section className="team-section section-padding" id="team">
@@ -696,130 +691,132 @@ const Team = () => {
 
 const Insights = ({ articles }) => {
   const navigate = useNavigate();
-  
+
   // Limit to only 3 articles on home page
   const limitedArticles = articles ? articles.slice(0, 3) : [];
   const hasMoreArticles = articles && articles.length > 3;
 
-  return (
-    <section className="insights-section section-padding" id="insights">
-      <div className="container">
-        <div className="services-header">
-          <div className="eyebrow dark">FROM OUR DESK</div>
-          <div className="section-rule visible"></div>
-          <h2 className="h2-title">Thinking at the Intersection of <em>Industry</em></h2>
-          <p className="services-sub">Deep dives into the technologies shaping the future of global enterprise.</p>
-        </div>
-        {limitedArticles && limitedArticles.length > 0 ? (
-        <motion.div
-          className="insights-grid"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ staggerChildren: 0.18 }}
-        >
-          {limitedArticles.map((article, idx) => (
-            <MotionLink
-              key={article.id || idx}
-              to={`/insights/${article.slug || article.id}`}
-              className="blog-card"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 * idx }}
-              whileHover={{ y: -10 }}
-            >
-              <div className="blog-img-wrap">
-                <img src={getImageUrl(article.img)} alt={article.title} className="blog-img" />
-                <div className="blog-overlay-info">
-                  <span>{article.read_time}</span>
-                </div>
-              </div>
-              <div className="blog-content">
-                <span className="blog-cat">{article.cat}</span>
-                <h3 className="blog-title">{article.title}</h3>
-                <p className="blog-excerpt">{article.excerpt}</p>
-                <div className="blog-footer">
-                  <span className="read-more">Read Full Article <ArrowRight size={14} /></span>
-                </div>
-              </div>
-            </MotionLink>
-          ))}
-        </motion.div>
-        ) : (
-          <p className="text-center text-gray-500 py-12">No articles available at the moment.</p>
-        )}
-        
-        {/* Explore More Button */}
-        {hasMoreArticles && (
-          <div className="explore-more-container">
-            <motion.button
-              className="explore-more-btn"
-              onClick={() => navigate('/insights')}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Explore More Articles
-              <ThumbsUp size={16} />
-            </motion.button>
+  
+
+    return (
+      <section className="insights-section section-padding" id="insights">
+        <div className="container">
+          <div className="services-header">
+            <div className="eyebrow dark">FROM OUR DESK</div>
+            <div className="section-rule visible"></div>
+            <h2 className="h2-title">Thinking at the Intersection of <em>Industry</em></h2>
+            <p className="services-sub">Deep dives into the technologies shaping the future of global enterprise.</p>
           </div>
-        )}
-      </div>
-    </section>
-  );
-};
+          {limitedArticles && limitedArticles.length > 0 ? (
+            <motion.div
+              className="insights-grid"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ staggerChildren: 0.18 }}
+            >
+              {limitedArticles.map((article, idx) => (
+                <MotionLink
+                  key={article.id || idx}
+                  to={`/insights/${article.slug || article.id}`}
+                  className="blog-card"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.1 * idx, duration: 0.2 }}
+                  whileHover={{ y: -8 }}
+                >
+                  <div className="blog-img-wrap">
+                    <img src={getImageUrl(article.img)} alt={article.title} className="blog-img" />
+                    <div className="blog-overlay-info">
+                      <span>{article.read_time}</span>
+                    </div>
+                  </div>
+                  <div className="blog-content">
+                    <span className="blog-cat">{article.cat}</span>
+                    <h3 className="blog-title">{article.title}</h3>
+                    <p className="blog-excerpt">{article.excerpt}</p>
+                    <div className="blog-footer">
+                      <span className="read-more">Read Full Article <ArrowRight size={14} /></span>
+                    </div>
+                  </div>
+                </MotionLink>
+              ))}
+            </motion.div>
+          ) : (
+            <p className="text-center text-gray-500 py-12">No articles available at the moment.</p>
+          )}
 
-const SectionReveal = ({ children }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-    >
-      {children}
-    </motion.div>
-  );
-};
+          {/* Explore More Button */}
+          {hasMoreArticles && (
+            <div className="explore-more-container">
+              <motion.button
+                className="explore-more-btn"
+                onClick={() => navigate('/insights')}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Explore More Articles
+                <ThumbsUp size={16} />
+              </motion.button>
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  };
 
-const Home = () => {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001
-  });
-  const [articles, setArticles] = useState([]);
+  const SectionReveal = ({ children }) => {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        {children}
+      </motion.div>
+    );
+  };
 
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const res = await axios.get(`${API_BASE}/api/public/articles/`);
-        setArticles(res.data);
-      } catch (error) {
-        console.error('Failed to fetch articles:', error);
-      }
-    };
-    fetchArticles();
-  }, []);
+  const Home = () => {
+    const { scrollYProgress } = useScroll();
+    const scaleX = useSpring(scrollYProgress, {
+      stiffness: 100,
+      damping: 30,
+      restDelta: 0.001
+    });
+    const [articles, setArticles] = useState([]);
 
-  return (
-    <div className="page-wrapper">
-      <motion.div id="scroll-progress" style={{ scaleX }} />
-      <Navbar />
-      <main>
-        <Hero />
-        <Marquee />
-        <SectionReveal><Story /></SectionReveal>
-        <SectionReveal><Services /></SectionReveal>
-        <SectionReveal><Team /></SectionReveal>
-        <SectionReveal><Insights articles={articles} /></SectionReveal>
+    useEffect(() => {
+      const fetchArticles = async () => {
+        try {
+          const res = await axios.get(`${API_BASE}/api/public/articles/`);
+          setArticles(res.data);
+        } catch (error) {
+          console.error('Failed to fetch articles:', error);
+        }
+      };
+      fetchArticles();
+    }, []);
 
-        {/* Unified CTA */}
-        {/* <SectionReveal>
+    return (
+      <div className="page-wrapper">
+        <motion.div id="scroll-progress" style={{ scaleX }} />
+        <Navbar />
+        <main>
+          <Hero />
+          <Marquee />
+          <SectionReveal><Story /></SectionReveal>
+          <SectionReveal><Services /></SectionReveal>
+          <SectionReveal><Team /></SectionReveal>
+          <SectionReveal><Insights articles={articles} /></SectionReveal>
+
+          {/* Unified CTA */}
+          {/* <SectionReveal>
           <section className="cta-merged">
             <div className="cta-merged-bg" />
             <div className="container">
@@ -840,10 +837,10 @@ const Home = () => {
             </div>
           </section>
         </SectionReveal> */}
-      </main>
-      <Footer />
-    </div>
-  );
-};
+        </main>
+        <Footer />
+      </div>
+    );
+  };
 
-export default Home;
+  export default Home;
