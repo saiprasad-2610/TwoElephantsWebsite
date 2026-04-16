@@ -53,7 +53,7 @@ import Sapna from '../assets/images/Sapna.png'
 import saurabh from '../assets/images/saurabh1.png'
 import prashant_bollu from '../assets/images/prashant_bollu.jpeg'
 import arpita from '../assets/images/arpita.jpg'
-import looms from '../assets/images/looms.jpg';
+import story from '../assets/images/story.png';
 import labs from '../assets/images/labs.jpg';
 import service1 from '../assets/images/service1.avif';
 
@@ -68,7 +68,7 @@ const saurabhImg = saurabh;
 const prashantBolluImg = prashant_bollu;
 const arpitaImg = arpita;
 const labsImg = labs;
-const loomsImg = looms;
+const storyImg = story;
 // const service1 = service1;
 
 
@@ -267,7 +267,7 @@ const Story = () => {
           >
             <div className="image-stack">
               <motion.img
-                src={loomsImg}
+                src={storyImg}
                 alt="Pushpa Textile"
                 className="story-img-main"
                 whileHover={{ scale: 1.03, rotate: 1 }}
@@ -365,17 +365,25 @@ const Story = () => {
               transition={{ duration: 0.1, ease: "easeOut" }}
             >
               "When people think of Solapur, they think of Looms. I want the next generation to think of Labs."
-              <motion.div
-                className="quote-author"
+              <motion.div 
+                className="quote-author "
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.8 }}
-                whileHover={{
-                  color: 'var(--color-blue-glow)',
-                  x: 5,
+                style={{ 
+                  fontWeight: '900', 
+                  fontSize: '1.4rem', 
+                  marginTop: '16px',
+                  color: 'var(--color-dark)',
+                  display: 'block'
                 }}
-                transition={{ duration: 0.1 }}
+                whileHover={{ 
+                  color: 'var(--color-blue-core)',
+                  x: 5,
+                  scale: 1.05
+                }}
+                // transition={{ duration: 0.1 }}
               >
                 — Prashant Rathi
               </motion.div>

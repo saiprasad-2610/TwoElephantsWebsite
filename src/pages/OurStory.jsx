@@ -103,7 +103,20 @@ const OurStory = () => {
     <div className="story-page">
       <Navbar />
       
-      <main>
+      {/* Background ambient blue effect */}
+      <div className="story-bg-glow" style={{
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '100vw',
+        height: '100vh',
+        background: 'radial-gradient(circle at center, rgba(37, 99, 235, 0.08) 0%, transparent 70%)',
+        pointerEvents: 'none',
+        zIndex: 0
+      }} />
+
+      <main className="story-main" style={{ position: 'relative', zIndex: 1 }}>
         {/* ── HERO SECTION ── */}
         <section className="story-hero">
           <div className="story-hero-bg" />
@@ -226,11 +239,37 @@ const OurStory = () => {
                 </p>
               </div>
               
-              <div className="name-visual">
-                 <div className="elephant-emblem-card">
+              <div className="name-visual" style={{ position: 'relative' }}>
+                {/* Additional localized blue glow */}
+                <div style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '600px',
+                  height: '600px',
+                  background: 'radial-gradient(circle at center, rgba(37, 99, 235, 0.12) 0%, transparent 70%)',
+                  pointerEvents: 'none',
+                  zIndex: -1
+                }} />
+                
+                 <motion.div 
+                    className="elephant-emblem-card"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                 >
                     <img src= {logo1} alt="Two Elephants Logo" className="large-emblem" />
-                    {/* <div className="emblem-label">Guided Growth</div> */}
-                 </div>
+                    <motion.div 
+                      className="emblem-label"
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      transition={{ delay: 0.5 }}
+                    >
+                      Guided Growth
+                    </motion.div>
+                 </motion.div>
               </div>
             </div>
           </div>
