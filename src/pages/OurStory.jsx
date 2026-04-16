@@ -9,6 +9,7 @@ import loomsImg from '../assets/images/looms.jpg';
 import labsImg from '../assets/images/labs.jpg';
 import '../styles/OurStory.css';
 import logo1 from '../assets/images/logo1.svg';
+import story from '../assets/images/story.png'
 
 
 const Counter = ({ value, label }) => {
@@ -163,7 +164,7 @@ const OurStory = () => {
             <div className="story-grid">
               <div className="story-images">
                 <div className="image-stack">
-                  <img src={loomsImg} alt="Pushpa Textile Heritage" className="story-img-main" />
+                  <img src={story} alt="Pushpa Textile Heritage" className="story-img-main" />
                   <div className="story-img-card card-legacy">
                     <span className="card-year">1960</span>
                     <span className="card-text">Legacy Begins</span>
@@ -348,7 +349,7 @@ const OurStory = () => {
         {/* ── FINAL CLOSING ── */}
         <section className="closing-section section-padding">
           <div className="container">
-            <div className="eyebrow amber no-line">FROM LEGACY TO TECHNOLOGY</div>
+            {/* <div className="eyebrow amber no-line">FROM LEGACY TO TECHNOLOGY</div> */}
             <h2 className="h2-title">From trust to transformation.</h2>
             <p className="body-text">
               This is who we are. This is what we carry forward.
