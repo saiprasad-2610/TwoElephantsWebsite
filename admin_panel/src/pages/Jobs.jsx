@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Briefcase, Plus, Edit2, Trash2, X, MapPin, Users, Search } from 'lucide-react';
-
-const API_BASE = 'https://twoelephantswebsitebackend.onrender.com/api/public';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 const DEPARTMENTS = ['Engineering', 'AI & Research', 'Design', 'Marketing', 'Sales', 'HR', 'Other'];
 
@@ -31,7 +30,7 @@ export default function Jobs() {
 
   const fetchJobs = async () => {
     try {
-      const res = await axios.get(`${API_BASE}/jobs/`);
+      const res = await axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.JOB));
       setJobs(res.data);
     } catch (error) {
       toast.error('Failed to fetch jobs');
@@ -94,10 +93,10 @@ export default function Jobs() {
 
     try {
       if (editingJob) {
-        await axios.put(`${API_BASE}/jobs/${editingJob.id}/`, payload);
+        await axios.put(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.JOB)}${editingJob.id}/`, payload);
         toast.success('Job role updated successfully');
       } else {
-        await axios.post(`${API_BASE}/jobs/`, payload);
+        await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.JOB), payload);
         toast.success('Job role created successfully');
       }
       fetchJobs();
@@ -109,7 +108,7 @@ export default function Jobs() {
 
   const toggleJobStatus = async (job) => {
     try {
-      await axios.patch(`${API_BASE}/jobs/${job.id}/`, { is_active: !job.is_active });
+      await axios.patch(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.JOB)}${job.id}/`, { is_active: !job.is_active });
       setJobs(jobs.map((j) => (j.id === job.id ? { ...j, is_active: !j.is_active } : j)));
       toast.success(`Job ${job.is_active ? 'deactivated' : 'activated'}`);
     } catch (error) {
@@ -120,7 +119,7 @@ export default function Jobs() {
   const deleteJob = async (id) => {
     if (!window.confirm('Are you sure you want to delete this job role?')) return;
     try {
-      await axios.delete(`${API_BASE}/jobs/${id}/`);
+      await axios.delete(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.JOB)}${id}/`);
       setJobs(jobs.filter((j) => j.id !== id));
       toast.success('Job role deleted');
     } catch (error) {

@@ -8,9 +8,7 @@ import {
   ChevronRight, Users, ShieldCheck, X, Linkedin, Github, ExternalLink,
   Clock, CreditCard, Building, MessageSquare
 } from 'lucide-react';
-
-const API_BASE = 'https://twoelephantswebsitebackend.onrender.com/api/public';
-const BACKEND_BASE = 'https://twoelephantswebsitebackend.onrender.com';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 const STATUS_COLORS = {
   new: { bg: 'bg-amber-50', text: 'text-amber-600', border: 'border-amber-200', gradient: 'from-amber-500 to-orange-500', label: 'New Arrival' },
@@ -43,8 +41,8 @@ export default function Applications() {
   const fetchData = async () => {
     try {
       const [appsRes, jobsRes] = await Promise.all([
-        axios.get(`${API_BASE}/applications/`),
-        axios.get(`${API_BASE}/jobs/`),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.APPLICATIONS)),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.JOB)),
       ]);
       setApplications(appsRes.data);
       setJobs(jobsRes.data);
@@ -57,7 +55,7 @@ export default function Applications() {
 
   const updateStatus = async (id, newStatus) => {
     try {
-      await axios.patch(`${API_BASE}/applications/${id}/`, { status: newStatus });
+      await axios.patch(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.APPLICATIONS)}${id}/`, { status: newStatus });
       const updatedApps = applications.map((app) => (app.id === id ? { ...app, status: newStatus } : app));
       setApplications(updatedApps);
       if (selectedApp?.id === id) {
@@ -91,7 +89,7 @@ export default function Applications() {
   const getResumeUrl = (path) => {
     if (!path) return null;
     if (path.startsWith('http')) return path;
-    return `${BACKEND_BASE}${path}`;
+    return `${API_CONFIG.BASE_URL}${path}`;
   };
 
   return (

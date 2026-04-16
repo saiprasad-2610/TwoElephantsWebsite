@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Mail, Search, Check, X, MessageSquare, MapPin, Globe, Trash2, Clock, ChevronDown, ExternalLink, Send } from 'lucide-react';
-
-const API_BASE = 'https://twoelephantswebsitebackend.onrender.com/api/public';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 export default function Contacts() {
   const [contacts, setContacts] = useState([]);
@@ -23,7 +22,7 @@ export default function Contacts() {
 
   const fetchContacts = async () => {
     try {
-      const res = await axios.get(`${API_BASE}/contacts/`);
+      const res = await axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.CONTACTS));
       setContacts(res.data);
     } catch (error) {
       toast.error('Failed to fetch contacts');
@@ -35,7 +34,7 @@ export default function Contacts() {
   const markAsRead = async (id) => {
     try {
       const contact = contacts.find((c) => c.id === id);
-      await axios.patch(`${API_BASE}/contacts/${id}/`, { ...contact, is_read: true });
+      await axios.patch(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.CONTACTS)}${id}/`, { ...contact, is_read: true });
       setContacts(contacts.map((c) => (c.id === id ? { ...c, is_read: true } : c)));
       if (selectedContact?.id === id) {
         setSelectedContact({ ...selectedContact, is_read: true });

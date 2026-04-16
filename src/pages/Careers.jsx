@@ -6,12 +6,12 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ParticleBackground from '../components/ParticleBackground';
 import '../styles/Careers.css';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 // Import tech hero images for careers bento grid
 import techHero1 from '../assets/images/tech_hero_1.png';
 import techHero2 from '../assets/images/tech_hero_2.png';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://twoelephantswebsitebackend.onrender.com';
 
 const Careers = () => {
   const [activeRole, setActiveRole] = useState(0);
@@ -34,7 +34,7 @@ const Careers = () => {
 
   const fetchRoles = async () => {
     try {
-      const res = await axios.get(`${API_BASE}/api/public/roles/`);
+      const res = await axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.PUBLIC.ROLES));
       setOpenings(res.data);
       if (res.data.length > 0) {
         setSelectedRole(res.data[0]);
@@ -69,7 +69,7 @@ const Careers = () => {
         if (formData[key]) payload.append(key, formData[key]);
       });
       if (selectedRole) payload.append('role', selectedRole.id);
-      await axios.post(`${API_BASE}/api/public/apply/`, payload, {
+      await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.PUBLIC.APPLY), payload, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setFormStatus('success');

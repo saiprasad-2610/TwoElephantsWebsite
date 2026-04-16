@@ -16,13 +16,12 @@ import {
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/blog.css';
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://twoelephantswebsitebackend.onrender.com';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 const getImageUrl = (url) => {
   if (!url) return null;
   if (url.startsWith('http')) return url;
-  return `https://twoelephantswebsitebackend.onrender.com${url}`;
+  return `${API_CONFIG.BASE_URL}${url}`;
 };
 
 const ArticleDetail = () => {
@@ -54,8 +53,8 @@ const ArticleDetail = () => {
   const fetchData = async () => {
     try {
       const [articleRes, allRes] = await Promise.all([
-        axios.get(`${API_BASE}/api/public/articles/${slug}/`),
-        axios.get(`${API_BASE}/api/public/articles/`)
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.PUBLIC.ARTICLE_BY_SLUG, { slug })),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.PUBLIC.ARTICLES))
       ]);
       setArticle(articleRes.data);
       setAllArticles(allRes.data);

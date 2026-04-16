@@ -14,11 +14,11 @@ import {
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/Contact.css';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 const CONTACT_RECEIVER_EMAIL =
   import.meta.env.VITE_CONTACT_RECEIVER_EMAIL || 'support@twoelephants.tech';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://twoelephantswebsitebackend.onrender.com';
 
 const Contact = () => {
   const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success, error
@@ -45,7 +45,7 @@ const Contact = () => {
     try {
       // Try backend API first
       try {
-        await axios.post(`${API_BASE}/api/public/contact/`, {
+        await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.PUBLIC.CONTACT), {
           fname: formData.fname,
           lname: formData.lname,
           email: formData.email,

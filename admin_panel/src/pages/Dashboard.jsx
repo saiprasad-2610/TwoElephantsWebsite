@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Briefcase, FileText, Newspaper, TrendingUp, Clock, CheckCircle, Eye } from 'lucide-react';
 import axios from 'axios';
-
-const API_BASE = 'https://twoelephantswebsitebackend.onrender.com/api/public';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 const statCards = [
   { label: 'Contact Inquiries', icon: Mail, gradient: 'from-blue-500 to-cyan-500', shadow: 'shadow-blue-500/30', key: 'contacts', delay: 0 },
@@ -25,10 +24,10 @@ export default function Dashboard() {
   const fetchData = async () => {
     try {
       const [contactsRes, jobsRes, applicationsRes, articlesRes] = await Promise.all([
-        axios.get(`${API_BASE}/contacts/`),
-        axios.get(`${API_BASE}/jobs/`),
-        axios.get(`${API_BASE}/applications/`),
-        axios.get(`${API_BASE}/articles/`),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.CONTACTS)),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.JOB)),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.APPLICATIONS)),
+        axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.ARTICLES)),
       ]);
 
       setStats({

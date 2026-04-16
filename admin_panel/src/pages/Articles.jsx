@@ -3,14 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Newspaper, Plus, Edit2, Trash2, X, Image, Calendar, User, Clock, Search } from 'lucide-react';
-
-const API_BASE = 'https://twoelephantswebsitebackend.onrender.com/api/public';
-const BACKEND_BASE = 'https://twoelephantswebsitebackend.onrender.com';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 const getImageUrl = (url) => {
   if (!url) return null;
   if (url.startsWith('http')) return url;
-  return `${BACKEND_BASE}${url}`;
+  return `${API_CONFIG.BASE_URL}${url}`;
 };
 
 const CATEGORIES = ['BFSI', 'OIL & GAS', 'SOLAPUR', 'Technology', 'Innovation', 'Other'];
@@ -44,7 +42,7 @@ export default function Articles() {
 
   const fetchArticles = async () => {
     try {
-      const res = await axios.get(`${API_BASE}/articles/`);
+      const res = await axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.ARTICLES));
       setArticles(res.data);
     } catch (error) {
       toast.error('Failed to fetch articles');
@@ -136,7 +134,7 @@ export default function Articles() {
           }
         });
         formDataToSend.append('content', JSON.stringify(formData.content.filter((c) => c.trim() !== '')));
-        await axios.put(`${API_BASE}/articles/${editingArticle.id}/`, formDataToSend, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await axios.put(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.ARTICLES)}${editingArticle.id}/`, formDataToSend, { headers: { 'Content-Type': 'multipart/form-data' } });
         toast.success('Article updated successfully');
       } else {
         const formDataToSend = new FormData();
@@ -148,7 +146,7 @@ export default function Articles() {
           }
         });
         formDataToSend.append('content', JSON.stringify(formData.content.filter((c) => c.trim() !== '')));
-        await axios.post(`${API_BASE}/articles/`, formDataToSend, { headers: { 'Content-Type': 'multipart/form-data' } });
+        await axios.post(buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.ARTICLES), formDataToSend, { headers: { 'Content-Type': 'multipart/form-data' } });
         toast.success('Article created successfully');
       }
       fetchArticles();
@@ -160,7 +158,7 @@ export default function Articles() {
 
   const togglePublishStatus = async (article) => {
     try {
-      await axios.patch(`${API_BASE}/articles/${article.id}/`, { is_published: !article.is_published });
+      await axios.patch(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.ARTICLES)}${article.id}/`, { is_published: !article.is_published });
       setArticles(articles.map((a) => (a.id === article.id ? { ...a, is_published: !a.is_published } : a)));
       toast.success(`Article ${article.is_published ? 'unpublished' : 'published'}`);
     } catch (error) {
@@ -171,7 +169,7 @@ export default function Articles() {
   const deleteArticle = async (id) => {
     if (!window.confirm('Are you sure you want to delete this article?')) return;
     try {
-      await axios.delete(`${API_BASE}/articles/${id}/`);
+      await axios.delete(`${buildApiUrl(API_CONFIG.ENDPOINTS.ADMIN.ARTICLES)}${id}/`);
       setArticles(articles.filter((a) => a.id !== id));
       toast.success('Article deleted');
     } catch (error) {

@@ -7,14 +7,12 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/blog.css';
-
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://twoelephantswebsitebackend.onrender.com';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 const getImageUrl = (url) => {
   if (!url) return null;
   if (url.startsWith('http')) return url;
-  return `https://twoelephantswebsitebackend.onrender.com${url}`;
+  return `${API_CONFIG.BASE_URL}${url}`;
 };
 
 const MotionLink = motion(Link);
@@ -28,7 +26,7 @@ const Insights = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const res = await axios.get(`${API_BASE}/api/public/articles/`);
+        const res = await axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.PUBLIC.ARTICLES));
         setArticles(res.data);
       } catch (error) {
         console.error('Failed to fetch articles:', error);

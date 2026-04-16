@@ -30,18 +30,13 @@ import Footer from '../components/Footer';
 import '../styles/blog.css';
 import '../styles/team.css';
 import '../styles/global.css';
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'https://twoelephantswebsitebackend.onrender.com';
+import { buildApiUrl, API_CONFIG } from '../config/api';
 
 const getImageUrl = (url) => {
   if (!url) return null;
   if (url.startsWith('http')) return url;
-  return `https://twoelephantswebsitebackend.onrender.com${url}`;
+  return `${API_CONFIG.BASE_URL}${url}`;
 };
-
-
-
-const MotionLink = motion(Link);
 
 // Import images
 import logo from '../assets/images/logo1.svg';
@@ -354,7 +349,7 @@ const Story = () => {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.6 }}
+              transition={{ delay: 0.6, duration: 0.1, ease: "easeOut" }}
               whileHover={{
                 borderLeftWidth: "8px",
                 paddingLeft: "36px",
@@ -362,7 +357,6 @@ const Story = () => {
                 scale: 1.01,
                 backgroundColor: 'rgba(77,168,255,0.05)',
               }}
-              transition={{ duration: 0.1, ease: "easeOut" }}
             >
               "When people think of Solapur, they think of Looms. I want the next generation to think of Labs."
               <motion.div 
@@ -803,7 +797,7 @@ const Insights = ({ articles }) => {
     useEffect(() => {
       const fetchArticles = async () => {
         try {
-          const res = await axios.get(`${API_BASE}/api/public/articles/`);
+          const res = await axios.get(buildApiUrl(API_CONFIG.ENDPOINTS.PUBLIC.ARTICLES));
           setArticles(res.data);
         } catch (error) {
           console.error('Failed to fetch articles:', error);
