@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Linkedin,
-  Facebook,
+  Users,
+  Share,
   MapPin,
   Mail,
   Phone,
   Clock,
-  Instagram
+  Camera
 } from "lucide-react";
 import logo from '../assets/images/logo1.svg';
 
@@ -27,9 +27,9 @@ const Footer = () => {
             <p className="f-tagline">Strength. Care. Honesty.</p>
             <p className="f-desc">Technology grounded in 65 years of industrial wisdom. Built in Solapur.</p>
             <div className="social-row">
-              <a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" className="social-btn" aria-label="LinkedIn"><Linkedin size={18} /></a>
-              <a href="#" className="social-btn" aria-label="Facebook"><Facebook size={18} /></a>
-              <a href="https://www.instagram.com/twoelephantstechnologiesllp?igsh=MWw5b2psZHJhMGJ4cA%3D%3D&utm_source=qr" className="social-btn" aria-label="Instagram"><Instagram size={18} /></a>
+              <a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" className="social-btn" aria-label="LinkedIn"><Users size={18} /></a>
+              <a href="#" className="social-btn" aria-label="Facebook"><Share size={18} /></a>
+              <a href="https://www.instagram.com/twoelephantstechnologiesllp?igsh=MWw5b2psZHJhMGJ4cA%3D%3D&utm_source=qr" className="social-btn" aria-label="Instagram"><Camera size={18} /></a>
             </div>
           </div>
           <div className="f-col">

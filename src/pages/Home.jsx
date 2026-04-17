@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'fra
 import {
   ArrowRight,
   ExternalLink,
-  Linkedin,
+  Users,
   Send,
   Mail,
   MapPin,
@@ -647,7 +647,7 @@ const TeamModal = ({ member, onClose }) => {
             <p className="modal-bio">{member.bio}</p>
 
             <div className="modal-social-inline">
-              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><Linkedin size={20} /></a>
+              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><Users size={20} /></a>
               <a href="#" className="m-social-btn twitter-btn"><Send size={20} /></a>
               <a href="#" className="m-social-btn mail-btn"><Mail size={20} strokeWidth={2.5} /></a>
             </div>
