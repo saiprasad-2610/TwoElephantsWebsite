@@ -66,11 +66,11 @@ Admin panel will run at: `http://localhost:3000/admin`
 
 ## Website Frontend Connection
 
-The website frontend connects to the backend at `https://twoelephantswebsitebackend.onrender.com`.
+The website frontend connects to the backend at `http://localhost:8000`.
 
 To configure the API URL, add to your `.env` file:
 ```
-VITE_API_BASE_URL=https://twoelephantswebsitebackend.onrender.com
+VITE_API_BASE_URL=http://localhost:8000
 ```
 
 ## Admin Panel Features

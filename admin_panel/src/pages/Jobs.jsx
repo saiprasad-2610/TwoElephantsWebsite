@@ -4,7 +4,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Briefcase, Plus, Edit2, Trash2, X, MapPin, Users, Search } from 'lucide-react';
 
-const API_BASE = 'https://twoelephantswebsitebackend.onrender.com/api';
+const API_BASE = 'http://localhost:8000/api';
 
 const DEPARTMENTS = ['Engineering', 'AI & Research', 'Design', 'Marketing', 'Sales', 'HR', 'Other'];
 

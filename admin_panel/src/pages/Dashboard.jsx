@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Mail, Briefcase, FileText, Newspaper, TrendingUp, Clock, CheckCircle, Eye } from 'lucide-react';
 import axios from 'axios';
 
-const API_BASE = 'https://twoelephantswebsitebackend.onrender.com/api';
+const API_BASE = 'http://localhost:8000/api';
 
 const statCards = [
   { label: 'Contact Inquiries', icon: Mail, gradient: 'from-blue-500 to-cyan-500', shadow: 'shadow-blue-500/30', key: 'contacts', delay: 0 },
