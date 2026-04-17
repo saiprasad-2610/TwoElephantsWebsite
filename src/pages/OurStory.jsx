@@ -11,6 +11,7 @@ import story from '../assets/images/story.png';
 
 import '../styles/OurStory.css';
 import logo1 from '../assets/images/logo1.svg';
+import story from '../assets/images/story.png'
 
 
 const Counter = ({ value, label }) => {
@@ -350,7 +351,7 @@ const OurStory = () => {
         {/* ── FINAL CLOSING ── */}
         <section className="closing-section section-padding">
           <div className="container">
-            <div className="eyebrow amber no-line">FROM LEGACY TO TECHNOLOGY</div>
+            {/* <div className="eyebrow amber no-line">FROM LEGACY TO TECHNOLOGY</div> */}
             <h2 className="h2-title">From trust to transformation.</h2>
             <p className="body-text">
               This is who we are. This is what we carry forward.

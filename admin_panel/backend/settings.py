@@ -5,7 +5,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY='django-insecure-two-elephants-admin-panel-2024'
 DEBUG=True
-ALLOWED_HOSTS=['*']
 
 DATABASES={
     'default': {
@@ -83,3 +82,7 @@ DEFAULT_AUTO_FIELD='django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS=True
 CORS_ALLOW_CREDENTIALS=True
+
+
+ALLOWED_HOSTS = ['*']
+
