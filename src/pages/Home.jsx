@@ -360,7 +360,7 @@ const Story = () => {
                 paddingLeft: "36px",
                 color: 'var(--color-blue-glow)',
                 scale: 1.01,
-                backgroundColor: 'rgba(77,168,255,0.05)',
+                backgroundColor: 'rgba(77,168,255,0.05)'
               }}
               transition={{ duration: 0.1, ease: "easeOut" }}
             >
