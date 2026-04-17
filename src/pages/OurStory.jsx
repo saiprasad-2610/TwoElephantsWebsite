@@ -7,6 +7,8 @@ import Footer from '../components/Footer';
 import ParticleBackground from '../components/ParticleBackground';
 import loomsImg from '../assets/images/looms.jpg';
 import labsImg from '../assets/images/labs.jpg';
+import story from '../assets/images/story.png';
+
 import '../styles/OurStory.css';
 import logo1 from '../assets/images/logo1.svg';
 
@@ -163,7 +165,7 @@ const OurStory = () => {
             <div className="story-grid">
               <div className="story-images">
                 <div className="image-stack">
-                  <img src={loomsImg} alt="Pushpa Textile Heritage" className="story-img-main" />
+                  <img src={story} alt="Pushpa Textile Heritage" className="story-img-main" />
                   <div className="story-img-card card-legacy">
                     <span className="card-year">1960</span>
                     <span className="card-text">Legacy Begins</span>

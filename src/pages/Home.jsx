@@ -196,7 +196,7 @@ const Hero = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
-                style={{ position: 'relative', zIndex: 20, marginTop: 'clamp(-28px, -6vw, -16px)' }}
+                style={{ position: 'relative', zIndex: 20, marginTop: 'clamp(0px, 2vw, 10px)' }}
               >
                 <div className="slogan-top">TWO ELEPHANTS TECHNOLOGIES LLP</div>
                 <div className="slogan-bottom">
@@ -513,190 +513,236 @@ const Services = () => {
 };
 
 
-const TeamMember = ({ name, role, img, bio, linkedin, delay }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  // Prevent scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => { document.body.style.overflow = 'unset'; };
-  }, [isOpen]);
+const TeamAccordion = ({ members, onMemberClick }) => {
+  const [activeIndex, setActiveIndex] = useState(null);
 
   return (
-    <>
-      <motion.div
-        className="team-card-horizontal"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: delay * 0.1, duration: 0.6 }}
-        onClick={() => setIsOpen(true)}
-        style={{ cursor: 'pointer' }}
-      >
-        <div className="team-card-aside">
-          <div className="circle-image-container">
-            <img src={img} alt={name} className="circle-img" loading="lazy" />
-            <div className="circle-border-accent"></div>
-          </div>
-        </div>
-        <div className="team-card-main">
-          <div className="team-card-header">
-            <div>
-              <h3 className="circle-name">{name}</h3>
-              <p className="circle-role">{role}</p>
-            </div>
-            {linkedin && (
-              <a
-                href={linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="circle-linkedin-link"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <FaLinkedin size={20} />
-              </a>
-            )}
-          </div>
-          <div className="circle-divider"></div>
-          <p className="click-for-more">Read Bio <ArrowRight size={12} /></p>
-        </div>
-      </motion.div>
-
-      <AnimatePresence>
-        {isOpen && (
-          <div className="team-modal-overlay" onClick={() => setIsOpen(false)}>
-            <motion.div
-              className="team-modal-content"
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button className="modal-close-btn" onClick={() => setIsOpen(false)}>
-                <X size={24} />
-              </button>
-
-              <div className="modal-body">
-                <div className="modal-aside">
-                  <div className="modal-img-container">
-                    <img src={img} alt={name} className="modal-img" />
-                  </div>
-                  {linkedin && (
-                    <a href={linkedin} target="_blank" rel="noopener noreferrer" className="modal-linkedin">
-                      <FaLinkedin size={24} /> <span>LinkedIn Profile</span>
-                    </a>
-                  )}
-                </div>
-
-                <div className="modal-main">
-                  <h2 className="modal-name">{name}</h2>
-                  <p className="modal-role">{role}</p>
-                  <div className="modal-divider"></div>
-                  <div className="modal-bio">
-                    {bio.split('\n').map((paragraph, i) => (
-                      <p key={i}>{paragraph}</p>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-    </>
-  );
-};
-
-const Team = () => {
-
-  const members = [
-    {
-      name: "Prashant Rathi",
-      role: "Co-Founder & CEO",
-      img: ptImg,
-      bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants Technologies LLP, bridging traditional business values with modern technological needs.",
-      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
-    },
-    {
-      name: "Sapna Rathi",
-      role: "Co-Founder",
-      img: sapnaImg,
-      bio: "Specialist in operational governance and process architecture. Expert in ISO frameworks. Sapna ensures the operational excellence and quality standards that our enterprise clients depend on.",
-      linkedin: "https://www.linkedin.com/in/sapna-rathi-44928b3b/"
-    },
-    {
-      name: "Abhik Biswas",
-      role: "Technology Advisor",
-      img: abhiImg,
-      bio: "30+ years of engineering leadership at TCS, Cisco, and VeriFone. Expert in large-scale systems. Abhik provides technical guidance for complex enterprise architectures and innovative software solutions.",
-      linkedin: "https://www.linkedin.com/in/abhik/"
-    },
-
-    {
-      name: "Anuradha Biswas",
-      role: "Advisor & Mentor",
-      img: auImg,
-      bio: "20+ years of leadership at Infosys, VeriFone, and CA Technologies. Architect of global delivery units. Anuradha brings deep industry knowledge in building and scaling high-performance engineering teams.",
-      linkedin: "https://www.linkedin.com/in/anubiswas/"
-    },
-
-    {
-      name: "Pankaj Rathi",
-      role: "Overseas Operations",
-      img: pankajImg,
-      bio: "Based in Houston, Texas. Leads global shipping and logistics for enterprise clients. Pankaj manages our international presence and ensures seamless coordination for our global projects.",
-      linkedin: "https://www.linkedin.com/in/pankajsureshrathi/"
-    },
-    {
-      name: "Arpita Kulkarni",
-      role: "Technology Leader - Products & Services",
-      img: arpitaImg,
-      bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.",
-      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
-    },
-    {
-      name: "Prashant Bollu",
-      role: "Technology Leader - Products & Services",
-      img: prashantBolluImg,
-      bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.",
-      // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/"
-    },
-    {
-      name: "Saurabh Kulkarni",
-      role: "Technology Leader - Cyber Security",
-      img: saurabhImg,
-      bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.",
-      // linkedin: "https://www.linkedin.com/in/saurabh-kulkarni-249a5726/"
-    },
-  ];
-
-  return (
-    <section className="team-section section-padding" id="team">
-      <div className="container">
-        <div className="services-header">
-          <div className="eyebrow dark">OUR TEAM</div>
-          <div className="section-rule visible"></div>
-          <h2 className="h2-title">Leadership Forged in <span className="careerHead">Legacy</span></h2>
-          <p className="services-sub">Meet the visionaries bridging industrial wisdom with digital execution.</p>
-        </div>
-
-        <div className="team-grid-enhanced">
-          {members.map((member, idx) => (
-            <TeamMember
-              key={idx}
-              {...member}
-              delay={idx}
+    <div 
+      className="team-accordion-container" 
+      onMouseLeave={() => setActiveIndex(null)}
+    >
+      {members.map((member, index) => (
+        <motion.div
+          key={index}
+          layout
+          className={`team-accordion-item ${activeIndex === index ? 'active' : ''}`}
+          onMouseEnter={() => setActiveIndex(index)}
+          onClick={() => {
+            if (activeIndex === index) {
+              onMemberClick(member);
+            } else {
+              setActiveIndex(index);
+            }
+          }}
+          transition={{
+            layout: { duration: 0.6, ease: [0.23, 1, 0.32, 1] }
+          }}
+        >
+          <div className="team-image-container">
+            <img 
+              src={member.img} 
+              alt={member.name} 
+              className="team-img" 
+              style={{ objectPosition: member.position || 'center 10%' }}
             />
-          ))}
-        </div>
-      </div>
-    </section>
+          </div>
+          <div className="team-accordion-content">
+            <span className="team-role-tag">{member.role}</span>
+            <h3 className="team-name">{member.name}</h3>
+          </div>
+        </motion.div>
+      ))}
+    </div>
   );
 };
+
+const TeamMobileScroll = ({ members, onMemberClick }) => {
+  return (
+    <div className="team-mobile-scroll-container">
+      <div className="team-scroll-wrapper">
+        {members.map((member, index) => (
+          <motion.div 
+            key={index} 
+            className="team-scroll-card"
+            onClick={() => onMemberClick(member)}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.1 }}
+          >
+            <div className="team-image-container">
+              <img 
+                src={member.img} 
+                alt={member.name} 
+                className="team-img" 
+                style={{ objectPosition: member.position || 'center 10%' }}
+              />
+            </div>
+            <div className="team-scroll-info">
+              <h3 className="team-name">{member.name}</h3>
+              <p className="team-role-tag">{member.role}</p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+      <div className="swipe-instructions">
+        <ArrowRight size={16} style={{ transform: 'rotate(180deg)' }} /> Swipe Left/Right <ArrowRight size={16} />
+      </div>
+    </div>
+  );
+};
+
+const TeamModal = ({ member, onClose }) => { 
+  if (!member) return null; 
+
+  return ( 
+    <motion.div 
+      className="team-modal-overlay" 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      exit={{ opacity: 0 }} 
+      onClick={onClose} 
+    > 
+      <motion.div 
+        className="team-modal-content" 
+        initial={{ scale: 0.9, y: 20, opacity: 0 }} 
+        animate={{ scale: 1, y: 0, opacity: 1 }} 
+        exit={{ scale: 0.9, y: 20, opacity: 0 }} 
+        onClick={e => e.stopPropagation()} 
+      > 
+        <button className="modal-close" onClick={onClose}><X size={24} /></button> 
+
+        <div className="modal-body"> 
+          <div className="modal-image-wrap"> 
+            <img 
+              src={member.img} 
+              alt={member.name} 
+              className="modal-img" 
+              style={{ objectPosition: member.position || 'center 10%' }}
+            /> 
+          </div> 
+
+          <div className="modal-text"> 
+            <div className="eyebrow amber no-line">TEAM MEMBER</div> 
+            <h2 className="modal-name">{member.name}</h2> 
+            <div className="modal-role">{member.role}</div> 
+            <div className="modal-divider"></div> 
+            <p className="modal-bio">{member.bio}</p> 
+
+            <div className="modal-social-inline"> 
+              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><FaLinkedin size={20} /></a> 
+            </div> 
+
+            <div className="modal-stats"> 
+              <div className="m-stat"> 
+                <span className="m-stat-label">Expertise</span> 
+                <span className="m-stat-val">Enterprise IT</span> 
+              </div> 
+              <div className="m-stat"> 
+                <span className="m-stat-label">Location</span> 
+                <span className="m-stat-val">Solapur / Global</span> 
+              </div> 
+            </div> 
+          </div> 
+        </div> 
+      </motion.div> 
+    </motion.div> 
+  ); 
+}; 
+
+const Team = () => { 
+  const [selectedMember, setSelectedMember] = useState(null); 
+  const members = [ 
+    { 
+      name: "Prashant Rathi", 
+      role: "Co-Founder & CEO", 
+      img: ptImg, 
+      bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants Technologies LLP, bridging traditional business values with modern technological needs.", 
+      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/" 
+    }, 
+    { 
+      name: "Sapna Rathi", 
+      role: "Co-Founder", 
+      img: sapnaImg, 
+      bio: "Specialist in operational governance and process architecture. Expert in ISO frameworks. Sapna ensures the operational excellence and quality standards that our enterprise clients depend on.", 
+      linkedin: "https://www.linkedin.com/in/sapna-rathi-44928b3b/" 
+    }, 
+    { 
+      name: "Anuradha Biswas", 
+      role: "Advisor & Mentor", 
+      img: auImg, 
+      bio: "20+ years of leadership at Infosys, VeriFone, and CA Technologies. Architect of global delivery units. Anuradha brings deep industry knowledge in building and scaling high-performance engineering teams.", 
+      linkedin: "https://www.linkedin.com/in/anubiswas/" 
+    }, 
+    { 
+      name: "Abhik Biswas", 
+      role: "Technology Advisor", 
+      img: abhiImg, 
+      bio: "30+ years of engineering leadership at TCS, Cisco, and VeriFone. Expert in large-scale systems. Abhik provides technical guidance for complex enterprise architectures and innovative software solutions.", 
+      linkedin: "https://www.linkedin.com/in/abhik/" 
+    }, 
+    { 
+      name: "Pankaj Rathi", 
+      role: "Overseas Operations", 
+      img: pankajImg, 
+      bio: "Based in Houston, Texas. Leads global shipping and logistics for enterprise clients. Pankaj manages our international presence and ensures seamless coordination for our global projects.", 
+      linkedin: "https://www.linkedin.com/in/pankajsureshrathi/" 
+    }, 
+    { 
+      name: "Arpita Kulkarni", 
+      role: "Technology Leader - IT Product and Services", 
+      img: arpitaImg, 
+      bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.", 
+      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/" 
+    }, 
+    // { 
+    
+    //   name: "Prashant Bollu", 
+    //   role: "Technology Leader - IT Product and Services", 
+    //   img: prashantBolluImg, 
+    //   bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.", 
+    //   linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/" 
+    // }, 
+
+    { 
+      name: "Saurabh Kulkarni", 
+      role: "Technology Leader - Cyber Security", 
+      img: saurabhImg, 
+      bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.", 
+      // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/" 
+    } 
+
+  ]; 
+
+  return ( 
+    <section className="team-section section-padding" id="team"> 
+      <div className="container"> 
+        <div className="services-header"> 
+          <div className="eyebrow dark">OUR TEAM</div> 
+          <div className="section-rule visible"></div> 
+          <h2 className="h2-title">Leadership Rooted in <em>Legacy</em></h2> 
+          <p className="services-sub">Meet the visionaries bridging industrial wisdom with digital execution.</p> 
+        </div> 
+
+        {/* Desktop View: Accordion */}
+        <TeamAccordion members={members} onMemberClick={setSelectedMember} />
+
+        {/* Mobile View: Horizontal Scroll */}
+        <TeamMobileScroll members={members} onMemberClick={setSelectedMember} />
+
+        {/* Modal */}
+        <AnimatePresence> 
+          {selectedMember && ( 
+            <TeamModal 
+              member={selectedMember} 
+              onClose={() => setSelectedMember(null)} 
+            /> 
+          )} 
+        </AnimatePresence> 
+      </div> 
+    </section> 
+  ); 
+}; 
 
 const Insights = ({ articles }) => {
   const navigate = useNavigate();

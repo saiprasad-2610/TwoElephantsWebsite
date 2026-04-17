@@ -89,11 +89,11 @@
   }
 
   .mobile-menu {
-    padding: 84px 20px 24px;
+    padding: 84px 20px 80px;
   }
 
   .mobile-nav-link {
-    font-size: 20px;
+    font-size: 18px;
     padding: 12px 4px;
   }
 
@@ -147,14 +147,14 @@
   }
 
   .hero-logo-wrapper {
-    height: clamp(260px, 68vw, 420px) !important;
+    height: clamp(320px, 75vw, 460px) !important;
   }
 
   .hero-slogan {
     max-width: 100%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: -8px !important;
+    margin-top: 12px !important;
     padding: 8px 12px;
     max-width: min(92vw, 300px);
     border-radius: 16px;
@@ -534,7 +534,7 @@
   }
 
   .mobile-nav-link {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .hero {
@@ -740,6 +740,7 @@
   .hero-slogan {
     max-width: min(92vw, 272px);
     padding: 8px 10px;
+    margin-top: 16px !important;
   }
 
   .slogan-top {

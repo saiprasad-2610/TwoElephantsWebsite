@@ -326,7 +326,7 @@ const Navbar = () => {
         </Link>
 
         <div className="mobile-menu-links">
-          {navItems.map((item) => {
+          {navItems.filter(item => item.name !== 'Contact').map((item) => {
             const Component = item.isHash ? NavHashLink : Link;
             return (
               <Component
