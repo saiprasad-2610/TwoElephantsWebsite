@@ -16,7 +16,10 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '.onrender.com',
+    'twoelephantswebsitebackend.onrender.com',
 ]
+
+CORS_ALLOW_HEADERS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -106,9 +109,12 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",                                                       # Vite dev server
     "http://127.0.0.1:3000",
     "http://127.0.0.1:5173",
+    "https://two-elephants-website-qb1reg3m-sais-projects-14551cbf.vercel.app",
+    'https://two-elephants-website.vercel.app',
 ]
 
 # For development, allow all origins (remove in production)
-if DEBUG:
-    CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_ALL_ORIGINS = True
