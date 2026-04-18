@@ -58,6 +58,11 @@ import story from '../assets/images/story.png';
 import labs from '../assets/images/labs.jpg';
 import service1 from '../assets/images/service1.avif';
 
+import service11 from '../assets/images/service11.jpg';
+import service2 from '../assets/images/service2.jpg';
+import service3 from '../assets/images/service3.jpg';
+
+
 
 // Temporary fallbacks for moved assets
 const abhiImg = Abhi;
@@ -70,6 +75,10 @@ const prashantBolluImg = prashant_bollu;
 const arpitaImg = arpita;
 const labsImg = labs;
 const storyImg = story;
+const service1Img = service11;
+const service2Img = service2;
+const service3Img = service3;
+
 // const service1 = service1;
 
 
@@ -445,7 +454,7 @@ const Services = () => {
       cat: "BFSI",
       tags: ["KYC", "Compliance", "Core Banking"],
       color: "blue",
-      img: "https://tse2.mm.bing.net/th/id/OIP.CYgk6l_Jd7zN9IO8wAhskAHaEA?pid=Api&P=0&h=180"
+      img: service1Img
     },
     {
       title: "Industrial Technology for Energy Operations",
@@ -453,7 +462,7 @@ const Services = () => {
       cat: "OIL & GAS",
       tags: ["IIoT", "Maintenance", "SCADA"],
       color: "amber",
-      img: "https://tse2.mm.bing.net/th/id/OIP.nlJXKjXI9gWDzqlmOXUA9wHaEK?pid=Api&P=0&h=220"
+      img: service2Img
     },
     {
       title: "Compliance-First Technology for Pharma",
@@ -461,7 +470,7 @@ const Services = () => {
       cat: "PHARMACEUTICALS",
       tags: ["GMP", "FDA", "Serialization"],
       color: "emerald",
-      img: "https://thetechintel.com/wp-content/uploads/2025/08/Article-31-Overcoming-Pharmaceutical-Industry-Challenges-with-SAP-Business-One_-A-Guide-to-Compliance-and-Cost-Efficiency.jpg"
+      img: service3Img
     }
   ];
 
