@@ -44,14 +44,18 @@ class ArticleSerializer(serializers.ModelSerializer):
         model = Article
         fields = '__all__'
 
+    # def get_img_url(self, obj):
+    #     if obj.img:
+    #         request = self.context.get('request')
+    #         if request:
+    #             return request.build_absolute_uri(obj.img.url)
+    #         return obj.img.url
+    #     return None
     def get_img_url(self, obj):
         if obj.img:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.img.url)
             return obj.img.url
         return None
-
+    
 class ArticlePublicSerializer(serializers.ModelSerializer):
     img = serializers.SerializerMethodField()
 
@@ -59,10 +63,14 @@ class ArticlePublicSerializer(serializers.ModelSerializer):
         model = Article
         fields = ['id', 'title', 'slug', 'cat', 'img', 'read_time', 'author', 'date', 'excerpt', 'content']
 
+    # def get_img(self, obj):
+    #     if obj.img:
+    #         request = self.context.get('request')
+    #         if request:
+    #             return request.build_absolute_uri(obj.img.url)
+    #         return obj.img.url
+    #     return None
     def get_img(self, obj):
         if obj.img:
-            request = self.context.get('request')
-            if request:
-                return request.build_absolute_uri(obj.img.url)
-            return obj.img.url
+            return obj.img.url   # <-- IMPORTANT
         return None

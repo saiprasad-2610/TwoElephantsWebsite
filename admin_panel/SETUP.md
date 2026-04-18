@@ -68,11 +68,11 @@ Login page is at `/login`.
 
 ## Website Frontend Connection
 
-The website frontend connects to the backend at `http://localhost:8000`.
+The website frontend connects to the backend at `http://192.168.1.124:8000`.
 
 To configure the API URL, add to your `.env` file:
 ```
-VITE_API_BASE_URL=http://localhost:8000
+VITE_API_BASE_URL=http://192.168.1.124:8000
 ```
 
 ## Admin Panel Features

@@ -13,11 +13,11 @@ port: 5173,
 strictPort: true,
 proxy: {
   '/api': {
-    target: 'http://localhost:8000',
+    target: 'http://192.168.1.124:8000',
     changeOrigin: true,
   },
   '/media': {
-    target: 'http://localhost:8000',
+    target: 'http://192.168.1.124:8000',
     changeOrigin: true,
   }
 },
