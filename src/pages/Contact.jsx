@@ -18,7 +18,7 @@ import '../styles/Contact.css';
 const CONTACT_RECEIVER_EMAIL =
   import.meta.env.VITE_CONTACT_RECEIVER_EMAIL || 'support@twoelephants.tech';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API_BASE = '';
 
 const Contact = () => {
   const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success, error

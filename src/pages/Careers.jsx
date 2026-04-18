@@ -11,7 +11,7 @@ import '../styles/Careers.css';
 import techHero1 from '../assets/images/tech_hero_1.png';
 import techHero2 from '../assets/images/tech_hero_2.png';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API_BASE = '';
 
 const Careers = () => {
   const [activeRole, setActiveRole] = useState(0);
