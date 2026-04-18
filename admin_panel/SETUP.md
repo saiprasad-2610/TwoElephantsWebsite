@@ -62,7 +62,9 @@ npm install
 npm run dev
 ```
 
-Admin panel will run at: `http://localhost:3000/admin`
+Admin panel will run at: `http://localhost:3003` (or the next available port shown in terminal)
+Default route is `/` which redirects to `/dashboard`.
+Login page is at `/login`.
 
 ## Website Frontend Connection
 

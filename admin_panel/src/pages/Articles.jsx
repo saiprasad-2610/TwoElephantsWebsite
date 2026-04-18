@@ -3,9 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Newspaper, Plus, Edit2, Trash2, X, Image, Calendar, User, Clock, Search } from 'lucide-react';
-
-const API_BASE = 'http://localhost:8000/api';
-const BACKEND_BASE = 'http://localhost:8000';
+import { API_BASE, BACKEND_BASE } from '../config';
 
 const getImageUrl = (url) => {
   if (!url) return null;

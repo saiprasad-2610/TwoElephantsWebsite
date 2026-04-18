@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Briefcase, Plus, Edit2, Trash2, X, MapPin, Users, Search } from 'lucide-react';
-
-const API_BASE = '/api';
+import { API_BASE } from '../config';
 
 const DEPARTMENTS = ['Engineering', 'AI & Research', 'Design', 'Marketing', 'Sales', 'HR', 'Other'];
 
@@ -88,19 +87,24 @@ export default function Jobs() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const payload = {
-      ...formData,
+      title: formData.title,
+      department: formData.department,
+      location: formData.location,
+      description: formData.description,
       points: formData.points.filter((p) => p.trim() !== ''),
+      is_active: formData.is_active,
     };
 
     try {
       if (editingJob) {
-        await axios.put(`${API_BASE}/jobs/${editingJob.id}/`, payload);
+        const res = await axios.put(`${API_BASE}/jobs/${editingJob.id}/`, payload);
+        setJobs(jobs.map((j) => (j.id === editingJob.id ? res.data : j)));
         toast.success('Job role updated successfully');
       } else {
-        await axios.post(`${API_BASE}/jobs/`, payload);
+        const res = await axios.post(`${API_BASE}/jobs/`, payload);
+        setJobs([res.data, ...jobs]);
         toast.success('Job role created successfully');
       }
-      fetchJobs();
       closeModal();
     } catch (error) {
       toast.error(editingJob ? 'Failed to update job' : 'Failed to create job');
@@ -109,9 +113,9 @@ export default function Jobs() {
 
   const toggleJobStatus = async (job) => {
     try {
-      await axios.patch(`${API_BASE}/jobs/${job.id}/`, { is_active: !job.is_active });
-      setJobs(jobs.map((j) => (j.id === job.id ? { ...j, is_active: !j.is_active } : j)));
-      toast.success(`Job ${job.is_active ? 'deactivated' : 'activated'}`);
+      const res = await axios.patch(`${API_BASE}/jobs/${job.id}/`, { is_active: !job.is_active });
+      setJobs(jobs.map((j) => (j.id === job.id ? res.data : j)));
+      toast.success(`Job ${!job.is_active ? 'activated' : 'deactivated'}`);
     } catch (error) {
       toast.error('Failed to update job status');
     }

@@ -22,6 +22,7 @@ import {
 import { FaLinkedin } from "react-icons/fa";
 import { useNavigate, Link } from 'react-router-dom';
 // import { useEffect } from "react";
+import { articles as defaultArticles } from '../data/articles';
 
 
 import ParticleBackground from '../components/ParticleBackground';
@@ -36,7 +37,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 const getImageUrl = (url) => {
   if (!url) return null;
   if (url.startsWith('http')) return url;
-  return `http://localhost:8000${url}`;
+  return `${API_BASE}${url}`;
 };
 
 
@@ -849,9 +850,14 @@ const Insights = ({ articles }) => {
       const fetchArticles = async () => {
         try {
           const res = await axios.get(`${API_BASE}/api/public/articles/`);
-          setArticles(res.data);
+          // Sort articles by date descending (most recent first)
+          const sortedArticles = (res.data || []).sort((a, b) => new Date(b.date) - new Date(a.date));
+          setArticles(sortedArticles);
         } catch (error) {
-          console.error('Failed to fetch articles:', error);
+          console.error('Failed to fetch articles from backend, falling back to defaults:', error);
+          // Fallback to default articles if backend is down
+          const sortedDefaults = [...defaultArticles].sort((a, b) => new Date(b.date) - new Date(a.date));
+          setArticles(sortedDefaults);
         }
       };
       fetchArticles();

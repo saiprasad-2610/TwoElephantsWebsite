@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { articles as defaultArticles } from '../data/articles';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -14,7 +15,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 const getImageUrl = (url) => {
   if (!url) return null;
   if (url.startsWith('http')) return url;
-  return `http://localhost:8000${url}`;
+  return `${API_BASE}${url}`;
 };
 
 const MotionLink = motion(Link);
@@ -29,9 +30,14 @@ const Insights = () => {
     const fetchArticles = async () => {
       try {
         const res = await axios.get(`${API_BASE}/api/public/articles/`);
-        setArticles(res.data);
+        // Sort articles by date descending (most recent first)
+        const sortedArticles = (res.data || []).sort((a, b) => new Date(b.date) - new Date(a.date));
+        setArticles(sortedArticles);
       } catch (error) {
-        console.error('Failed to fetch articles:', error);
+        console.error('Failed to fetch articles from backend, falling back to defaults:', error);
+        // Fallback to default articles if backend is down
+        const sortedDefaults = [...defaultArticles].sort((a, b) => new Date(b.date) - new Date(a.date));
+        setArticles(sortedDefaults);
       } finally {
         setLoading(false);
       }

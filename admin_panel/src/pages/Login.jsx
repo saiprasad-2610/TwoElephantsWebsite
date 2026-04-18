@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, LogIn, AlertCircle, ShieldCheck } from 'lucide-react';
-import logo from '../../../src/assets/images/logo1.svg';
+const logo = '/logo.svg';
 
 export default function Login() {
   const [email, setEmail] = useState('');

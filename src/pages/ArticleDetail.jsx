@@ -12,6 +12,7 @@ import {
   FaLink,
   FaArrowLeft
 } from "react-icons/fa";
+import { articles as defaultArticles } from '../data/articles';
 
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -22,7 +23,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 const getImageUrl = (url) => {
   if (!url) return null;
   if (url.startsWith('http')) return url;
-  return `http://localhost:8000${url}`;
+  return `${API_BASE}${url}`;
 };
 
 const ArticleDetail = () => {
@@ -60,8 +61,15 @@ const ArticleDetail = () => {
       setArticle(articleRes.data);
       setAllArticles(allRes.data);
     } catch (err) {
-      console.error('Failed to fetch article:', err);
-      setError(true);
+      console.error('Failed to fetch article from backend, checking defaults:', err);
+      // Check if it's in defaults
+      const foundInDefault = defaultArticles.find(a => a.id === slug || a.slug === slug);
+      if (foundInDefault) {
+        setArticle(foundInDefault);
+        setAllArticles(defaultArticles);
+      } else {
+        setError(true);
+      }
     } finally {
       setLoading(false);
     }
