@@ -148,14 +148,13 @@
   margin-bottom: 0;
   flex: 1;
   display: -webkit-box;
-  display: -moz-box;
-  display: box;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-line-clamp: 3;
-  -moz-line-clamp: 3;
   line-clamp: 3;
   -webkit-box-orient: vertical;
-  -moz-box-orient: vertical;
-  box-orient: vertical;
+  -ms-flex-direction: column;
+  flex-direction: column;
   overflow: hidden;
   text-overflow: ellipsis;
 }

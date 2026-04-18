@@ -7,7 +7,7 @@ import Footer from '../components/Footer';
 import ParticleBackground from '../components/ParticleBackground';
 import loomsImg from '../assets/images/looms.jpg';
 import labsImg from '../assets/images/labs.jpg';
-import story from '../assets/images/story.png';
+// import story from '../assets/images/story.png';
 
 import '../styles/OurStory.css';
 import logo1 from '../assets/images/logo1.svg';

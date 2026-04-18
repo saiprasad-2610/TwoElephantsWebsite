@@ -360,9 +360,9 @@ const Story = () => {
                 paddingLeft: "36px",
                 color: 'var(--color-blue-glow)',
                 scale: 1.01,
-                backgroundColor: 'rgba(77,168,255,0.05)'
+                backgroundColor: 'rgba(77,168,255,0.05)',
+                transition: { duration: 0.1, ease: "easeOut" }
               }}
-              transition={{ duration: 0.1, ease: "easeOut" }}
             >
               "When people think of Solapur, they think of Looms. I want the next generation to think of Labs."
               <motion.div 
@@ -383,7 +383,6 @@ const Story = () => {
                   x: 5,
                   scale: 1.05
                 }}
-                // transition={{ duration: 0.1 }}
               >
                 — Prashant Rathi
               </motion.div>
@@ -693,7 +692,7 @@ const Team = () => {
       role: "Technology Leader - IT Product and Services", 
       img: arpitaImg, 
       bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.", 
-      linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/" 
+      linkedin: "https://www.linkedin.com/in/arpita-kulkarni/" 
     }, 
     // { 
     
@@ -709,7 +708,7 @@ const Team = () => {
       role: "Technology Leader - Cyber Security", 
       img: saurabhImg, 
       bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.", 
-      // linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/" 
+      
     } 
 
   ]; 
