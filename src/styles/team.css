@@ -362,7 +362,75 @@
   }
 }
 
+@media (max-width: 768px) {
+  .team-modal-overlay {
+    padding: 12px;
+  }
+
+  .team-modal-content {
+    width: min(90vw, 360px);
+    max-height: 82vh;
+    border-radius: 20px;
+    overflow-y: auto;
+  }
+
+  .modal-body {
+    min-height: 0;
+  }
+
+  .modal-image-wrap {
+    height: 220px;
+  }
+
+  .modal-text {
+    padding: 22px 18px 18px;
+  }
+
+  .modal-name {
+    font-size: 34px;
+  }
+
+  .modal-bio {
+    font-size: 14px;
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+
+  .modal-social-inline {
+    margin-bottom: 12px;
+  }
+
+  .modal-stats {
+    display: none;
+  }
+}
+
 @media (max-width: 480px) {
+  .team-modal-content {
+    width: min(88vw, 330px);
+    max-height: 80vh;
+    border-radius: 18px;
+  }
+
+  .modal-image-wrap {
+    height: 200px;
+  }
+
+  .modal-text {
+    padding: 18px 14px 14px;
+  }
+
+  .modal-name {
+    font-size: 30px;
+  }
+
+  .modal-close {
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+  }
+
   .team-scroll-card {
     height: 420px;
   }

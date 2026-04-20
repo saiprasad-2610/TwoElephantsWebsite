@@ -447,6 +447,8 @@ const ServiceCard = ({ title, desc, cat, tags, color, img, delay }) => {
 };
 
 const Services = () => {
+  const navigate = useNavigate();
+
   const services = [
     {
       title: "Banking, Financial Services & Insurance",
@@ -493,7 +495,7 @@ const Services = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.1 * idx, duration: 0.2 }}
               whileHover={{ y: -8 }}
-              onClick={() => window.location.href = '/services'}
+              onClick={() => navigate('/services')}
               style={{ cursor: 'pointer' }}
             >
               <div className="blog-img-wrap">
@@ -638,9 +640,11 @@ const TeamModal = ({ member, onClose }) => {
             <div className="modal-divider"></div> 
             <p className="modal-bio">{member.bio}</p> 
 
-            <div className="modal-social-inline"> 
-              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><FaLinkedin size={20} /></a> 
-            </div> 
+            {member.linkedin && (
+              <div className="modal-social-inline"> 
+                <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><FaLinkedin size={20} /></a> 
+              </div>
+            )} 
 
             <div className="modal-stats"> 
               <div className="m-stat"> 
@@ -704,14 +708,13 @@ const Team = () => {
       bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.", 
       linkedin: "https://www.linkedin.com/in/arpita-kulkarni/" 
     }, 
-    // { 
+    { 
     
-    //   name: "Prashant Bollu", 
-    //   role: "Technology Leader - IT Product and Services", 
-    //   img: prashantBolluImg, 
-    //   bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.", 
-    //   linkedin: "https://www.linkedin.com/in/prashant-rathi-pr-28b26b7/" 
-    // }, 
+      name: "Prashant Bollu", 
+      role: "Technology Leader - IT Product and Services", 
+      img: prashantBolluImg, 
+      bio: "MBA from Sydney with strong cross-market acumen. Continuing the 65-year legacy of Pushpa Textile. Prashant leads the strategic direction of Two Elephants, bridging traditional business values with modern technological needs.", 
+    }, 
 
     { 
       name: "Saurabh Kulkarni", 
@@ -729,7 +732,7 @@ const Team = () => {
         <div className="services-header"> 
           <div className="eyebrow dark">OUR TEAM</div> 
           <div className="section-rule visible"></div> 
-          <h2 className="h2-title">Leadership Rooted in <em>Legacy</em></h2> 
+          <h2 className="h2-title">Leadership forged in <span className="careerHead">Legacy</span></h2> 
           <p className="services-sub">Meet the visionaries bridging industrial wisdom with digital execution.</p> 
         </div> 
 

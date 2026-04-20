@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import OurStory from './pages/OurStory'
 import Contact from './pages/Contact'
@@ -11,7 +11,7 @@ import NotFound from './pages/NotFound'
 
 function App() {
   return (
-    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/story" element={<OurStory />} />
@@ -22,7 +22,7 @@ function App() {
         <Route path="/careers" element={<Careers />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </Router>
+    </HashRouter>
   )
 }
 

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { Link, useLocation } from 'react-router-dom';
-import { NavHashLink } from 'react-router-hash-link';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../assets/images/logo1.svg';
 
 /** ─────────────────────────────────────────
@@ -69,10 +68,11 @@ const ClickRipple = ({ trigger, color = 'rgba(96, 165, 250, 0.4)' }) => {
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [hoveredPath, setHoveredPath] = useState(null);
-  const [clickedPath, setClickedPath] = useState(null);
+  const [hoveredItemId, setHoveredItemId] = useState(null);
+  const [clickedItemId, setClickedItemId] = useState(null);
   const [isClicked, setIsClicked] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () =>
@@ -113,15 +113,56 @@ const Navbar = () => {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [isMobileMenuOpen, closeMobileMenu]);
 
+  const scrollToSection = useCallback((sectionId) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, []);
+
   const navItems = [
-    { name: 'Home', path: '/#home', isHash: true },
-    { name: 'Our Story', path: '/story', isHash: false },
-    { name: 'Services', path: '/services', isHash: false },
-    { name: 'Team', path: '/#team', isHash: true },
-    { name: 'Insights', path: '/#insights', isHash: true },
-    { name: 'Careers', path: '/careers', isHash: false },
-    { name: 'Contact', path: '/contact', isHash: false },
+    { id: 'home', name: 'Home', path: '/', sectionId: 'home' },
+    { id: 'story', name: 'Our Story', path: '/story' },
+    { id: 'services', name: 'Services', path: '/services' },
+    { id: 'team', name: 'Team', path: '/', sectionId: 'team' },
+    { id: 'insights', name: 'Insights', path: '/', sectionId: 'insights' },
+    { id: 'careers', name: 'Careers', path: '/careers' },
+    { id: 'contact', name: 'Contact', path: '/contact' },
   ];
+
+  const handleSectionLinkClick = useCallback((sectionId) => {
+    closeMobileMenu();
+
+    if (location.pathname === '/') {
+      scrollToSection(sectionId);
+      return;
+    }
+
+    window.sessionStorage.setItem('pendingSection', sectionId);
+    navigate('/');
+  }, [closeMobileMenu, location.pathname, navigate, scrollToSection]);
+
+  const handleMobileItemClick = useCallback((item) => {
+    if (item.sectionId) {
+      handleSectionLinkClick(item.sectionId);
+      return;
+    }
+
+    closeMobileMenu();
+    navigate(item.path);
+  }, [closeMobileMenu, handleSectionLinkClick, navigate]);
+
+  useEffect(() => {
+    if (location.pathname !== '/') return;
+
+    const pendingSection = window.sessionStorage.getItem('pendingSection');
+    if (!pendingSection) return;
+
+    window.sessionStorage.removeItem('pendingSection');
+    window.requestAnimationFrame(() => {
+      scrollToSection(pendingSection);
+    });
+  }, [location.pathname, scrollToSection]);
 
   return (
     <motion.nav
@@ -144,7 +185,7 @@ const Navbar = () => {
       <div className="container nav-inner">
 
         {/* ── LOGO ── */}
-        <Link to="/#home"  onClick={() => window.scrollTo(0,0)} className="logo" style={{ textDecoration: "none" }}>
+        <Link to="/" onClick={() => window.scrollTo(0, 0)} className="logo" style={{ textDecoration: "none" }}>
           <motion.img
             src={logo}
             alt="Two Elephants"
@@ -163,21 +204,20 @@ const Navbar = () => {
         {/* ── DESKTOP LINKS ── */}
         <div
           className="nav-links"
-          onMouseLeave={() => setHoveredPath(null)}
+          onMouseLeave={() => setHoveredItemId(null)}
           style={{ position: 'relative' }}
         >
           {navItems.map((item, idx) => {
-            const isActive = item.isHash
-              ? location.pathname === '/' && location.hash === '#' + item.path.split('#')[1]
+            const isActive = item.sectionId
+              ? location.pathname === '/' && item.sectionId === 'home'
               : location.pathname === item.path;
-            const isHovered = hoveredPath === item.path;
-            const anyHovered = hoveredPath !== null;
-            const Component = item.isHash ? NavHashLink : Link;
+            const isHovered = hoveredItemId === item.id;
+            const anyHovered = hoveredItemId !== null;
 
             return (
               /* EFFECT 5: Staggered entrance per item */
               <motion.div
-                key={item.path}
+                key={item.id}
                 initial={{ y: -20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.2 + idx * 0.07 }}
@@ -187,17 +227,21 @@ const Navbar = () => {
                   className="simple-hover-link"
                   whileHover={{ scale: 1.005 }}
                   transition={{ type: "spring", stiffness: 320, damping: 28 }}
-                  onMouseEnter={() => setHoveredPath(item.path)}
-                  onMouseLeave={() => setHoveredPath(null)}
+                  onMouseEnter={() => setHoveredItemId(item.id)}
+                  onMouseLeave={() => setHoveredItemId(null)}
                 >
-                  <Component
-                    {...(item.isHash ? { smooth: true } : {})}
+                  <Link
                     to={item.path}
-                    onClick={() => {
-                      setClickedPath(item.path);
+                    onClick={(event) => {
+                      if (item.sectionId) {
+                        event.preventDefault();
+                        handleSectionLinkClick(item.sectionId);
+                      }
+
+                      setClickedItemId(item.id);
                       setIsClicked(true);
                       setTimeout(() => {
-                        setClickedPath(null);
+                        setClickedItemId(null);
                         setIsClicked(false);
                       }, 200);
                     }}
@@ -252,7 +296,7 @@ const Navbar = () => {
                         transition={{ type: 'spring', stiffness: 350, damping: 32 }}
                       />
                     )}
-                    <ClickRipple trigger={clickedPath === item.path} />
+                    <ClickRipple trigger={clickedItemId === item.id} />
                     <span
                       style={{
                         position: 'relative',
@@ -263,7 +307,7 @@ const Navbar = () => {
                     >
                       <NavText text={item.name} isActive={isActive} isHovered={isHovered} />
                     </span>
-                  </Component>
+                  </Link>
                 </motion.div>
               </motion.div>
             );
@@ -320,24 +364,22 @@ const Navbar = () => {
       ></button>
 
       <div id="mobile-menu" className={`mobile-menu${isMobileMenuOpen ? ' open' : ''}`}>
-        <Link to="/#home" className="mobile-menu-logo" onClick={closeMobileMenu}>
+        <Link to="/" className="mobile-menu-logo" onClick={closeMobileMenu}>
           <img src={logo} alt="Two Elephants" />
           <span>Two Elephants</span>
         </Link>
 
         <div className="mobile-menu-links">
           {navItems.filter(item => item.name !== 'Contact').map((item) => {
-            const Component = item.isHash ? NavHashLink : Link;
             return (
-              <Component
-                key={item.path}
-                {...(item.isHash ? { smooth: true } : {})}
-                to={item.path}
-                className="mobile-nav-link"
-                onClick={closeMobileMenu}
+              <button
+                type="button"
+                key={item.id}
+                className="mobile-nav-link mobile-nav-button"
+                onClick={() => handleMobileItemClick(item)}
               >
                 {item.name}
-              </Component>
+              </button>
             );
           })}
         </div>

@@ -1,10 +1,15 @@
+import insights1 from "../assets/insights1.png";
+import insights2 from "../assets/insights2.jpeg";
+import insights3 from "../assets/insights3.jpg";
+
+
 export const articles = [
   {
     id: "compliance-it-gaps",
     title: "3 Compliance IT Gaps Costing Mid-Size Banks Crores",
     cat: "BFSI",
-    img: "https://www.ovaledge.com/hubfs/Asset%204%20(2).png",
-    readTime: "6 min read",
+    img: insights1,
+    read_time: "6 min read",
     author: "Two Elephants Research",
     date: "April 12, 2026",
     excerpt: "Regulatory compliance is no longer a 'check-the-box' activity. In the modern BFSI landscape, it's a critical technology challenge that can make or break a bank's bottom line.",
@@ -20,8 +25,8 @@ export const articles = [
     id: "predictive-maintenance-iiot",
     title: "Predictive Maintenance: How IIoT Pays for Itself",
     cat: "OIL & GAS",
-    img: "https://tse1.mm.bing.net/th/id/OIP._mmRK30Yvt9lxNXKe63zwgHaFe?pid=Api&P=0&h=220",
-    readTime: "5 min read",
+    img: insights2,
+    read_time: "5 min read",
     author: "Industrial Tech Team",
     date: "April 08, 2026",
     excerpt: "In industrial operations, downtime isn't just an inconvenience — it's a massive expense. Learn how IIoT and predictive analytics are changing the game.",
@@ -37,8 +42,8 @@ export const articles = [
     id: "solapur-tech-opportunity",
     title: "Why Solapur Is Maharashtra's Overlooked Tech Opportunity",
     cat: "SOLAPUR",
-    img: "https://tripxl.com/blog/wp-content/uploads/2024/10/Solapur-Municipal-Corporation-Building.jpg",
-    readTime: "4 min read",
+    img: insights3,
+    read_time: "4 min read",
     author: "Prashant Rathi",
     date: "April 05, 2026",
     excerpt: "The next wave of Indian technology isn't happening in the metros. It's happening in Tier-2 cities that offer a unique combination of talent and lifestyle.",

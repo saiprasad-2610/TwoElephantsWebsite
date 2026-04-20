@@ -628,7 +628,7 @@ nav.scrolled {
   opacity: 0;
   pointer-events: none;
   transition: opacity .28s ease-in-out;
-  z-index: 1090;
+  z-index: 1100;
 }
 
 .mobile-overlay.open {
@@ -643,17 +643,19 @@ nav.scrolled {
   width: min(88vw, 380px);
   height: 100dvh;
   background: rgba(8, 14, 28, 0.98); /* Slightly more opaque background since blur is removed */
-  z-index: 1100;
+  z-index: 1200;
   padding: 88px 22px 80px; /* Increased bottom padding to move button higher */
   transform: translateX(100%);
   transition: transform .28s ease-in-out;
   display: flex;
   flex-direction: column;
   box-shadow: -12px 0 34px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
 }
 
 .mobile-menu.open {
   transform: translateX(0);
+  pointer-events: auto;
 }
 
 .mobile-menu-logo {
@@ -690,6 +692,15 @@ nav.scrolled {
   padding: 8px 4px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   transition: color .22s ease, border-color .22s ease;
+}
+
+.mobile-nav-button {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  touch-action: manipulation;
 }
 
 .mobile-nav-link:hover,
