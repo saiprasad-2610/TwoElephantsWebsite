@@ -12,6 +12,7 @@ import techHero1 from '../assets/images/tech_hero_1.png';
 import techHero2 from '../assets/images/tech_hero_2.png';
 
 const API_BASE = '';
+const NAME_MAX_LENGTH = 50;
 
 const Careers = () => {
   const [activeRole, setActiveRole] = useState(0);
@@ -26,6 +27,7 @@ const Careers = () => {
     expected_ctc: '', current_ctc: '', cover_letter: '', resume: null
   });
   const [formStatus, setFormStatus] = useState('idle');
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -48,7 +50,21 @@ const Careers = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === 'first_name' || name === 'last_name') {
+      const isTooLong = value.length > NAME_MAX_LENGTH;
+      setFormData({ ...formData, [name]: value.slice(0, NAME_MAX_LENGTH) });
+      setFormErrors({
+        ...formErrors,
+        [name]: isTooLong ? `Name cannot be longer than ${NAME_MAX_LENGTH} characters.` : ''
+      });
+      return;
+    }
+
     setFormData({ ...formData, [name]: value });
+    if (formErrors[name]) {
+      setFormErrors({ ...formErrors, [name]: '' });
+    }
   };
 
   const handleFileChange = (e) => {
@@ -62,17 +78,34 @@ const Careers = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const nameErrors = {};
+    if (formData.first_name.trim().length > NAME_MAX_LENGTH) {
+      nameErrors.first_name = `Name cannot be longer than ${NAME_MAX_LENGTH} characters.`;
+    }
+    if (formData.last_name.trim().length > NAME_MAX_LENGTH) {
+      nameErrors.last_name = `Name cannot be longer than ${NAME_MAX_LENGTH} characters.`;
+    }
+    if (Object.keys(nameErrors).length > 0) {
+      setFormErrors(nameErrors);
+      return;
+    }
+
     setFormStatus('loading');
     try {
       const payload = new FormData();
       Object.keys(formData).forEach(key => {
-        if (formData[key]) payload.append(key, formData[key]);
+        const value = key === 'first_name' || key === 'last_name'
+          ? formData[key].trim()
+          : formData[key];
+        if (value) payload.append(key, value);
       });
       if (selectedRole) payload.append('role', selectedRole.id);
       await axios.post(`${API_BASE}/api/public/apply/`, payload, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setFormStatus('success');
+      setFormErrors({});
       setFormData({ first_name: '', last_name: '', email: '', phone: '', location: '',
         linkedin: '', portfolio: '', github: '', current_company: '',
         current_designation: '', years_experience: '', notice_period: '',
@@ -416,11 +449,17 @@ const Careers = () => {
                     <div className="career-form-grid">
                       <div className="form-group">
                         <label>First Name *</label>
-                        <input type="text" name="first_name" placeholder="John" value={formData.first_name} onChange={handleInputChange} required className="form-control-premium" />
+                        <input type="text" name="first_name" placeholder="John" value={formData.first_name} onChange={handleInputChange} required className="form-control-premium" aria-describedby="career-first-name-error" aria-invalid={Boolean(formErrors.first_name)} />
+                        {formErrors.first_name && (
+                          <div className="field-error" id="career-first-name-error">{formErrors.first_name}</div>
+                        )}
                       </div>
                       <div className="form-group">
                         <label>Last Name *</label>
-                        <input type="text" name="last_name" placeholder="Doe" value={formData.last_name} onChange={handleInputChange} required className="form-control-premium" />
+                        <input type="text" name="last_name" placeholder="Doe" value={formData.last_name} onChange={handleInputChange} required className="form-control-premium" aria-describedby="career-last-name-error" aria-invalid={Boolean(formErrors.last_name)} />
+                        {formErrors.last_name && (
+                          <div className="field-error" id="career-last-name-error">{formErrors.last_name}</div>
+                        )}
                       </div>
                       <div className="form-group">
                         <label>Email Address *</label>

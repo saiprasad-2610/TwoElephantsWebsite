@@ -19,10 +19,30 @@ const CONTACT_RECEIVER_EMAIL =
   import.meta.env.VITE_CONTACT_RECEIVER_EMAIL || 'support@twoelephants.tech';
 
 const API_BASE = '';
+const NAME_MAX_LENGTH = 50;
+const MESSAGE_MAX_LENGTH = 1000;
+
+const isValidEmail = (value) => {
+  const email = value.trim();
+  const parts = email.split('@');
+
+  if (parts.length !== 2) return false;
+
+  const [localPart, domain] = parts;
+  if (!localPart || !domain || localPart.startsWith('.') || localPart.endsWith('.')) {
+    return false;
+  }
+
+  const domainLabels = domain.split('.');
+  if (domainLabels.length < 2) return false;
+
+  return domainLabels.every(label => /^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$/.test(label))
+    && /^[A-Za-z]{2,}$/.test(domainLabels[domainLabels.length - 1]);
+};
 
 const Contact = () => {
   const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success, error
-  const [formError, setFormError] = useState('');
+  const [formErrors, setFormErrors] = useState({});
   
   const [formData, setFormData] = useState({
     fname: '',
@@ -34,21 +54,89 @@ const Contact = () => {
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    const { id, value } = e.target;
+
+    if (id === 'email') {
+      e.target.setCustomValidity('');
+    }
+
+    if (id === 'fname' || id === 'lname') {
+      const isTooLong = value.length > NAME_MAX_LENGTH;
+      setFormData({ ...formData, [id]: value.slice(0, NAME_MAX_LENGTH) });
+      setFormErrors({
+        ...formErrors,
+        [id]: isTooLong ? `Name cannot be longer than ${NAME_MAX_LENGTH} characters.` : ''
+      });
+      if (formStatus === 'error') {
+        setFormStatus('idle');
+      }
+      return;
+    }
+
+    if (id === 'message') {
+      const isTooLong = value.length > MESSAGE_MAX_LENGTH;
+      setFormData({ ...formData, message: value.slice(0, MESSAGE_MAX_LENGTH) });
+      setFormErrors({
+        ...formErrors,
+        message: isTooLong ? `Message cannot be longer than ${MESSAGE_MAX_LENGTH} characters.` : ''
+      });
+      if (formStatus === 'error') {
+        setFormStatus('idle');
+      }
+      return;
+    }
+
+    setFormData({ ...formData, [id]: value });
+    if (formErrors[id]) {
+      setFormErrors({ ...formErrors, [id]: '' });
+    }
+    if (formStatus === 'error') {
+      setFormStatus('idle');
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const emailInput = e.currentTarget.elements.email;
+    emailInput.setCustomValidity('');
+
+    const nameErrors = {};
+    if (formData.fname.trim().length > NAME_MAX_LENGTH) {
+      nameErrors.fname = `Name cannot be longer than ${NAME_MAX_LENGTH} characters.`;
+    }
+    if (formData.lname.trim().length > NAME_MAX_LENGTH) {
+      nameErrors.lname = `Name cannot be longer than ${NAME_MAX_LENGTH} characters.`;
+    }
+    const nextErrors = { ...nameErrors };
+    if (formData.message.trim().length > MESSAGE_MAX_LENGTH) {
+      nextErrors.message = `Message cannot be longer than ${MESSAGE_MAX_LENGTH} characters.`;
+    }
+    if (Object.keys(nextErrors).length > 0) {
+      setFormErrors(nextErrors);
+      return;
+    }
+
+    if (!isValidEmail(formData.email)) {
+      setFormStatus('error');
+      emailInput.setCustomValidity('please enter valid email');
+      emailInput.reportValidity();
+      return;
+    }
+
     setFormStatus('loading');
-    setFormError('');
 
     try {
+      const sanitizedEmail = formData.email.trim();
+      const sanitizedFirstName = formData.fname.trim();
+      const sanitizedLastName = formData.lname.trim();
+
       // Try backend API first
       try {
         await axios.post(`${API_BASE}/api/public/contact/`, {
-          fname: formData.fname,
-          lname: formData.lname,
-          email: formData.email,
+          fname: sanitizedFirstName,
+          lname: sanitizedLastName,
+          email: sanitizedEmail,
           location: formData.location,
           interest: formData.interest,
           message: formData.message
@@ -63,7 +151,7 @@ const Contact = () => {
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
       if (serviceId && templateId && publicKey) {
-        const fullName = `${formData.fname} ${formData.lname}`.trim();
+        const fullName = `${sanitizedFirstName} ${sanitizedLastName}`.trim();
         const submittedAt = new Date().toLocaleString('en-IN', {
           dateStyle: 'medium',
           timeStyle: 'short',
@@ -77,12 +165,12 @@ const Contact = () => {
           templateId,
           {
             to_email: CONTACT_RECEIVER_EMAIL,
-            reply_to: formData.email,
+            reply_to: sanitizedEmail,
             subject: `New Contact Inquiry - ${interest}`,
             from_name: fullName,
-            from_email: formData.email,
+            from_email: sanitizedEmail,
             name: fullName,
-            email: formData.email,
+            email: sanitizedEmail,
             location: formData.location,
             interest,
             message: safeMessage,
@@ -92,7 +180,7 @@ const Contact = () => {
             submitted_at: submittedAt,
             summary_text: [
               `New inquiry from ${fullName}`,
-              `Email: ${formData.email}`,
+              `Email: ${sanitizedEmail}`,
               `Location: ${formData.location}`,
               `Interest: ${interest}`,
               `Submitted: ${submittedAt}`,
@@ -110,6 +198,7 @@ const Contact = () => {
 
       // Always show success if form is valid
       setFormStatus('success');
+      setFormErrors({});
       setFormData({
         fname: '',
         lname: '',
@@ -122,6 +211,7 @@ const Contact = () => {
       console.error('Submission error:', error);
       // Still show success for better UX, but log the error
       setFormStatus('success');
+      setFormErrors({});
       setFormData({
         fname: '',
         lname: '',
@@ -137,7 +227,6 @@ const Contact = () => {
   const resetFormStatus = () => {
     if (formStatus === 'error') {
       setFormStatus('idle');
-      setFormError('');
     }
   };
 
@@ -249,7 +338,12 @@ const Contact = () => {
                                 placeholder="Enter First Name" 
                                 onChange={handleChange} 
                                 value={formData.fname} 
+                                aria-describedby="fname-error"
+                                aria-invalid={Boolean(formErrors.fname)}
                               />
+                              {formErrors.fname && (
+                                <div className="field-error" id="fname-error">{formErrors.fname}</div>
+                              )}
                             </div>
                             <div className="form-group">
                               <label htmlFor="lname">Last Name *</label>
@@ -260,7 +354,12 @@ const Contact = () => {
                                 placeholder="Enter Last Name" 
                                 onChange={handleChange} 
                                 value={formData.lname} 
+                                aria-describedby="lname-error"
+                                aria-invalid={Boolean(formErrors.lname)}
                               />
+                              {formErrors.lname && (
+                                <div className="field-error" id="lname-error">{formErrors.lname}</div>
+                              )}
                             </div>
                           </div>
 
@@ -271,9 +370,15 @@ const Contact = () => {
                                 type="email" 
                                 id="email" 
                                 required 
+                                inputMode="email"
                                 placeholder="Enter Email" 
                                 onChange={handleChange} 
                                 value={formData.email} 
+                                onInvalid={(e) => {
+                                  if (e.currentTarget.value.trim()) {
+                                    e.currentTarget.setCustomValidity('please enter valid email');
+                                  }
+                                }}
                               />
                             </div>
                             <div className="form-group">
@@ -314,8 +419,19 @@ const Contact = () => {
                               placeholder="Tell us about your project..." 
                               onChange={handleChange} 
                               value={formData.message}
+                              maxLength={MESSAGE_MAX_LENGTH}
+                              aria-describedby="message-error message-count"
+                              aria-invalid={Boolean(formErrors.message)}
                               rows={5}
                             ></textarea>
+                            <div className="field-meta">
+                              {formErrors.message ? (
+                                <span className="field-error" id="message-error">{formErrors.message}</span>
+                              ) : (
+                                <span></span>
+                              )}
+                              <span id="message-count">{formData.message.length}/{MESSAGE_MAX_LENGTH}</span>
+                            </div>
                           </div>
 
                           <button 
@@ -329,10 +445,6 @@ const Contact = () => {
                               <>Send Message <Send size={18} style={{ marginLeft: '8px' }} /></>
                             )}
                           </button>
-
-                          {formError && (
-                            <p className="form-error">{formError}</p>
-                          )}
                         </form>
                       </motion.div>
                     ) : (

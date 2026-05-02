@@ -237,6 +237,35 @@
   box-shadow: 0 0 0 4px rgba(248, 204, 28, 0.1);
 }
 
+.form-group input[aria-invalid="true"],
+.form-group textarea[aria-invalid="true"] {
+  border-color: #dc2626;
+  background: #fff;
+}
+
+.field-meta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 8px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.field-error {
+  margin-top: 8px;
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.field-meta .field-error {
+  margin-top: 0;
+}
+
 .form-submit {
   width: 100%;
   background: #080E1C;

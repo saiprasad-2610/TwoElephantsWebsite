@@ -990,6 +990,18 @@
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15), 0 0 20px rgba(59, 130, 246, 0.2);
 }
 
+.form-control-premium[aria-invalid="true"] {
+  border-color: #dc2626;
+  background: #fff;
+}
+
+.field-error {
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 .form-control-premium::placeholder {
   color: #94a3b8;
 }

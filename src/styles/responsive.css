@@ -927,6 +927,78 @@
     font-size: 28px;
   }
 
+  .hero-grid {
+    justify-items: center;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .hero-grid > * {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .hero-grid > div:first-child {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    justify-self: center;
+    text-align: center;
+  }
+
+  .hero-grid .eyebrow {
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    letter-spacing: 2px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .hero-sub,
+  .typewriter-container {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .hero-buttons {
+    width: min(100%, 340px);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+    max-width: calc(100vw - 40px);
+    min-height: 48px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-badges {
+    width: 100%;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .hero-badges .badge {
+    flex: 0 1 auto;
+    min-width: 0;
+    padding: 4px 8px;
+    font-size: 8.5px;
+    white-space: nowrap;
+  }
+
   .hero-visual {
     min-height: 340px;
   }
@@ -1008,6 +1080,19 @@
     max-width: 100%;
     font-size: 13px;
     padding: 10px 12px;
+  }
+
+  .hero-buttons .btn {
+    max-width: calc(100vw - 24px);
+  }
+
+  .hero-badges {
+    gap: 4px;
+  }
+
+  .hero-badges .badge {
+    padding: 4px 6px;
+    font-size: 7.5px;
   }
 
   .logo img {
