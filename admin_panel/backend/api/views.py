@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -13,11 +15,32 @@ from .serializers import (
     ArticlePublicSerializer
 )
 
+DUPLICATE_CONTACT_MESSAGE = 'You have already submitted this form. Please wait before submitting again.'
+DUPLICATE_CONTACT_WINDOW_MINUTES = 10
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def submit_contact(request):
     serializer = ContactSubmissionSerializer(data=request.data)
     if serializer.is_valid():
+        data = serializer.validated_data
+        duplicate_since = timezone.now() - timedelta(minutes=DUPLICATE_CONTACT_WINDOW_MINUTES)
+        duplicate_exists = ContactSubmission.objects.filter(
+            fname__iexact=data.get('fname', '').strip(),
+            lname__iexact=data.get('lname', '').strip(),
+            email__iexact=data.get('email', '').strip(),
+            location__iexact=data.get('location', '').strip(),
+            interest__iexact=data.get('interest', '').strip(),
+            message__iexact=data.get('message', '').strip(),
+            submitted_at__gte=duplicate_since,
+        ).exists()
+
+        if duplicate_exists:
+            return Response(
+                {'success': False, 'message': DUPLICATE_CONTACT_MESSAGE},
+                status=status.HTTP_409_CONFLICT
+            )
+
         serializer.save()
         return Response({'success': True, 'message': 'Contact form submitted successfully'}, status=status.HTTP_201_CREATED)
     return Response({'success': False, 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

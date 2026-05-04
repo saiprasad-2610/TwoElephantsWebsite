@@ -258,7 +258,7 @@
 }
 
 .highlights-intro {
-  max-width: 800px;
+  max-width: 860px;
   margin: 0 auto 60px;
   text-align: center;
 }
@@ -383,6 +383,23 @@
   gap: 40px;
   align-items: flex-start;
   margin-top: 48px;
+}
+
+.no-openings-state {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  padding: 56px 0 24px;
+  text-align: center;
+}
+
+.no-openings-state p {
+  color: #475569;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 520px;
 }
 
 .os-left {
@@ -609,7 +626,7 @@
   box-shadow: 0 15px 30px rgba(248, 204, 28, 0.25), 0 0 30px rgba(59, 130, 246, 0.5), 0 0 60px rgba(59, 130, 246, 0.25);
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 900px) {
   .openings-split-layout {
     grid-template-columns: 300px 1fr;
     gap: 32px;

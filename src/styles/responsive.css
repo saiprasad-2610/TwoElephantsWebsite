@@ -153,7 +153,7 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 900px) {
   .nav-links,
   .nav-actions {
     display: none !important;
@@ -188,6 +188,128 @@
   .team-grid-enhanced {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 32px !important;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1280px) {
+  .nav-links {
+    display: flex !important;
+    gap: 4px;
+  }
+
+  .nav-links a {
+    font-size: 12px;
+    padding: 7px 9px;
+  }
+
+  .menu-btn {
+    display: none !important;
+  }
+
+  .hero {
+    min-height: 100dvh;
+    height: 100dvh;
+    padding-top: 72px;
+    padding-bottom: 0;
+  }
+
+  .hero .container {
+    width: 100%;
+  }
+
+  .hero-grid {
+    grid-template-columns: minmax(0, 0.94fr) minmax(340px, 0.86fr) !important;
+    gap: clamp(28px, 4vw, 52px);
+    align-items: center;
+    text-align: left;
+  }
+
+  .hero-grid > div:first-child {
+    justify-self: end;
+    max-width: 560px;
+  }
+
+  .hero-title {
+    font-size: clamp(50px, 6.2vw, 76px) !important;
+    line-height: 1.08;
+    margin-bottom: 22px;
+  }
+
+  .hero-sub {
+    max-width: 520px;
+    font-size: clamp(16px, 1.55vw, 18px);
+    line-height: 1.65;
+    margin-right: 0;
+  }
+
+  .hero-buttons,
+  .hero-badges {
+    justify-content: flex-start;
+  }
+
+  .hero-visual {
+    order: initial;
+    width: min(38vw, 420px) !important;
+    max-width: 420px !important;
+    height: auto !important;
+    min-height: 420px;
+    margin: 0 auto;
+  }
+
+  .hero-logo-wrapper {
+    height: clamp(360px, 44vw, 460px) !important;
+    max-width: 420px !important;
+  }
+
+  .hero-logo,
+  .hero-logo-cropped {
+    max-width: min(34vw, 390px) !important;
+  }
+
+  .hero-slogan {
+    max-width: min(34vw, 340px);
+    margin-top: 4px !important;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1080px) {
+  .nav-links a {
+    font-size: 10px;
+    padding: 6px 7px;
+  }
+
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(310px, 0.82fr) !important;
+    gap: 24px;
+  }
+
+  .hero-title {
+    font-size: clamp(46px, 6vw, 64px) !important;
+  }
+
+  .hero-sub {
+    max-width: 440px;
+    font-size: 15px;
+  }
+
+  .hero-visual {
+    width: min(36vw, 360px) !important;
+    max-width: 360px !important;
+    min-height: 360px;
+  }
+
+  .hero-logo-wrapper {
+    height: clamp(330px, 38vw, 390px) !important;
+    max-width: 360px !important;
+  }
+
+  .hero-logo,
+  .hero-logo-cropped {
+    max-width: min(32vw, 330px) !important;
+  }
+
+  .hero-slogan {
+    max-width: 310px;
   }
 }
 

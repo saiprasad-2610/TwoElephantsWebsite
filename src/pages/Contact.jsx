@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import axios from 'axios';
@@ -20,7 +20,13 @@ const CONTACT_RECEIVER_EMAIL =
 
 const API_BASE = '';
 const NAME_MAX_LENGTH = 50;
+const EMAIL_MAX_LENGTH = 254;
 const MESSAGE_MAX_LENGTH = 1000;
+const TEXT_ONLY_FIELDS = new Set(['fname', 'lname', 'location']);
+const DUPLICATE_SUBMISSION_MESSAGE =
+  'You have already submitted this form. Please wait before submitting again.';
+const DUPLICATE_SUBMISSION_WINDOW_MS = 10 * 60 * 1000;
+const DUPLICATE_SUBMISSION_KEY = 'two-elephants-contact-submission';
 
 const isValidEmail = (value) => {
   const email = value.trim();
@@ -40,9 +46,83 @@ const isValidEmail = (value) => {
     && /^[A-Za-z]{2,}$/.test(domainLabels[domainLabels.length - 1]);
 };
 
+const validateContactField = (id, value) => {
+  const trimmedValue = value.trim();
+
+  if ((id === 'fname' || id === 'lname') && trimmedValue.length > NAME_MAX_LENGTH) {
+    return `Name cannot be longer than ${NAME_MAX_LENGTH} characters.`;
+  }
+
+  if (id === 'email' && trimmedValue.length > EMAIL_MAX_LENGTH) {
+    return `Email cannot be longer than ${EMAIL_MAX_LENGTH} characters.`;
+  }
+
+  if (TEXT_ONLY_FIELDS.has(id) && /\d/.test(value)) {
+    if (id === 'location') {
+      return 'Location / City cannot contain numbers.';
+    }
+    return 'Name cannot contain numbers.';
+  }
+
+  if (id === 'message') {
+    if (trimmedValue.length > MESSAGE_MAX_LENGTH) {
+      return `Message cannot be longer than ${MESSAGE_MAX_LENGTH} characters.`;
+    }
+
+    if (trimmedValue && !/[A-Za-z]/.test(trimmedValue)) {
+      return 'Message must include meaningful text, not only numbers or symbols.';
+    }
+  }
+
+  return '';
+};
+
+const normalizeSubmissionValue = (value) =>
+  value.trim().replace(/\s+/g, ' ').toLowerCase();
+
+const createSubmissionFingerprint = ({ fname, lname, email, location, interest, message }) =>
+  JSON.stringify({
+    fname: normalizeSubmissionValue(fname),
+    lname: normalizeSubmissionValue(lname),
+    email: normalizeSubmissionValue(email),
+    location: normalizeSubmissionValue(location),
+    interest: normalizeSubmissionValue(interest),
+    message: normalizeSubmissionValue(message),
+  });
+
+const getDuplicateLock = () => {
+  try {
+    return JSON.parse(window.localStorage.getItem(DUPLICATE_SUBMISSION_KEY));
+  } catch (error) {
+    return null;
+  }
+};
+
+const isDuplicateSubmission = (fingerprint) => {
+  const duplicateLock = getDuplicateLock();
+
+  return Boolean(
+    duplicateLock?.fingerprint === fingerprint &&
+    Date.now() - duplicateLock.submittedAt < DUPLICATE_SUBMISSION_WINDOW_MS
+  );
+};
+
+const rememberSubmission = (fingerprint) => {
+  try {
+    window.localStorage.setItem(
+      DUPLICATE_SUBMISSION_KEY,
+      JSON.stringify({ fingerprint, submittedAt: Date.now() })
+    );
+  } catch (error) {
+    // Ignore storage failures; backend duplicate detection still protects persistence.
+  }
+};
+
 const Contact = () => {
   const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success, error
   const [formErrors, setFormErrors] = useState({});
+  const [duplicateMessage, setDuplicateMessage] = useState('');
+  const isSubmittingRef = useRef(false);
   
   const [formData, setFormData] = useState({
     fname: '',
@@ -55,41 +135,16 @@ const Contact = () => {
 
   const handleChange = (e) => {
     const { id, value } = e.target;
+    const nextValue = id === 'message'
+      ? value.slice(0, MESSAGE_MAX_LENGTH)
+      : value;
+    const fieldError = validateContactField(id, nextValue);
 
-    if (id === 'email') {
-      e.target.setCustomValidity('');
-    }
+    e.target.setCustomValidity(fieldError);
+    setFormData({ ...formData, [id]: nextValue });
+    setFormErrors({ ...formErrors, [id]: fieldError });
+    setDuplicateMessage('');
 
-    if (id === 'fname' || id === 'lname') {
-      const isTooLong = value.length > NAME_MAX_LENGTH;
-      setFormData({ ...formData, [id]: value.slice(0, NAME_MAX_LENGTH) });
-      setFormErrors({
-        ...formErrors,
-        [id]: isTooLong ? `Name cannot be longer than ${NAME_MAX_LENGTH} characters.` : ''
-      });
-      if (formStatus === 'error') {
-        setFormStatus('idle');
-      }
-      return;
-    }
-
-    if (id === 'message') {
-      const isTooLong = value.length > MESSAGE_MAX_LENGTH;
-      setFormData({ ...formData, message: value.slice(0, MESSAGE_MAX_LENGTH) });
-      setFormErrors({
-        ...formErrors,
-        message: isTooLong ? `Message cannot be longer than ${MESSAGE_MAX_LENGTH} characters.` : ''
-      });
-      if (formStatus === 'error') {
-        setFormStatus('idle');
-      }
-      return;
-    }
-
-    setFormData({ ...formData, [id]: value });
-    if (formErrors[id]) {
-      setFormErrors({ ...formErrors, [id]: '' });
-    }
     if (formStatus === 'error') {
       setFormStatus('idle');
     }
@@ -98,22 +153,31 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (isSubmittingRef.current || formStatus === 'loading') {
+      setDuplicateMessage(DUPLICATE_SUBMISSION_MESSAGE);
+      setFormStatus('error');
+      return;
+    }
+
     const emailInput = e.currentTarget.elements.email;
     emailInput.setCustomValidity('');
 
-    const nameErrors = {};
-    if (formData.fname.trim().length > NAME_MAX_LENGTH) {
-      nameErrors.fname = `Name cannot be longer than ${NAME_MAX_LENGTH} characters.`;
-    }
-    if (formData.lname.trim().length > NAME_MAX_LENGTH) {
-      nameErrors.lname = `Name cannot be longer than ${NAME_MAX_LENGTH} characters.`;
-    }
-    const nextErrors = { ...nameErrors };
-    if (formData.message.trim().length > MESSAGE_MAX_LENGTH) {
-      nextErrors.message = `Message cannot be longer than ${MESSAGE_MAX_LENGTH} characters.`;
-    }
+    const nextErrors = {};
+    let firstInvalidField = null;
+
+    ['fname', 'lname', 'email', 'location', 'message'].forEach((fieldId) => {
+      const fieldInput = e.currentTarget.elements[fieldId];
+      const fieldError = validateContactField(fieldId, formData[fieldId]);
+      fieldInput.setCustomValidity(fieldError);
+      if (fieldError) {
+        nextErrors[fieldId] = fieldError;
+        firstInvalidField ||= fieldInput;
+      }
+    });
+
     if (Object.keys(nextErrors).length > 0) {
       setFormErrors(nextErrors);
+      firstInvalidField.reportValidity();
       return;
     }
 
@@ -124,24 +188,51 @@ const Contact = () => {
       return;
     }
 
+    const sanitizedEmail = formData.email.trim();
+    const sanitizedFirstName = formData.fname.trim();
+    const sanitizedLastName = formData.lname.trim();
+    const sanitizedLocation = formData.location.trim();
+    const sanitizedMessage = formData.message.trim();
+    const sanitizedInterest = formData.interest.trim();
+    const submissionFingerprint = createSubmissionFingerprint({
+      fname: sanitizedFirstName,
+      lname: sanitizedLastName,
+      email: sanitizedEmail,
+      location: sanitizedLocation,
+      interest: sanitizedInterest,
+      message: sanitizedMessage,
+    });
+
+    if (isDuplicateSubmission(submissionFingerprint)) {
+      setDuplicateMessage(DUPLICATE_SUBMISSION_MESSAGE);
+      setFormStatus('error');
+      return;
+    }
+
+    isSubmittingRef.current = true;
+    setDuplicateMessage('');
     setFormStatus('loading');
 
     try {
-      const sanitizedEmail = formData.email.trim();
-      const sanitizedFirstName = formData.fname.trim();
-      const sanitizedLastName = formData.lname.trim();
-
       // Try backend API first
       try {
         await axios.post(`${API_BASE}/api/public/contact/`, {
           fname: sanitizedFirstName,
           lname: sanitizedLastName,
           email: sanitizedEmail,
-          location: formData.location,
-          interest: formData.interest,
-          message: formData.message
+          location: sanitizedLocation,
+          interest: sanitizedInterest,
+          message: sanitizedMessage
         });
       } catch (apiError) {
+        if (apiError.response?.status === 409) {
+          setDuplicateMessage(
+            apiError.response.data?.message || DUPLICATE_SUBMISSION_MESSAGE
+          );
+          setFormStatus('error');
+          return;
+        }
+
         console.log('Backend API not available, continuing with EmailJS...');
       }
 
@@ -157,8 +248,7 @@ const Contact = () => {
           timeStyle: 'short',
           hour12: true,
         });
-        const interest = formData.interest || 'General inquiry';
-        const safeMessage = formData.message.trim();
+        const interest = sanitizedInterest || 'General inquiry';
 
         await emailjs.send(
           serviceId,
@@ -171,9 +261,9 @@ const Contact = () => {
             from_email: sanitizedEmail,
             name: fullName,
             email: sanitizedEmail,
-            location: formData.location,
+            location: sanitizedLocation,
             interest,
-            message: safeMessage,
+            message: sanitizedMessage,
             time: submittedAt,
             title: `New Contact Inquiry - ${interest}`,
             company_name: 'Two Elephants Website',
@@ -181,12 +271,12 @@ const Contact = () => {
             summary_text: [
               `New inquiry from ${fullName}`,
               `Email: ${sanitizedEmail}`,
-              `Location: ${formData.location}`,
+              `Location: ${sanitizedLocation}`,
               `Interest: ${interest}`,
               `Submitted: ${submittedAt}`,
               '',
               'Message:',
-              safeMessage,
+              sanitizedMessage,
             ].join('\n'),
           },
           publicKey
@@ -197,6 +287,7 @@ const Contact = () => {
       }
 
       // Always show success if form is valid
+      rememberSubmission(submissionFingerprint);
       setFormStatus('success');
       setFormErrors({});
       setFormData({
@@ -210,6 +301,7 @@ const Contact = () => {
     } catch (error) {
       console.error('Submission error:', error);
       // Still show success for better UX, but log the error
+      rememberSubmission(submissionFingerprint);
       setFormStatus('success');
       setFormErrors({});
       setFormData({
@@ -220,11 +312,14 @@ const Contact = () => {
         interest: '',
         message: ''
       });
+    } finally {
+      isSubmittingRef.current = false;
     }
   };
 
   // Reset form status when user starts typing again after error
   const resetFormStatus = () => {
+    setDuplicateMessage('');
     if (formStatus === 'error') {
       setFormStatus('idle');
     }
@@ -334,32 +429,26 @@ const Contact = () => {
                               <input 
                                 type="text" 
                                 id="fname" 
+                                name="fname"
                                 required 
                                 placeholder="Enter First Name" 
                                 onChange={handleChange} 
                                 value={formData.fname} 
-                                aria-describedby="fname-error"
                                 aria-invalid={Boolean(formErrors.fname)}
                               />
-                              {formErrors.fname && (
-                                <div className="field-error" id="fname-error">{formErrors.fname}</div>
-                              )}
                             </div>
                             <div className="form-group">
                               <label htmlFor="lname">Last Name *</label>
                               <input 
                                 type="text" 
                                 id="lname" 
+                                name="lname"
                                 required 
                                 placeholder="Enter Last Name" 
                                 onChange={handleChange} 
                                 value={formData.lname} 
-                                aria-describedby="lname-error"
                                 aria-invalid={Boolean(formErrors.lname)}
                               />
-                              {formErrors.lname && (
-                                <div className="field-error" id="lname-error">{formErrors.lname}</div>
-                              )}
                             </div>
                           </div>
 
@@ -369,12 +458,19 @@ const Contact = () => {
                               <input 
                                 type="email" 
                                 id="email" 
+                                name="email"
                                 required 
                                 inputMode="email"
                                 placeholder="Enter Email" 
                                 onChange={handleChange} 
                                 value={formData.email} 
                                 onInvalid={(e) => {
+                                  const emailError = validateContactField('email', e.currentTarget.value);
+                                  if (emailError) {
+                                    e.currentTarget.setCustomValidity(emailError);
+                                    return;
+                                  }
+
                                   if (e.currentTarget.value.trim()) {
                                     e.currentTarget.setCustomValidity('please enter valid email');
                                   }
@@ -386,10 +482,12 @@ const Contact = () => {
                               <input 
                                 type="text" 
                                 id="location" 
+                                name="location"
                                 required 
                                 placeholder="Enter Location" 
                                 onChange={handleChange} 
                                 value={formData.location} 
+                                aria-invalid={Boolean(formErrors.location)}
                               />
                             </div>
                           </div>
@@ -398,6 +496,7 @@ const Contact = () => {
                             <label htmlFor="interest">I'm interested in…</label>
                             <select 
                               id="interest" 
+                              name="interest"
                               onChange={handleChange} 
                               value={formData.interest}
                               required
@@ -415,24 +514,27 @@ const Contact = () => {
                             <label htmlFor="message">Your Message *</label>
                             <textarea 
                               id="message" 
+                              name="message"
                               required 
                               placeholder="Tell us about your project..." 
                               onChange={handleChange} 
                               value={formData.message}
                               maxLength={MESSAGE_MAX_LENGTH}
-                              aria-describedby="message-error message-count"
+                              aria-describedby="message-count"
                               aria-invalid={Boolean(formErrors.message)}
                               rows={5}
                             ></textarea>
                             <div className="field-meta">
-                              {formErrors.message ? (
-                                <span className="field-error" id="message-error">{formErrors.message}</span>
-                              ) : (
-                                <span></span>
-                              )}
+                              <span></span>
                               <span id="message-count">{formData.message.length}/{MESSAGE_MAX_LENGTH}</span>
                             </div>
                           </div>
+
+                          {duplicateMessage && (
+                            <div className="form-error-message" role="alert">
+                              {duplicateMessage}
+                            </div>
+                          )}
 
                           <button 
                             className="btn btn-primary form-submit" 

@@ -294,10 +294,12 @@ const Careers = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-            ><div className="services-header">
-              <div className="eyebrow dark">LIFE AT Two Elephants Technologies LLP</div>
-              <div className="section-rule visible"></div></div>
-              <h3 className="h2-title text-3xl">A career where <span className="careerHead">impact</span>, <span className="careerHead">growth</span>, and <span className="careerHead">momentum</span> meet.</h3>
+            >
+              <div className="services-header">
+                <div className="eyebrow dark">LIFE AT Two Elephants Technologies LLP</div>
+                <div className="section-rule visible"></div>
+                <h3 className="h2-title text-3xl">A career where <span className="careerHead">impact</span>, <span className="careerHead">growth</span>, and <span className="careerHead">momentum</span> meet.</h3>
+              </div>
             </motion.div>
           </div>
 
@@ -406,8 +408,8 @@ const Careers = () => {
               </div>
               </>
             ) : (
-              <div className="text-center py-16 w-full">
-                <p className="text-slate-500 text-lg">No openings available at the moment. Check back soon!</p>
+              <div className="no-openings-state">
+                <p>No openings available at the moment. Check back soon!</p>
               </div>
             )}
           </div>

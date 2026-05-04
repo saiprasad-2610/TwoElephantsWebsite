@@ -266,6 +266,18 @@
   margin-top: 0;
 }
 
+.form-error-message {
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  border-radius: 8px;
+  background: rgba(254, 242, 242, 0.95);
+  color: #b91c1c;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  padding: 12px 14px;
+}
+
 .form-submit {
   width: 100%;
   background: #080E1C;
