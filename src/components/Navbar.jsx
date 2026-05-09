@@ -129,15 +129,8 @@ const Navbar = () => {
 
   const handleSectionLinkClick = useCallback((sectionId) => {
     closeMobileMenu();
-
-    if (location.pathname === '/') {
-      scrollToSection(sectionId);
-      return;
-    }
-
-    window.sessionStorage.setItem('pendingSection', sectionId);
-    navigate('/');
-  }, [closeMobileMenu, location.pathname, navigate, scrollToSection]);
+    navigate(`/?scroll=${sectionId}`);
+  }, [closeMobileMenu, navigate]);
 
   const handleMobileItemClick = useCallback((item) => {
     if (item.sectionId) {
@@ -149,17 +142,7 @@ const Navbar = () => {
     navigate(item.path);
   }, [closeMobileMenu, handleSectionLinkClick, navigate]);
 
-  useEffect(() => {
-    if (location.pathname !== '/') return;
-
-    const pendingSection = window.sessionStorage.getItem('pendingSection');
-    if (!pendingSection) return;
-
-    window.sessionStorage.removeItem('pendingSection');
-    window.requestAnimationFrame(() => {
-      scrollToSection(pendingSection);
-    });
-  }, [location.pathname, scrollToSection]);
+  const activeScrollSection = new URLSearchParams(location.search).get('scroll');
 
   useEffect(() => {
     if (location.pathname !== '/') {
@@ -255,8 +238,10 @@ const Navbar = () => {
           onMouseLeave={() => setHoveredItemId(null)}
           style={{ position: 'relative' }}
         >
-          {NAV_ITEMS.map((item, idx) => {
-            const isActive = isNavItemActive(item);
+          {navItems.map((item, idx) => {
+            const isActive = item.sectionId
+              ? location.pathname === '/' && item.sectionId === 'home'
+              : location.pathname === item.path;
             const isHovered = hoveredItemId === item.id;
             const anyHovered = hoveredItemId !== null;
 
@@ -277,11 +262,18 @@ const Navbar = () => {
                   onMouseLeave={() => setHoveredItemId(null)}
                 >
                   <Link
-                    to={item.path}
+                    to={item.sectionId ? `/?scroll=${item.sectionId}` : item.path}
                     onClick={(event) => {
                       if (item.sectionId) {
                         event.preventDefault();
                         handleSectionLinkClick(item.sectionId);
+                        setClickedItemId(item.id);
+                        setIsClicked(true);
+                        setTimeout(() => {
+                          setClickedItemId(null);
+                          setIsClicked(false);
+                        }, 200);
+                        return;
                       }
 
                       setClickedItemId(item.id);

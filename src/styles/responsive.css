@@ -3,7 +3,7 @@
 @media (min-width: 901px) and (max-width: 1280px) {
   .hero {
     padding-top: 80px; /* ensures eyebrow clears the fixed navbar */
-    min-height: 80vh;
+    min-height: 100vh;
     height: auto;
   }
 
@@ -208,9 +208,9 @@
 
   .hero {
     min-height: 100dvh;
-    height: 100dvh;
+    height: auto;
     padding-top: 72px;
-    padding-bottom: 0;
+    padding-bottom: 28px;
   }
 
   .hero .container {
@@ -463,6 +463,10 @@
   .story-grid {
     text-align: center;
     gap: 40px;
+  }
+
+  .story-hero h1{
+    margin-right: 25px;
   }
 
   .story-images,
@@ -1337,6 +1341,27 @@
     text-align: center;
   }
 
+  .typewriter-container {
+    height: auto !important;
+    min-height: 4em;
+    overflow: visible;
+    margin-bottom: 20px;
+    padding-right: 10px;
+  }
+
+  .typewriter-text {
+    display: block;
+    font-size: clamp(14px, 4.2vw, 16px);
+    line-height: 1.5;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  .typewriter-cursor {
+    display: none;
+  }
+
   .hero-buttons {
     width: min(100%, 340px);
     flex-direction: column;
@@ -1430,10 +1455,34 @@
   }
 }
 
+@media (max-width: 375px) {
+  .typewriter-container {
+    min-height: 4.2em;
+    margin-bottom: 16px;
+    padding-right: 8px;
+  }
+
+  .typewriter-text {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+}
+
 @media (max-width: 320px) {
   .container {
     padding-left: 12px !important;
     padding-right: 12px !important;
+  }
+
+  .typewriter-container {
+    min-height: 4.4em;
+    margin-bottom: 16px;
+    padding-right: 6px;
+  }
+
+  .typewriter-text {
+    font-size: 12px;
+    line-height: 1.5;
   }
 
   .hero-title {
@@ -1563,3 +1612,10 @@
   }
 }
 
+@media (min-width: 375px) and (max-width: 768px) {
+  .custom-mobile-btn {
+    padding: 15px; 
+    font-size: 15px;     
+    line-height: 17px;
+  }
+}

@@ -745,8 +745,8 @@ body.no-scroll {
 ═══════════════════════════════════════════ */
 .hero {
   position: relative;
-  height: 100dvh;
   min-height: 100vh;
+  height: auto;
   background: var(--color-navy);
   display: flex;
   align-items: center;

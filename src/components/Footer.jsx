@@ -137,7 +137,7 @@ const Footer = () => {
               <li><Link to="/story">Our Story</Link></li>
               <li><Link to="/services">Services</Link></li>
               <li><Link to="/?scroll=team">Team</Link></li>
-              <li><Link to="/insights">Insights</Link></li>
+              <li><Link to="/?scroll=insights">Insights</Link></li>
               <li><Link to="/careers">Careers</Link></li>
               <li><Link to="/contact">Contact</Link></li>
             </ul>
@@ -148,6 +148,7 @@ const Footer = () => {
             <h4 className="f-col-title">Services</h4>
             <div className="f-services-grid">
               <ul className="f-links">
+              <li><Link to="/services?scroll=erp">Enterprise Resource Planning</Link></li>
               <li><Link to="/services?scroll=cybersecurity">Cybersecurity & Compliance</Link></li>
               <li><Link to="/services?scroll=fintech">FinTech & Banking</Link></li>
               <li><Link to="/services?scroll=ai-ml">AI & ML Automation</Link></li>

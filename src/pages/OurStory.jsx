@@ -365,8 +365,8 @@ const OurStory = () => {
                <span>Honesty</span>
             </div>
             <div className="closing-actions">
-              <Link to="/contact" className="btn btn-primary">Partner With Us</Link>
-              <Link to="/careers" className="btn btn-primary">Join the Team</Link>
+              <Link to="/contact" className="btn btn-primary custom-mobile-btn">Partner With Us</Link>
+              <Link to="/careers" className="btn btn-primary custom-mobile-btn">Join the Team</Link>
             </div>
           </div>
         </section>
