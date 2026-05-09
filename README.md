@@ -17,7 +17,7 @@ This project demonstrates best practices in **component-based development**, reu
 Example:
 
 ```
-https://twoelephantswebsite.vercel.app
+https://www.twoelephants.org
 ```
 
 ---
