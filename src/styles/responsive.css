@@ -790,6 +790,162 @@
   }
 }
 
+@media (min-width: 768px) and (max-width: 900px) {
+  .nav-links {
+    display: flex !important;
+    gap: 2px !important;
+  }
+
+  .nav-actions {
+    display: none !important;
+  }
+
+  .menu-btn {
+    display: none !important;
+  }
+
+  .nav-inner {
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+    gap: 10px;
+  }
+
+  .logo {
+    gap: 8px;
+  }
+
+  .logo img {
+    height: 42px !important;
+  }
+
+  .logo-main {
+    font-size: 18px;
+  }
+
+  .logo-sub {
+    font-size: 8px;
+  }
+
+  .nav-item-link {
+    padding: 7px 8px !important;
+  }
+
+  .nav-item-link > span {
+    font-size: 11px !important;
+  }
+
+  .insights-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 28px !important;
+  }
+
+  .blog-img-wrap {
+    aspect-ratio: 16 / 10;
+    height: auto !important;
+  }
+
+  .story-section .services-header {
+    margin-bottom: 30px;
+  }
+
+  .story-grid {
+    grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr) !important;
+    align-items: center;
+    gap: 32px !important;
+    text-align: left;
+  }
+
+  .story-images,
+  .story-content {
+    max-width: none;
+    min-width: 0;
+  }
+
+  .story-content {
+    align-items: flex-start;
+  }
+
+  .story-content .h2-title,
+  .story-content .body-text {
+    text-align: left;
+  }
+
+  .story-content .h2-title {
+    font-size: clamp(30px, 4.2vw, 36px) !important;
+    margin-bottom: 18px;
+  }
+
+  .story-content .body-text {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .image-stack {
+    width: 100%;
+    height: clamp(330px, 44vw, 390px);
+    padding: 22px 12px 28px;
+    margin: 0;
+  }
+
+  .story-img-main {
+    width: 82%;
+    height: clamp(220px, 30vw, 270px);
+    margin: 0;
+    object-fit: cover;
+    border-radius: 22px;
+  }
+
+  .story-img-fg {
+    position: absolute;
+    width: 54%;
+    height: clamp(150px, 21vw, 190px);
+    right: 0;
+    bottom: 18px;
+    border: 6px solid #fff;
+    border-radius: 18px;
+    object-fit: cover;
+  }
+
+  .story-img-card {
+    position: absolute !important;
+    width: auto;
+    padding: 12px 18px;
+    border-radius: 14px;
+  }
+
+  .card-legacy {
+    top: 10px !important;
+    left: 0 !important;
+  }
+
+  .card-tech {
+    left: 8px !important;
+    bottom: 72px !important;
+    flex-direction: row !important;
+    align-items: center;
+  }
+
+  .legacy-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 24px 0;
+  }
+
+  .l-number {
+    font-size: 32px;
+  }
+
+  .l-label {
+    font-size: 10px;
+  }
+
+  .pull-quote {
+    margin: 26px 0;
+    padding-left: 22px;
+    font-size: 21px;
+  }
+}
+
 @media (max-width: 640px) {
   .container {
     padding-left: 16px !important;
@@ -1000,7 +1156,7 @@
 
 @media (min-width: 641px) and (max-width: 768px) {
   .footer-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 24px !important;
   }
 
@@ -1015,6 +1171,99 @@
 
   .f-contact {
     gap: 10px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 900px) {
+  footer {
+    padding: 44px 0 24px;
+  }
+
+  footer .container {
+    padding-left: 28px !important;
+    padding-right: 28px !important;
+  }
+
+  footer .logo {
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+  }
+
+  footer .logo img {
+    height: 36px !important;
+  }
+
+  footer .logo-main {
+    font-size: 21px;
+  }
+
+  footer .logo-sub {
+    font-size: 9px;
+  }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 30px 42px !important;
+    margin-bottom: 36px;
+    text-align: left;
+  }
+
+  .f-brand {
+    grid-column: 1 / -1;
+    max-width: 520px;
+  }
+
+  .f-brand br {
+    display: none;
+  }
+
+  .f-desc {
+    margin-top: 14px;
+    max-width: 460px;
+  }
+
+  .f-col-title {
+    margin-bottom: 12px;
+    font-size: 15px;
+  }
+
+  .f-links {
+    align-items: flex-start;
+    gap: 7px;
+    text-align: left;
+  }
+
+  .f-links a {
+    white-space: normal;
+    line-height: 1.35;
+    font-size: 13px;
+  }
+
+  .contact-item {
+    gap: 10px;
+  }
+
+  .contact-item a,
+  .contact-item p {
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .footer-bottom {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px 20px;
+    align-items: center;
+    text-align: left;
+  }
+
+  .footer-bottom > div:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .f-bottom-links {
+    justify-content: flex-end;
   }
 }
 

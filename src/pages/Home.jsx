@@ -839,7 +839,9 @@ const Insights = ({ articles }) => {
               ))}
             </motion.div>
           ) : (
-            <p className="text-center text-gray-500 py-12">No articles available at the moment.</p>
+            <div className="insights-empty-state">
+              <p>No articles available at the moment.</p>
+            </div>
           )}
 
           {/* Explore More Button */}

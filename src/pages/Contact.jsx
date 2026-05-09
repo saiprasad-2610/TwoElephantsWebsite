@@ -22,6 +22,7 @@ const API_BASE = '';
 const NAME_MAX_LENGTH = 50;
 const EMAIL_MAX_LENGTH = 254;
 const MESSAGE_MAX_LENGTH = 1000;
+const NAME_PATTERN = /^[A-Za-z]+$/;
 const TEXT_ONLY_FIELDS = new Set(['fname', 'lname', 'location']);
 const DUPLICATE_SUBMISSION_MESSAGE =
   'You have already submitted this form. Please wait before submitting again.';
@@ -51,6 +52,10 @@ const validateContactField = (id, value) => {
 
   if ((id === 'fname' || id === 'lname') && trimmedValue.length > NAME_MAX_LENGTH) {
     return `Name cannot be longer than ${NAME_MAX_LENGTH} characters.`;
+  }
+
+  if ((id === 'fname' || id === 'lname') && value && !NAME_PATTERN.test(value)) {
+    return 'Name can contain only letters.';
   }
 
   if (id === 'email' && trimmedValue.length > EMAIL_MAX_LENGTH) {
@@ -431,6 +436,7 @@ const Contact = () => {
                                 id="fname" 
                                 name="fname"
                                 required 
+                                pattern="[A-Za-z]+"
                                 placeholder="Enter First Name" 
                                 onChange={handleChange} 
                                 value={formData.fname} 
@@ -444,6 +450,7 @@ const Contact = () => {
                                 id="lname" 
                                 name="lname"
                                 required 
+                                pattern="[A-Za-z]+"
                                 placeholder="Enter Last Name" 
                                 onChange={handleChange} 
                                 value={formData.lname} 

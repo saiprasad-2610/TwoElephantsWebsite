@@ -147,8 +147,8 @@ const Insights = () => {
                 ))}
               </motion.div>
             ) : (
-              <div className="text-center py-12">
-                <p className="text-gray-500">No articles available at the moment.</p>
+              <div className="insights-empty-state">
+                <p>No articles available at the moment.</p>
               </div>
             )}
           </div>

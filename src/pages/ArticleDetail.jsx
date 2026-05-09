@@ -7,8 +7,8 @@ import {
   FaUser,
   FaCalendar,
   FaClock,
-  FaGlobe,
-  FaPaperPlane,
+  FaLinkedinIn,
+  FaTwitter,
   FaLink,
   FaArrowLeft
 } from "react-icons/fa";
@@ -26,15 +26,20 @@ const getImageUrl = (url) => {
   return url;
 };
 
+const getArticleSlug = (article) => article?.slug || article?.id;
+
 const ArticleDetail = () => {
   const { slug } = useParams();
   const [article, setArticle] = useState(null);
   const [allArticles, setAllArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [copyTooltip, setCopyTooltip] = useState('Copy article link');
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setLoading(true);
+    setError(false);
     fetchData();
 
     const updateProgress = () => {
@@ -98,7 +103,10 @@ const ArticleDetail = () => {
     );
   }
 
-  const relatedArticles = allArticles.filter(a => a.cat === article.cat && a.slug !== slug).slice(0, 2);
+  const currentArticleSlug = getArticleSlug(article) || slug;
+  const relatedArticles = allArticles
+    .filter(a => a.cat === article.cat && getArticleSlug(a) !== currentArticleSlug)
+    .slice(0, 2);
   const shareUrl = window.location.href;
   const shareTitle = article.title;
 
@@ -113,8 +121,12 @@ const ArticleDetail = () => {
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
+      setCopyTooltip('Link copied');
+      window.setTimeout(() => setCopyTooltip('Copy article link'), 2000);
     } catch (err) {
       console.error('Failed to copy link:', err);
+      setCopyTooltip('Copy failed');
+      window.setTimeout(() => setCopyTooltip('Copy article link'), 2000);
     }
   };
 
@@ -178,14 +190,35 @@ const ArticleDetail = () => {
                 <div className="share-box">
                   <span className="share-label">Share this insight</span>
                   <div className="share-actions">
-                    <button className="share-btn" onClick={shareOnLinkedIn}>
-                      <FaGlobe size={16} />
+                    <button
+                      type="button"
+                      className="share-btn"
+                      onClick={shareOnLinkedIn}
+                      aria-label="Share on LinkedIn"
+                      title="Share on LinkedIn"
+                      data-tooltip="Share on LinkedIn"
+                    >
+                      <FaLinkedinIn size={16} aria-hidden="true" focusable="false" />
                     </button>
-                    <button className="share-btn" onClick={shareOnTwitter}>
-                      <FaPaperPlane size={16} />
+                    <button
+                      type="button"
+                      className="share-btn"
+                      onClick={shareOnTwitter}
+                      aria-label="Share on Twitter"
+                      title="Share on Twitter"
+                      data-tooltip="Share on Twitter"
+                    >
+                      <FaTwitter size={16} aria-hidden="true" focusable="false" />
                     </button>
-                    <button className="share-btn" onClick={copyLink}>
-                      <FaLink size={16} />
+                    <button
+                      type="button"
+                      className="share-btn"
+                      onClick={copyLink}
+                      aria-label="Copy article link"
+                      title={copyTooltip}
+                      data-tooltip={copyTooltip}
+                    >
+                      <FaLink size={16} aria-hidden="true" focusable="false" />
                     </button>
                   </div>
                 </div>
@@ -201,13 +234,18 @@ const ArticleDetail = () => {
                 <div className="related-articles">
                   <h3>Related Articles</h3>
                   <div className="related-grid">
-                    {relatedArticles.map((rel) => (
-                      <Link key={rel.slug} to={`/insights/${rel.slug}`} className="related-card">
+                    {relatedArticles.map((rel) => {
+                      const relatedSlug = getArticleSlug(rel);
+                      if (!relatedSlug) return null;
+
+                      return (
+                      <Link key={relatedSlug} to={`/insights/${relatedSlug}`} className="related-card">
                         {rel.img && <img src={getImageUrl(rel.img)} alt={rel.title} />}
                         <span className="blog-cat">{rel.cat}</span>
                         <h4>{rel.title}</h4>
                       </Link>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               )}

@@ -60,12 +60,23 @@ const ClickRipple = ({ trigger, color = 'rgba(96, 165, 250, 0.4)' }) => {
 /* ═══════════════════════════════════════════
    MAIN NAVBAR
 ═══════════════════════════════════════════ */
+const NAV_ITEMS = [
+  { id: 'home', name: 'Home', path: '/', sectionId: 'home' },
+  { id: 'story', name: 'Our Story', path: '/story' },
+  { id: 'services', name: 'Services', path: '/services' },
+  { id: 'team', name: 'Team', path: '/', sectionId: 'team' },
+  { id: 'insights', name: 'Insights', path: '/', sectionId: 'insights' },
+  { id: 'careers', name: 'Careers', path: '/careers' },
+  { id: 'contact', name: 'Contact', path: '/contact' },
+];
+
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredItemId, setHoveredItemId] = useState(null);
   const [clickedItemId, setClickedItemId] = useState(null);
   const [isClicked, setIsClicked] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -111,19 +122,10 @@ const Navbar = () => {
   const scrollToSection = useCallback((sectionId) => {
     const section = document.getElementById(sectionId);
     if (section) {
+      setActiveSection(sectionId);
       section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, []);
-
-  const navItems = [
-    { id: 'home', name: 'Home', path: '/', sectionId: 'home' },
-    { id: 'story', name: 'Our Story', path: '/story' },
-    { id: 'services', name: 'Services', path: '/services' },
-    { id: 'team', name: 'Team', path: '/', sectionId: 'team' },
-    { id: 'insights', name: 'Insights', path: '/', sectionId: 'insights' },
-    { id: 'careers', name: 'Careers', path: '/careers' },
-    { id: 'contact', name: 'Contact', path: '/contact' },
-  ];
 
   const handleSectionLinkClick = useCallback((sectionId) => {
     closeMobileMenu();
@@ -158,6 +160,57 @@ const Navbar = () => {
       scrollToSection(pendingSection);
     });
   }, [location.pathname, scrollToSection]);
+
+  useEffect(() => {
+    if (location.pathname !== '/') {
+      return;
+    }
+
+    const sectionIds = NAV_ITEMS
+      .map((item) => item.sectionId)
+      .filter(Boolean);
+
+    const updateActiveSection = () => {
+      const navOffset = 96;
+      if (window.scrollY <= navOffset) {
+        setActiveSection('home');
+        return;
+      }
+
+      const currentSection = sectionIds.reduce((current, sectionId) => {
+        const section = document.getElementById(sectionId);
+        if (!section) {
+          return current;
+        }
+
+        const sectionTop = section.getBoundingClientRect().top;
+        return sectionTop <= navOffset ? sectionId : current;
+      }, 'home');
+
+      setActiveSection(currentSection);
+    };
+
+    updateActiveSection();
+    window.addEventListener('scroll', updateActiveSection, { passive: true });
+    window.addEventListener('resize', updateActiveSection);
+
+    return () => {
+      window.removeEventListener('scroll', updateActiveSection);
+      window.removeEventListener('resize', updateActiveSection);
+    };
+  }, [location.pathname]);
+
+  const isNavItemActive = useCallback((item) => {
+    if (location.pathname === '/') {
+      return item.sectionId ? activeSection === item.sectionId : false;
+    }
+
+    if (item.id === 'insights') {
+      return location.pathname.startsWith('/insights');
+    }
+
+    return !item.sectionId && location.pathname === item.path;
+  }, [activeSection, location.pathname]);
 
   return (
     <motion.nav
@@ -202,10 +255,8 @@ const Navbar = () => {
           onMouseLeave={() => setHoveredItemId(null)}
           style={{ position: 'relative' }}
         >
-          {navItems.map((item, idx) => {
-            const isActive = item.sectionId
-              ? location.pathname === '/' && item.sectionId === 'home'
-              : location.pathname === item.path;
+          {NAV_ITEMS.map((item, idx) => {
+            const isActive = isNavItemActive(item);
             const isHovered = hoveredItemId === item.id;
             const anyHovered = hoveredItemId !== null;
 
@@ -240,7 +291,7 @@ const Navbar = () => {
                         setIsClicked(false);
                       }, 200);
                     }}
-                    className="nav-item-link"
+                    className={`nav-item-link${isActive ? ' active' : ''}`}
                     style={{
                       position: 'relative',
                       display: 'inline-block',
@@ -313,7 +364,7 @@ const Navbar = () => {
             style={{ marginLeft: '8px' }}
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.2 + navItems.length * 0.07 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.2 + NAV_ITEMS.length * 0.07 }}
             whileHover={{ scale: 1.07 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -365,7 +416,7 @@ const Navbar = () => {
         </Link>
 
         <div className="mobile-menu-links">
-          {navItems.filter(item => item.name !== 'Contact').map((item) => {
+          {NAV_ITEMS.filter(item => item.name !== 'Contact').map((item) => {
             return (
               <button
                 type="button"
