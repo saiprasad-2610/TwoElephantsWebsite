@@ -41,7 +41,7 @@ const getImageUrl = (url) => {
 
 
 
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 
 // Import images
 import logo from '../assets/images/logo1.svg';

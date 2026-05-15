@@ -18,7 +18,7 @@ const getImageUrl = (url) => {
   return url;
 };
 
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 
 
 

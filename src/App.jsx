@@ -8,10 +8,17 @@ import Careers from './pages/Careers'
 import Services from './pages/Services'
 import Insights from './pages/Insights'
 import NotFound from './pages/NotFound'
+import Chatbot from './components/Chatbot'
+import './styles/chatbot.css'
 
 function App() {
+  const routerFutureFlags = {
+    v7_startTransition: true,
+    v7_relativeSplatPath: true,
+  };
+
   return (
-    <HashRouter>
+    <HashRouter future={routerFutureFlags}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/story" element={<OurStory />} />
@@ -22,6 +29,7 @@ function App() {
         <Route path="/careers" element={<Careers />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Chatbot />
     </HashRouter>
   )
 }
