@@ -22,33 +22,66 @@ const API_BASE = '';
 const NAME_MAX_LENGTH = 50;
 const EMAIL_MAX_LENGTH = 254;
 const MESSAGE_MAX_LENGTH = 1000;
+const REQUIRED_FIELD_MESSAGE = 'Please fill out this field.';
+const MALICIOUS_CONTENT_MESSAGE = 'Message cannot include HTML, scripts, or executable content.';
 const NAME_PATTERN = /^[A-Za-z]+$/;
-const TEXT_ONLY_FIELDS = new Set(['fname', 'lname', 'location']);
+const LOCATION_PATTERN = /^[A-Za-z\s,-]{2,50}$/;
+const LOCATION_ALLOWED_PATTERN = /^[A-Za-z\s,-]+$/;
+const LOCATION_MIN_LENGTH = 2;
+const LOCATION_MAX_LENGTH = 50;
+const LOCATION_INPUT_ERROR = 'Only letters, spaces, commas and hyphens are allowed';
+const LETTERS_ONLY_PATTERN = /[^A-Za-z]/g;
+const NAME_INPUT_ERROR = 'Only letters are allowed.';
+const EMAIL_PATTERN = /^(?![.])(?!.*[.]{2})(?!.*[.]@)[A-Za-z0-9._+-]+@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/;
+const EMAIL_ALLOWED_INPUT_PATTERN = /^[A-Za-z0-9._+@-]+$/;
+const EMAIL_USERNAME_PATTERN = /^[A-Za-z0-9._+-]*$/;
+const EMAIL_DOMAIN_PATTERN = /^[A-Za-z0-9.-]*$/;
+const EMAIL_INPUT_ERROR = 'Email can contain only letters, numbers, dot, underscore, hyphen, plus, and one @ symbol.';
+const EMAIL_RULE_MESSAGES = {
+  invalidCharacters: EMAIL_INPUT_ERROR,
+  multipleAt: 'Email can contain only one @ symbol.',
+  startsWithDot: "Email can't start with dot (.).",
+  consecutiveDots: 'Email cannot contain consecutive dots.',
+  dotBeforeAt: "Username can't end with dot (.) before @.",
+  missingUsername: 'Email username is required before @.',
+  invalidUsername: 'Username can contain only letters, numbers, dot, underscore, hyphen, and plus.',
+  invalidDomain: 'Domain can contain only letters, numbers, dot, and hyphen.',
+  domainStartsWithDot: "Domain can't start with dot (.).",
+  domainStartsWithHyphen: "Domain can't start with hyphen (-).",
+  invalidDomainDotHyphen: "Domain can't place dot and hyphen together.",
+  tooLong: `Email cannot be longer than ${EMAIL_MAX_LENGTH} characters.`,
+};
+const TEXT_ONLY_FIELDS = new Set(['fname', 'lname']);
+const CONTACT_FORM_FIELDS = ['fname', 'lname', 'email', 'location', 'interest', 'message'];
 const DUPLICATE_SUBMISSION_MESSAGE =
   'You have already submitted this form. Please wait before submitting again.';
 const DUPLICATE_SUBMISSION_WINDOW_MS = 10 * 60 * 1000;
 const DUPLICATE_SUBMISSION_KEY = 'two-elephants-contact-submission';
+const CONTROL_CHARACTER_PATTERN = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
+const DANGEROUS_MESSAGE_PATTERN =
+  /(?:<\s*\/?\s*[a-z][^>]*>|&lt;\s*\/?\s*[a-z][\s\S]*?&gt;|javascript\s*:|data\s*:\s*text\/html|on[a-z]+\s*=)/i;
 
 const isValidEmail = (value) => {
   const email = value.trim();
-  const parts = email.split('@');
 
-  if (parts.length !== 2) return false;
-
-  const [localPart, domain] = parts;
-  if (!localPart || !domain || localPart.startsWith('.') || localPart.endsWith('.')) {
-    return false;
-  }
-
-  const domainLabels = domain.split('.');
-  if (domainLabels.length < 2) return false;
-
-  return domainLabels.every(label => /^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$/.test(label))
-    && /^[A-Za-z]{2,}$/.test(domainLabels[domainLabels.length - 1]);
+  return EMAIL_PATTERN.test(email);
 };
 
+const stripMessageControlCharacters = (value) =>
+  value.replace(CONTROL_CHARACTER_PATTERN, '');
+
+const sanitizeMessageValue = (value) =>
+  stripMessageControlCharacters(value).trim();
+
+const hasDangerousMessageContent = (value) =>
+  DANGEROUS_MESSAGE_PATTERN.test(value);
+
 const validateContactField = (id, value) => {
-  const trimmedValue = value.trim();
+  const trimmedValue = id === 'message' ? sanitizeMessageValue(value) : value.trim();
+
+  if (CONTACT_FORM_FIELDS.includes(id) && !trimmedValue) {
+    return REQUIRED_FIELD_MESSAGE;
+  }
 
   if ((id === 'fname' || id === 'lname') && trimmedValue.length > NAME_MAX_LENGTH) {
     return `Name cannot be longer than ${NAME_MAX_LENGTH} characters.`;
@@ -62,16 +95,42 @@ const validateContactField = (id, value) => {
     return `Email cannot be longer than ${EMAIL_MAX_LENGTH} characters.`;
   }
 
-  if (TEXT_ONLY_FIELDS.has(id) && /\d/.test(value)) {
-    if (id === 'location') {
-      return 'Location / City cannot contain numbers.';
+  if (id === 'email' && trimmedValue && !isValidEmail(trimmedValue)) {
+    return 'Please enter a valid email address.';
+  }
+
+  if (id === 'location') {
+    if (
+      trimmedValue.length < LOCATION_MIN_LENGTH ||
+      trimmedValue.length > LOCATION_MAX_LENGTH
+    ) {
+      return 'Location must be between 2 and 50 characters';
     }
+
+    if (!LOCATION_ALLOWED_PATTERN.test(trimmedValue)) {
+      if (/^\d+$/.test(trimmedValue)) {
+        return 'Enter a valid city/location';
+      }
+
+      return 'Only letters, spaces, commas and hyphens are allowed';
+    }
+
+    if (!LOCATION_PATTERN.test(trimmedValue)) {
+      return 'Enter a valid city/location';
+    }
+  }
+
+  if (TEXT_ONLY_FIELDS.has(id) && /\d/.test(value)) {
     return 'Name cannot contain numbers.';
   }
 
   if (id === 'message') {
     if (trimmedValue.length > MESSAGE_MAX_LENGTH) {
       return `Message cannot be longer than ${MESSAGE_MAX_LENGTH} characters.`;
+    }
+
+    if (hasDangerousMessageContent(trimmedValue)) {
+      return MALICIOUS_CONTENT_MESSAGE;
     }
 
     if (trimmedValue && !/[A-Za-z]/.test(trimmedValue)) {
@@ -138,11 +197,57 @@ const Contact = () => {
     message: ''
   });
 
+  const hasFormErrors = Object.values(formErrors).some(Boolean);
+  const isFormCompleteAndValid = CONTACT_FORM_FIELDS.every(
+    (fieldId) => !validateContactField(fieldId, formData[fieldId])
+  );
+  const isSubmitDisabled =
+    formStatus === 'loading' || hasFormErrors || !isFormCompleteAndValid;
+
   const handleChange = (e) => {
     const { id, value } = e.target;
+
+    if (id === 'message' && /^\s/.test(value)) {
+      e.target.value = formData.message;
+      const message = 'Message cannot start with a space';
+      e.target.setCustomValidity(message);
+      setFormErrors({ ...formErrors, message });
+      return;
+    }
+
+    if (
+      id === 'location' &&
+      value &&
+      (/^\s/.test(value) || !LOCATION_ALLOWED_PATTERN.test(value) || value.length > LOCATION_MAX_LENGTH)
+    ) {
+      e.target.value = formData.location;
+      showLocationInputError(
+        e.target,
+        value.length > LOCATION_MAX_LENGTH
+          ? 'Location must be between 2 and 50 characters'
+          : /^\s/.test(value)
+            ? 'Location cannot start with a space'
+          : LOCATION_INPUT_ERROR
+      );
+      return;
+    }
+
     const nextValue = id === 'message'
-      ? value.slice(0, MESSAGE_MAX_LENGTH)
-      : value;
+      ? stripMessageControlCharacters(value).slice(0, MESSAGE_MAX_LENGTH)
+      : id === 'fname' || id === 'lname'
+        ? value.replace(LETTERS_ONLY_PATTERN, '').slice(0, NAME_MAX_LENGTH)
+        : id === 'email'
+          ? value.slice(0, EMAIL_MAX_LENGTH)
+        : value;
+
+    const emailPartialError = id === 'email' ? getEmailPartialError(nextValue) : '';
+
+    if (emailPartialError) {
+      e.target.value = formData.email;
+      showEmailInputError(e.target, emailPartialError);
+      return;
+    }
+
     const fieldError = validateContactField(id, nextValue);
 
     e.target.setCustomValidity(fieldError);
@@ -153,6 +258,300 @@ const Contact = () => {
     if (formStatus === 'error') {
       setFormStatus('idle');
     }
+  };
+
+  const showNameInputError = (input) => {
+    input.setCustomValidity(NAME_INPUT_ERROR);
+    setFormErrors((currentErrors) => ({
+      ...currentErrors,
+      [input.id]: NAME_INPUT_ERROR,
+    }));
+  };
+
+  const handleNameBeforeInput = (e) => {
+    if (e.data && !/^[A-Za-z]+$/.test(e.data)) {
+      e.preventDefault();
+      showNameInputError(e.currentTarget);
+    }
+  };
+
+  const handleNameKeyDown = (e) => {
+    if (
+      e.key.length === 1 &&
+      !e.ctrlKey &&
+      !e.metaKey &&
+      !e.altKey &&
+      !/^[A-Za-z]$/.test(e.key)
+    ) {
+      e.preventDefault();
+      showNameInputError(e.currentTarget);
+    }
+  };
+
+  const handleNamePaste = (e) => {
+    const pastedText = e.clipboardData.getData('text');
+
+    if (pastedText && !/^[A-Za-z]+$/.test(pastedText)) {
+      e.preventDefault();
+      showNameInputError(e.currentTarget);
+    }
+  };
+
+  const handleNameDrop = (e) => {
+    e.preventDefault();
+    showNameInputError(e.currentTarget);
+  };
+
+  const showLocationInputError = (input, message = LOCATION_INPUT_ERROR) => {
+    input.setCustomValidity(message);
+    setFormErrors((currentErrors) => ({
+      ...currentErrors,
+      location: message,
+    }));
+  };
+
+  const getLocationInputError = (value) => {
+    if (value.length > LOCATION_MAX_LENGTH) {
+      return 'Location must be between 2 and 50 characters';
+    }
+
+    if (/^\s/.test(value)) {
+      return 'Location cannot start with a space';
+    }
+
+    if (value && !LOCATION_ALLOWED_PATTERN.test(value)) {
+      return LOCATION_INPUT_ERROR;
+    }
+
+    return '';
+  };
+
+  const handleLocationBeforeInput = (e) => {
+    const locationError = e.data
+      ? getLocationInputError(getNextInputValue(e.currentTarget, e.data))
+      : '';
+
+    if (locationError) {
+      e.preventDefault();
+      showLocationInputError(e.currentTarget, locationError);
+    }
+  };
+
+  const handleLocationKeyDown = (e) => {
+    const locationError = e.key.length === 1
+      ? getLocationInputError(getNextInputValue(e.currentTarget, e.key))
+      : '';
+
+    if (
+      e.key.length === 1 &&
+      !e.ctrlKey &&
+      !e.metaKey &&
+      !e.altKey &&
+      locationError
+    ) {
+      e.preventDefault();
+      showLocationInputError(e.currentTarget, locationError);
+    }
+  };
+
+  const handleLocationPaste = (e) => {
+    const pastedText = e.clipboardData.getData('text');
+    const locationError = pastedText
+      ? getLocationInputError(getNextInputValue(e.currentTarget, pastedText))
+      : '';
+
+    if (locationError) {
+      e.preventDefault();
+      showLocationInputError(e.currentTarget, locationError);
+    }
+  };
+
+  const handleLocationDrop = (e) => {
+    e.preventDefault();
+    showLocationInputError(e.currentTarget);
+  };
+
+  const showMessageInputError = (input, message = 'Message cannot start with a space') => {
+    input.setCustomValidity(message);
+    setFormErrors((currentErrors) => ({
+      ...currentErrors,
+      message,
+    }));
+  };
+
+  const getMessageInputError = (value) => {
+    if (/^\s/.test(value)) {
+      return 'Message cannot start with a space';
+    }
+
+    if (hasDangerousMessageContent(value)) {
+      return MALICIOUS_CONTENT_MESSAGE;
+    }
+
+    return '';
+  };
+
+  const handleMessageBeforeInput = (e) => {
+    const messageError = e.data
+      ? getMessageInputError(getNextInputValue(e.currentTarget, e.data))
+      : '';
+
+    if (messageError) {
+      e.preventDefault();
+      showMessageInputError(e.currentTarget, messageError);
+    }
+  };
+
+  const handleMessageKeyDown = (e) => {
+    const messageError = e.key.length === 1
+      ? getMessageInputError(getNextInputValue(e.currentTarget, e.key))
+      : '';
+
+    if (
+      e.key.length === 1 &&
+      !e.ctrlKey &&
+      !e.metaKey &&
+      !e.altKey &&
+      messageError
+    ) {
+      e.preventDefault();
+      showMessageInputError(e.currentTarget, messageError);
+    }
+  };
+
+  const handleMessagePaste = (e) => {
+    const pastedText = e.clipboardData.getData('text');
+    const messageError = pastedText
+      ? getMessageInputError(getNextInputValue(e.currentTarget, pastedText))
+      : '';
+
+    if (messageError) {
+      e.preventDefault();
+      showMessageInputError(e.currentTarget, messageError);
+    }
+  };
+
+  const handleMessageDrop = (e) => {
+    e.preventDefault();
+    showMessageInputError(e.currentTarget);
+  };
+
+  const showEmailInputError = (input, message = EMAIL_INPUT_ERROR) => {
+    input.setCustomValidity(message);
+    setFormErrors((currentErrors) => ({
+      ...currentErrors,
+      email: message,
+    }));
+  };
+
+  const getFieldErrorMessage = (input) => {
+    if (input.validity.valueMissing) {
+      return REQUIRED_FIELD_MESSAGE;
+    }
+
+    if (input.id === 'email' && input.validity.typeMismatch) {
+      return 'Please enter a valid email address.';
+    }
+
+    if ((input.id === 'fname' || input.id === 'lname') && input.validity.patternMismatch) {
+      return 'Name can contain only letters.';
+    }
+
+    return validateContactField(input.id, input.value);
+  };
+
+  const handleInvalid = (e) => {
+    const message = getFieldErrorMessage(e.currentTarget);
+
+    e.currentTarget.setCustomValidity(message);
+    setFormErrors((currentErrors) => ({
+      ...currentErrors,
+      [e.currentTarget.id]: message,
+    }));
+  };
+
+  const getNextInputValue = (input, incomingValue) => {
+    const start = input.selectionStart ?? input.value.length;
+    const end = input.selectionEnd ?? input.value.length;
+
+    return `${input.value.slice(0, start)}${incomingValue}${input.value.slice(end)}`;
+  };
+
+  const getEmailPartialError = (value) => {
+    if (!value) return '';
+    if (value.length > EMAIL_MAX_LENGTH) {
+      return EMAIL_RULE_MESSAGES.tooLong;
+    }
+
+    if (!EMAIL_ALLOWED_INPUT_PATTERN.test(value)) {
+      return EMAIL_RULE_MESSAGES.invalidCharacters;
+    }
+
+    const firstAtIndex = value.indexOf('@');
+    const lastAtIndex = value.lastIndexOf('@');
+    if (firstAtIndex !== lastAtIndex) return EMAIL_RULE_MESSAGES.multipleAt;
+
+    const hasAtSymbol = firstAtIndex !== -1;
+    const username = hasAtSymbol ? value.slice(0, firstAtIndex) : value;
+    const domain = hasAtSymbol ? value.slice(firstAtIndex + 1) : '';
+
+    if (!EMAIL_USERNAME_PATTERN.test(username)) return EMAIL_RULE_MESSAGES.invalidUsername;
+    if (username.startsWith('.')) return EMAIL_RULE_MESSAGES.startsWithDot;
+    if (username.includes('..')) return EMAIL_RULE_MESSAGES.consecutiveDots;
+    if (hasAtSymbol && !username) return EMAIL_RULE_MESSAGES.missingUsername;
+    if (hasAtSymbol && username.endsWith('.')) return EMAIL_RULE_MESSAGES.dotBeforeAt;
+
+    if (!hasAtSymbol) return '';
+    if (!EMAIL_DOMAIN_PATTERN.test(domain)) return EMAIL_RULE_MESSAGES.invalidDomain;
+    if (domain.startsWith('.')) return EMAIL_RULE_MESSAGES.domainStartsWithDot;
+    if (domain.startsWith('-')) return EMAIL_RULE_MESSAGES.domainStartsWithHyphen;
+    if (domain.includes('..')) return EMAIL_RULE_MESSAGES.consecutiveDots;
+    if (domain.includes('.-') || domain.includes('-.')) return EMAIL_RULE_MESSAGES.invalidDomainDotHyphen;
+
+    return '';
+  };
+
+  const handleEmailBeforeInput = (e) => {
+    const emailError = e.data ? getEmailPartialError(getNextInputValue(e.currentTarget, e.data)) : '';
+
+    if (emailError) {
+      e.preventDefault();
+      showEmailInputError(e.currentTarget, emailError);
+    }
+  };
+
+  const handleEmailKeyDown = (e) => {
+    const emailError = e.key.length === 1
+      ? getEmailPartialError(getNextInputValue(e.currentTarget, e.key))
+      : '';
+
+    if (
+      e.key.length === 1 &&
+      !e.ctrlKey &&
+      !e.metaKey &&
+      !e.altKey &&
+      emailError
+    ) {
+      e.preventDefault();
+      showEmailInputError(e.currentTarget, emailError);
+    }
+  };
+
+  const handleEmailPaste = (e) => {
+    const pastedText = e.clipboardData.getData('text');
+    const emailError = pastedText
+      ? getEmailPartialError(getNextInputValue(e.currentTarget, pastedText))
+      : '';
+
+    if (emailError) {
+      e.preventDefault();
+      showEmailInputError(e.currentTarget, emailError);
+    }
+  };
+
+  const handleEmailDrop = (e) => {
+    e.preventDefault();
+    showEmailInputError(e.currentTarget);
   };
 
   const handleSubmit = async (e) => {
@@ -170,7 +569,7 @@ const Contact = () => {
     const nextErrors = {};
     let firstInvalidField = null;
 
-    ['fname', 'lname', 'email', 'location', 'message'].forEach((fieldId) => {
+    CONTACT_FORM_FIELDS.forEach((fieldId) => {
       const fieldInput = e.currentTarget.elements[fieldId];
       const fieldError = validateContactField(fieldId, formData[fieldId]);
       fieldInput.setCustomValidity(fieldError);
@@ -197,7 +596,7 @@ const Contact = () => {
     const sanitizedFirstName = formData.fname.trim();
     const sanitizedLastName = formData.lname.trim();
     const sanitizedLocation = formData.location.trim();
-    const sanitizedMessage = formData.message.trim();
+    const sanitizedMessage = sanitizeMessageValue(formData.message);
     const sanitizedInterest = formData.interest.trim();
     const submissionFingerprint = createSubmissionFingerprint({
       fname: sanitizedFirstName,
@@ -438,10 +837,19 @@ const Contact = () => {
                                 required 
                                 pattern="[A-Za-z]+"
                                 placeholder="Enter First Name" 
+                                onBeforeInput={handleNameBeforeInput}
+                                onKeyDown={handleNameKeyDown}
+                                onPaste={handleNamePaste}
+                                onDrop={handleNameDrop}
                                 onChange={handleChange} 
+                                onInvalid={handleInvalid}
                                 value={formData.fname} 
+                                aria-describedby="fname-error"
                                 aria-invalid={Boolean(formErrors.fname)}
                               />
+                              {formErrors.fname && (
+                                <div className="field-error" id="fname-error">{formErrors.fname}</div>
+                              )}
                             </div>
                             <div className="form-group">
                               <label htmlFor="lname">Last Name *</label>
@@ -452,10 +860,19 @@ const Contact = () => {
                                 required 
                                 pattern="[A-Za-z]+"
                                 placeholder="Enter Last Name" 
+                                onBeforeInput={handleNameBeforeInput}
+                                onKeyDown={handleNameKeyDown}
+                                onPaste={handleNamePaste}
+                                onDrop={handleNameDrop}
                                 onChange={handleChange} 
+                                onInvalid={handleInvalid}
                                 value={formData.lname} 
+                                aria-describedby="lname-error"
                                 aria-invalid={Boolean(formErrors.lname)}
                               />
+                              {formErrors.lname && (
+                                <div className="field-error" id="lname-error">{formErrors.lname}</div>
+                              )}
                             </div>
                           </div>
 
@@ -469,20 +886,19 @@ const Contact = () => {
                                 required 
                                 inputMode="email"
                                 placeholder="Enter Email" 
+                                onBeforeInput={handleEmailBeforeInput}
+                                onKeyDown={handleEmailKeyDown}
+                                onPaste={handleEmailPaste}
+                                onDrop={handleEmailDrop}
                                 onChange={handleChange} 
+                                onInvalid={handleInvalid}
                                 value={formData.email} 
-                                onInvalid={(e) => {
-                                  const emailError = validateContactField('email', e.currentTarget.value);
-                                  if (emailError) {
-                                    e.currentTarget.setCustomValidity(emailError);
-                                    return;
-                                  }
-
-                                  if (e.currentTarget.value.trim()) {
-                                    e.currentTarget.setCustomValidity('please enter valid email');
-                                  }
-                                }}
+                                aria-describedby="email-error"
+                                aria-invalid={Boolean(formErrors.email)}
                               />
+                              {formErrors.email && (
+                                <div className="field-error" id="email-error">{formErrors.email}</div>
+                              )}
                             </div>
                             <div className="form-group">
                               <label htmlFor="location">Location / City *</label>
@@ -491,11 +907,21 @@ const Contact = () => {
                                 id="location" 
                                 name="location"
                                 required 
+                                minLength={LOCATION_MIN_LENGTH}
                                 placeholder="Enter Location" 
+                                onBeforeInput={handleLocationBeforeInput}
+                                onKeyDown={handleLocationKeyDown}
+                                onPaste={handleLocationPaste}
+                                onDrop={handleLocationDrop}
                                 onChange={handleChange} 
+                                onInvalid={handleInvalid}
                                 value={formData.location} 
+                                aria-describedby="location-error"
                                 aria-invalid={Boolean(formErrors.location)}
                               />
+                              {formErrors.location && (
+                                <div className="field-error" id="location-error">{formErrors.location}</div>
+                              )}
                             </div>
                           </div>
 
@@ -505,8 +931,11 @@ const Contact = () => {
                               id="interest" 
                               name="interest"
                               onChange={handleChange} 
+                              onInvalid={handleInvalid}
                               value={formData.interest}
                               required
+                              aria-describedby="interest-error"
+                              aria-invalid={Boolean(formErrors.interest)}
                             >
                               <option value="" disabled>Select a service area</option>
                               <option value="BFSI Technology">BFSI Technology</option>
@@ -515,24 +944,34 @@ const Contact = () => {
                               <option value="Cloud & AI Solutions">Cloud & AI Solutions</option>
                               <option value="Other">Other</option>
                             </select>
+                            {formErrors.interest && (
+                              <div className="field-error" id="interest-error">{formErrors.interest}</div>
+                            )}
                           </div>
 
-                          <div className="form-group">
+                          <div className="form-group message-form-group">
                             <label htmlFor="message">Your Message *</label>
                             <textarea 
                               id="message" 
                               name="message"
                               required 
                               placeholder="Tell us about your project..." 
+                              onBeforeInput={handleMessageBeforeInput}
+                              onKeyDown={handleMessageKeyDown}
+                              onPaste={handleMessagePaste}
+                              onDrop={handleMessageDrop}
                               onChange={handleChange} 
+                              onInvalid={handleInvalid}
                               value={formData.message}
                               maxLength={MESSAGE_MAX_LENGTH}
-                              aria-describedby="message-count"
+                              aria-describedby="message-error message-count"
                               aria-invalid={Boolean(formErrors.message)}
                               rows={5}
                             ></textarea>
-                            <div className="field-meta">
-                              <span></span>
+                            {formErrors.message && (
+                              <div className="field-error" id="message-error">{formErrors.message}</div>
+                            )}
+                            <div className="field-meta message-field-meta">
                               <span id="message-count">{formData.message.length}/{MESSAGE_MAX_LENGTH}</span>
                             </div>
                           </div>
@@ -546,7 +985,7 @@ const Contact = () => {
                           <button 
                             className="btn btn-primary form-submit" 
                             type="submit" 
-                            disabled={formStatus === 'loading'}
+                            disabled={isSubmitDisabled}
                           >
                             {formStatus === 'loading' ? (
                               <>Sending <Send size={18} style={{ marginLeft: '8px' }} /></>

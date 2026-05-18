@@ -1513,6 +1513,12 @@ body.no-scroll {
   gap: 40px;
 }
 
+.service-detail-card-wrap {
+  height: 100%;
+  border-radius: 30px;
+  outline: none;
+}
+
 .service-detail-card {
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(15, 23, 42, 0.08);
@@ -1525,6 +1531,25 @@ body.no-scroll {
 .service-detail-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 32px 80px rgba(15, 23, 42, 0.12);
+}
+
+.service-detail-card-wrap:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.75);
+  outline-offset: 6px;
+}
+
+.service-detail-card-wrap:focus-visible .service-detail-card {
+  transform: translateY(-6px);
+  box-shadow: 0 32px 80px rgba(15, 23, 42, 0.12);
+}
+
+.detailed-service-item:focus {
+  outline: none;
+}
+
+.detailed-service-item:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.75);
+  outline-offset: -10px;
 }
 
 .service-detail-badge {

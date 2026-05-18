@@ -251,6 +251,15 @@
   padding: 100px 0;
 }
 
+.keyboard-focus-section {
+  scroll-margin-top: 96px;
+}
+
+.keyboard-focus-section:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.75);
+  outline-offset: -8px;
+}
+
 /* CULTURE HIGHLIGHTS SECTION */
 .career-highlights-section {
   background: #F8F9FB;

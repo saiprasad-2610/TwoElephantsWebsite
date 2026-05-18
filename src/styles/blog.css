@@ -250,11 +250,11 @@
 }
 
 .featured-image {
+  display: block;
   width: 100%;
   height: auto;
-  max-height: min(500px, 62vh);
-  aspect-ratio: 16 / 8;
-  object-fit: cover;
+  aspect-ratio: 3 / 2;
+  object-fit: contain;
   object-position: center;
   border-radius: 22px;
   box-shadow: 0 20px 55px rgba(15, 23, 42, 0.14);

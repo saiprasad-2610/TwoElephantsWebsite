@@ -1,6 +1,6 @@
 import insights1 from "../assets/insights1.png";
-import insights2 from "../assets/insights2.jpeg";
-import insights3 from "../assets/insights3.jpg";
+import insights2 from "../assets/insights2.png";
+import insights3 from "../assets/insights3.png";
 
 
 export const articles = [

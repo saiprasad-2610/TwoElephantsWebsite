@@ -29,7 +29,6 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/blog.css';
 import '../styles/team.css';
-import '../styles/global.css';
 
 const API_BASE = '';
 
@@ -161,6 +160,10 @@ const Hero = () => {
               <div className="typewriter-text">{text}</div>
               <span className="typewriter-cursor">|</span>
             </div>
+            <div className="hero-badges hero-badges-main">
+              <span className="badge">BFSI &middot; Oil &amp; Gas &middot; Pharma</span>
+              <span className="badge">India &middot; USA &middot; Middle East</span>
+            </div>
             <div className="hero-buttons">
               <Link to="/story" className="btn btn-primary">
                 Explore Our Story <ArrowRight size={18} />
@@ -168,10 +171,6 @@ const Hero = () => {
               <a href="#services" className="btn btn-outline">
                 Our Services
               </a>
-            </div>
-            <div className="hero-badges">
-              <span className="badge">BFSI · Oil & Gas · Pharma</span>
-              <span className="badge">India · USA · Middle East</span>
             </div>
           </motion.div>
 
@@ -431,8 +430,11 @@ const Story = () => {
   );
 };
 
-const ServiceCard = ({ title, desc, cat, tags, color, img, delay }) => {
+const getServicePath = (serviceKey) => `/services?scroll=${serviceKey}`;
+
+const ServiceCard = ({ title, desc, cat, tags, color, img, delay, serviceKey = 'digital' }) => {
   const navigate = useNavigate();
+  const servicePath = getServicePath(serviceKey);
 
   return (
     <motion.div
@@ -446,13 +448,14 @@ const ServiceCard = ({ title, desc, cat, tags, color, img, delay }) => {
         rotateY: 2,
       }}
       transition={{ delay, duration: 0.1 }}
-      onClick={() => navigate('/services')}
+      onClick={() => navigate(servicePath)}
       style={{ perspective: 1000, cursor: 'pointer' }}
       role="link"
       tabIndex={0}
       onKeyDown={event => {
         if (event.key === 'Enter' || event.key === ' ') {
-          navigate('/services');
+          event.preventDefault();
+          navigate(servicePath);
         }
       }}
     >
@@ -482,7 +485,8 @@ const Services = () => {
       cat: "BFSI",
       tags: ["KYC", "Compliance", "Core Banking"],
       color: "blue",
-      img: service1Img
+      img: service1Img,
+      serviceKey: "fintech"
     },
     {
       title: "Industrial Technology for Energy Operations",
@@ -490,7 +494,8 @@ const Services = () => {
       cat: "OIL & GAS",
       tags: ["IIoT", "Maintenance", "SCADA"],
       color: "amber",
-      img: service2Img
+      img: service2Img,
+      serviceKey: "fdd"
     },
     {
       title: "Compliance-First Technology for Pharma",
@@ -498,7 +503,8 @@ const Services = () => {
       cat: "PHARMACEUTICALS",
       tags: ["GMP", "FDA", "Serialization"],
       color: "emerald",
-      img: service3Img
+      img: service3Img,
+      serviceKey: "cybersecurity"
     }
   ];
 
@@ -522,7 +528,15 @@ const Services = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.1 * idx, duration: 0.2 }}
               whileHover={{ y: -8 }}
-              onClick={() => navigate('/services')}
+              onClick={() => navigate(getServicePath(svc.serviceKey))}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  navigate(getServicePath(svc.serviceKey));
+                }
+              }}
+              role="link"
+              tabIndex={0}
               style={{ cursor: 'pointer' }}
             >
               <div className="blog-img-wrap">
@@ -566,11 +580,24 @@ const TeamAccordion = ({ members, onMemberClick }) => {
           layout
           className={`team-accordion-item ${activeIndex === index ? 'active' : ''}`}
           onMouseEnter={() => setActiveIndex(index)}
-          onClick={() => {
+          role="button"
+          tabIndex={0}
+          aria-label={`${activeIndex === index ? 'Open details for' : 'Select'} ${member.name}`}
+          onClick={(event) => {
             if (activeIndex === index) {
-              onMemberClick(member);
+              onMemberClick(member, event.currentTarget);
             } else {
               setActiveIndex(index);
+            }
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              if (activeIndex === index) {
+                onMemberClick(member, event.currentTarget);
+              } else {
+                setActiveIndex(index);
+              }
             }
           }}
           transition={{
@@ -605,7 +632,16 @@ const TeamMobileScroll = ({ members, onMemberClick }) => {
           <motion.div 
             key={index} 
             className="team-scroll-card"
-            onClick={() => onMemberClick(member)}
+            onClick={(event) => onMemberClick(member, event.currentTarget)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                onMemberClick(member, event.currentTarget);
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label={`Open details for ${member.name}`}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -634,7 +670,42 @@ const TeamMobileScroll = ({ members, onMemberClick }) => {
 };
 
 const TeamModal = ({ member, onClose }) => { 
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    modalRef.current?.focus();
+  }, [member]);
+
   if (!member) return null; 
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      onClose();
+      return;
+    }
+
+    if (event.key !== 'Tab') return;
+
+    const focusableElements = modalRef.current?.querySelectorAll(
+      'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    const visibleFocusableElements = Array.from(focusableElements || []).filter(
+      (element) => element.offsetParent !== null
+    );
+
+    if (visibleFocusableElements.length === 0) return;
+
+    const firstElement = visibleFocusableElements[0];
+    const lastElement = visibleFocusableElements[visibleFocusableElements.length - 1];
+
+    if (event.shiftKey && document.activeElement === firstElement) {
+      event.preventDefault();
+      lastElement.focus();
+    } else if (!event.shiftKey && document.activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  };
 
   return ( 
     <motion.div 
@@ -645,13 +716,19 @@ const TeamModal = ({ member, onClose }) => {
       onClick={onClose} 
     > 
       <motion.div 
+        ref={modalRef}
         className="team-modal-content" 
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="team-modal-title"
+        tabIndex={-1}
         initial={{ scale: 0.9, y: 20, opacity: 0 }} 
         animate={{ scale: 1, y: 0, opacity: 1 }} 
         exit={{ scale: 0.9, y: 20, opacity: 0 }} 
         onClick={e => e.stopPropagation()} 
+        onKeyDown={handleKeyDown}
       > 
-        <button className="modal-close" onClick={onClose}><X size={24} /></button> 
+        <button className="modal-close" onClick={onClose} aria-label="Close team member details"><X size={24} /></button> 
 
         <div className="modal-body"> 
           <div className="modal-image-wrap"> 
@@ -665,14 +742,14 @@ const TeamModal = ({ member, onClose }) => {
 
           <div className="modal-text"> 
             <div className="eyebrow amber no-line">{member.role}</div> 
-            <h2 className="modal-name">{member.name}</h2> 
+            <h2 className="modal-name" id="team-modal-title">{member.name}</h2> 
             {/* <div className="modal-role">{member.role}</div>  */}
             <div className="modal-divider"></div> 
             <p className="modal-bio">{member.bio}</p> 
 
             {member.linkedin && (
               <div className="modal-social-inline"> 
-                <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn"><FaLinkedin size={20} /></a> 
+                <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="m-social-btn linkedin-btn" aria-label={`${member.name} on LinkedIn`}><FaLinkedin size={20} /></a> 
               </div>
             )} 
 
@@ -695,6 +772,8 @@ const TeamModal = ({ member, onClose }) => {
 
 const Team = () => { 
   const [selectedMember, setSelectedMember] = useState(null); 
+  const lastOpenedCardRef = useRef(null);
+  const shouldRestoreFocusRef = useRef(false);
   const members = [ 
     { 
       name: "Prashant Rathi", 
@@ -756,6 +835,29 @@ const Team = () => {
 
   ]; 
 
+  const handleMemberClick = (member, openerElement) => {
+    lastOpenedCardRef.current = openerElement;
+    setSelectedMember(member);
+  };
+
+  const closeTeamModal = () => {
+    shouldRestoreFocusRef.current = true;
+    setSelectedMember(null);
+  };
+
+  useEffect(() => {
+    if (selectedMember || !shouldRestoreFocusRef.current) return;
+
+    shouldRestoreFocusRef.current = false;
+    window.requestAnimationFrame(() => {
+      const openerElement = lastOpenedCardRef.current;
+
+      if (openerElement?.isConnected && openerElement.offsetParent !== null) {
+        openerElement.focus();
+      }
+    });
+  }, [selectedMember]);
+
   return ( 
     <section className="team-section section-padding" id="team"> 
       <div className="container"> 
@@ -767,17 +869,17 @@ const Team = () => {
         </div> 
 
         {/* Desktop View: Accordion */}
-        <TeamAccordion members={members} onMemberClick={setSelectedMember} />
+        <TeamAccordion members={members} onMemberClick={handleMemberClick} />
 
         {/* Mobile View: Horizontal Scroll */}
-        <TeamMobileScroll members={members} onMemberClick={setSelectedMember} />
+        <TeamMobileScroll members={members} onMemberClick={handleMemberClick} />
 
         {/* Modal */}
         <AnimatePresence> 
           {selectedMember && ( 
             <TeamModal 
               member={selectedMember} 
-              onClose={() => setSelectedMember(null)} 
+              onClose={closeTeamModal} 
             /> 
           )} 
         </AnimatePresence> 

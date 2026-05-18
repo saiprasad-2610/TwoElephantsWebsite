@@ -119,9 +119,9 @@ const OurStory = () => {
         zIndex: 0
       }} />
 
-      <main className="story-main" style={{ position: 'relative', zIndex: 1 }}>
+      <main id="main-content" className="story-main" style={{ position: 'relative', zIndex: 1 }}>
         {/* ── HERO SECTION ── */}
-        <section className="story-hero">
+        <section className="story-hero focusable-story-section" tabIndex="0" aria-labelledby="story-hero-title">
           <div className="story-hero-bg" />
           <div className="container relative z-10">
             <div className="story-hero-content">
@@ -134,11 +134,19 @@ const OurStory = () => {
                 OUR STORY
               </motion.div>
               <motion.h1
+                id="story-hero-title"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
               >
-                From threads to technology — a legacy in motion.
+                <span className="story-title-line">
+                  <span className="story-mobile-line">From threads</span>{' '}
+                  <span className="story-mobile-line">to technology</span>
+                </span>
+                <span className="story-title-line story-title-line-legacy">
+                  <span className="story-mobile-line">&mdash; a legacy</span>{' '}
+                  <span className="story-mobile-line">in motion.</span>
+                </span>
               </motion.h1>
               <motion.p 
                 className="lead"
@@ -156,31 +164,31 @@ const OurStory = () => {
         </section>
 
         {/* ── CHAPTER 01: THE ORIGIN ── */}
-        <section className="chapter-section section-padding">
+        <section className="chapter-section section-padding focusable-story-section" tabIndex="0" aria-labelledby="chapter-origin-title">
           <div className="container">
             <div className="chapter-header">
               <span className="chapter-num">Chapter 01</span>
-              <h2 className="chapter-title">The Origin</h2>
+              <h2 id="chapter-origin-title" className="chapter-title">The Origin</h2>
             </div>
             
             <div className="story-grid">
               <div className="story-images">
-                <div className="image-stack">
+                <div className="image-stack" tabIndex="0" aria-label="Pushpa Textile Heritage and Modern Technology Labs">
                   <img src={story} alt="Pushpa Textile Heritage" className="story-img-main" />
-                  <div className="story-img-card card-legacy">
+                  <div className="story-img-card card-legacy" tabIndex="0" aria-label="1960, Legacy Begins">
                     <span className="card-year">1960</span>
                     <span className="card-text">Legacy Begins</span>
                   </div>
                   <img src={labsImg} alt="Modern Technology Labs" className="story-img-fg" />
-                  <div className="story-img-card card-tech">
-                    <Zap size={16} color="var(--color-blue-glow)" />
+                  <div className="story-img-card card-tech" tabIndex="0" aria-label="Digital Era">
+                    <Zap size={16} color="var(--color-blue-glow)" aria-hidden="true" />
                     <span>Digital Era</span>
                   </div>
                 </div>
               </div>
 
-              <div className="story-content">
-                <h3 className="h2-title">Six decades of building trust</h3>
+              <div className="story-content" tabIndex="0" aria-labelledby="origin-content-title">
+                <h3 id="origin-content-title" className="h2-title">Six decades of building trust</h3>
                 <p className="body-text">
                   For over sixty years, the Rathi family has built its foundation on something more enduring than products — trust, resilience, and an unwavering commitment to excellence. What began as a textile venture under the visionary leadership of Mr. Prashant Rathi became Pushpa Textiles — a name that became synonymous with quality across India and beyond.
                 </p>
@@ -191,18 +199,18 @@ const OurStory = () => {
             </div>
 
             {/* Horizontal Timeline */}
-            <div className="htl-wrap">
-              <div className="htl-track">
+            <div className="htl-wrap" tabIndex="0" aria-label="Company milestone timeline">
+              <div className="htl-track" role="list">
                 <div className="htl-line"></div>
                 {milestones.map((m, i) => (
-                  <div key={i} className="htl-item">
+                  <div key={i} className="htl-item" role="listitem">
                     <div className="htl-dot" style={{ background: m.color, boxShadow: `0 0 0 6px ${m.glow}` }}></div>
-                    <div className="htl-card">
+                    <div className="htl-card" tabIndex="0" aria-labelledby={`milestone-title-${i}`}>
                       <div className="htl-icon" style={{ background: m.glow }}>
-                        <span>{m.icon}</span>
+                        <span aria-hidden="true">{m.icon}</span>
                       </div>
                       <div className="htl-year" style={{ color: m.color }}>{m.year}</div>
-                      <h4 className="htl-title">{m.title}</h4>
+                      <h4 id={`milestone-title-${i}`} className="htl-title">{m.title}</h4>
                       <p className="htl-desc">{m.desc}</p>
                     </div>
                   </div>
@@ -213,16 +221,16 @@ const OurStory = () => {
         </section>
 
         {/* ── CHAPTER 02: THE NAME ── */}
-        <section className="chapter-section section-padding bg-light">
+        <section className="chapter-section section-padding bg-light focusable-story-section" tabIndex="0" aria-labelledby="chapter-name-title">
           <div className="container">
             <div className="chapter-header">
               <span className="chapter-num">Chapter 02</span>
-              <h2 className="chapter-title">The Name</h2>
+              <h2 id="chapter-name-title" className="chapter-title">The Name</h2>
             </div>
 
             <div className="story-grid alt">
-              <div className="story-content">
-                <h3 className="h2-title">Why Two Elephants?</h3>
+              <div className="story-content" tabIndex="0" aria-labelledby="name-content-title">
+                <h3 id="name-content-title" className="h2-title">Why Two Elephants?</h3>
                 <p className="body-text">
                   The name was never arbitrary. Elephants stand for wisdom, strength, and reliability — values woven into every decision the Rathi family has made over generations.
                 </p>
@@ -233,7 +241,7 @@ const OurStory = () => {
                   In our logo, the mother elephant embodies authority, experience, and protection — the six decades of industrial wisdom we carry forward. The baby elephant represents growth, learning, and possibility — the digital future we are helping businesses step into.
                 </p>
                 
-                <blockquote className="pull-quote">
+                <blockquote className="pull-quote" tabIndex="0">
                   "This isn't just a new venture. It is a continuation of a story — one built over generations and now ready to shape the future."
                 </blockquote>
                 
@@ -258,6 +266,8 @@ const OurStory = () => {
                 
                  <motion.div 
                     className="elephant-emblem-card"
+                    tabIndex="0"
+                    aria-label="Two Elephants logo, Guided Growth"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -279,16 +289,16 @@ const OurStory = () => {
         </section>
 
         {/* ── CHAPTER 03: OUR PURPOSE ── */}
-        <section className="chapter-section section-padding">
+        <section className="chapter-section section-padding focusable-story-section" tabIndex="0" aria-labelledby="chapter-purpose-title">
           <div className="container">
             <div className="chapter-header">
               <span className="chapter-num">Chapter 03</span>
-              <h2 className="chapter-title">Our Purpose</h2>
+              <h2 id="chapter-purpose-title" className="chapter-title">Our Purpose</h2>
             </div>
 
             <div className="purpose-grid">
-              <div className="purpose-block">
-                <h3 className="h3-title blue-accent">Technology that understands business</h3>
+              <div className="purpose-block" tabIndex="0" aria-labelledby="purpose-business-title">
+                <h3 id="purpose-business-title" className="h3-title blue-accent">Technology that understands business</h3>
                 <p className="body-text">
                   Businesses today are surrounded by technology — yet many still struggle to find solutions that truly understand how they operate. Especially for small and mid-sized enterprises, technology is often too generic, built without the ground-level insight needed to align with real workflows and growth realities.
                 </p>
@@ -300,8 +310,8 @@ const OurStory = () => {
                 </p>
               </div>
 
-              <div className="purpose-block">
-                <h3 className="h3-title amber-accent">Creating opportunity, close to home</h3>
+              <div className="purpose-block" tabIndex="0" aria-labelledby="purpose-opportunity-title">
+                <h3 id="purpose-opportunity-title" className="h3-title amber-accent">Creating opportunity, close to home</h3>
                 <p className="body-text">
                   Every year, thousands of capable engineers graduate from Solapur — full of ambition, skill, and potential. Yet many are forced to leave in search of the right opportunities, not because the talent is lacking, but because the ecosystem around them hasn't evolved fast enough.
                 </p>
@@ -317,29 +327,32 @@ const OurStory = () => {
         </section>
 
         {/* ── CHAPTER 04: WHAT WE STAND FOR ── */}
-        <section className="chapter-section section-padding bg-dark">
+        <section className="chapter-section section-padding bg-dark focusable-story-section" tabIndex="0" aria-labelledby="chapter-principles-title">
           <div className="container">
             <div className="chapter-header light">
               <span className="chapter-num">Chapter 04</span>
-              <h2 className="chapter-title">What We Stand For</h2>
+              <h2 id="chapter-principles-title" className="chapter-title">What We Stand For</h2>
                 <h3 className="chapter-title">Principles carried across generations</h3>
           
             </div>
 
            
-            <div className="principles-grid">
+            <div className="principles-grid" role="list">
               {values.map((v, i) => (
                 <motion.div 
                   key={i} 
                   className="principle-card"
+                  tabIndex="0"
+                  role="listitem"
+                  aria-labelledby={`principle-title-${i}`}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
                 >
-                  <div className="principle-icon" style={{ color: v.color }}>{v.icon}</div>
+                  <div className="principle-icon" style={{ color: v.color }} aria-hidden="true">{v.icon}</div>
                   <div className="principle-info">
-                    <h4>{v.title}</h4>
+                    <h4 id={`principle-title-${i}`}>{v.title}</h4>
                     <p>{v.desc}</p>
                   </div>
                 </motion.div>
@@ -349,10 +362,10 @@ const OurStory = () => {
         </section>
 
         {/* ── FINAL CLOSING ── */}
-        <section className="closing-section section-padding">
+        <section className="closing-section section-padding focusable-story-section" tabIndex="0" aria-labelledby="story-closing-title">
           <div className="container">
             {/* <div className="eyebrow amber no-line">FROM LEGACY TO TECHNOLOGY</div> */}
-            <h2 className="h2-title">From trust to transformation.</h2>
+            <h2 id="story-closing-title" className="h2-title">From trust to transformation.</h2>
             <p className="body-text">
               This is who we are. This is what we carry forward.
             </p>

@@ -330,6 +330,8 @@ const Chatbot = () => {
       <motion.button
         className="chatbot-trigger"
         onClick={() => setIsOpen(!isOpen)}
+        aria-label={isOpen ? 'Close chat assistant' : 'Open chat assistant'}
+        aria-expanded={isOpen}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
@@ -355,10 +357,10 @@ const Chatbot = () => {
                 </div>
               </div>
               <div className="header-controls">
-                <button onClick={() => setIsMinimized(!isMinimized)}>
+                <button onClick={() => setIsMinimized(!isMinimized)} aria-label={isMinimized ? 'Expand chat' : 'Minimize chat'}>
                   {isMinimized ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                 </button>
-                <button onClick={() => setMessages([])} title="Reset Chat">
+                <button onClick={() => setMessages([])} title="Reset Chat" aria-label="Reset chat">
                   <RefreshCcw size={16} />
                 </button>
               </div>
@@ -406,8 +408,9 @@ const Chatbot = () => {
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                     placeholder="Ask me anything about TETL..."
+                    aria-label="Chat message"
                   />
-                  <button onClick={() => handleSendMessage()} disabled={!inputValue.trim()}>
+                  <button onClick={() => handleSendMessage()} disabled={!inputValue.trim()} aria-label="Send chat message">
                     <Send size={18} />
                   </button>
                 </div>

@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { CheckCircle2, ArrowRightCircle, Zap, ShieldCheck, Activity, BarChart3 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -208,9 +208,11 @@ const detailedServices = [
 
 
 // 3D Apple-Style Perspective Hover Card Component
-const ServiceCard3D = ({ service, idx }) => {
+const ServiceCard3D = ({ service, idx, isHighlighted }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  const titleId = `service-card-title-${service.key}`;
+  const descriptionId = `service-card-description-${service.key}`;
 
   // Tighter clamp for realistic subtle rotation
   const rotateX = useTransform(y, [-200, 200], [15, -15]);
@@ -230,8 +232,12 @@ const ServiceCard3D = ({ service, idx }) => {
   return (
     <motion.div
       id={service.key}
-      className="service-detail-card-wrap"
+      className={`service-detail-card-wrap${isHighlighted ? ' service-target-highlight' : ''}`}
       style={{ perspective: 1200 }}
+      role="article"
+      tabIndex={0}
+      aria-labelledby={titleId}
+      aria-describedby={descriptionId}
       initial={{ opacity: 0, scale: 0.9, y: 50 }}
       whileInView={{ opacity: 1, scale: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
@@ -246,8 +252,8 @@ const ServiceCard3D = ({ service, idx }) => {
         transition={{ type: "spring", stiffness: 400, damping: 30 }}
       >
         <div className="service-detail-badge badge-blue">{service.cat}</div>
-        <h2>{service.title}</h2>
-        <p className="body-text">{service.desc}</p>
+        <h2 id={titleId}>{service.title}</h2>
+        <p id={descriptionId} className="body-text">{service.desc}</p>
         <ul className="service-detail-list">
           {service.points.map(point => (
             <li key={point}>{point}</li>
@@ -267,15 +273,17 @@ const ServiceCard3D = ({ service, idx }) => {
 };
 
 // Detailed Service Component for the 4 specific services
-const DetailedService = ({ service, index }) => {
+const DetailedService = ({ service, index, isHighlighted }) => {
   const isEven = index % 2 === 0;
-  
-  // Generate ID from service title (e.g., "BMS", "FMS", "FDD", "CDA")
-  const serviceId = service.title.match(/\(([^)]+)\)/)?.[1]?.toLowerCase() || `service-${service.id}`;
-
+  const titleId = `detailed-service-title-${service.key}`;
 
   return (
-    <section id={service.key} className="detailed-service-item" style={{ 
+    <section
+      id={service.key}
+      className={`detailed-service-item${isHighlighted ? ' detailed-service-target-highlight' : ''}`}
+      aria-labelledby={titleId}
+      tabIndex={0}
+      style={{ 
       position: 'relative', 
       padding: 'clamp(40px, 6vw, 80px) 0',
       overflow: 'hidden',
@@ -360,7 +368,7 @@ const DetailedService = ({ service, index }) => {
               </motion.div>
             </div>
 
-            <h2 style={{ 
+            <h2 id={titleId} style={{ 
               fontSize: 'clamp(28px, 3.5vw, 42px)', 
               fontWeight: '700', 
               color: '#0F172A', 
@@ -513,26 +521,37 @@ const DetailedService = ({ service, index }) => {
 
 const Services = () => {
     const location = useLocation();
+    const [highlightedService, setHighlightedService] = useState(null);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const section = params.get("scroll");
 
     if (section) {
+      setHighlightedService(section);
       const interval = setInterval(() => {
         const element = document.getElementById(section);
 
         if (element) {
           element.scrollIntoView({
             behavior: "smooth",
-            block: "start",
+            block: "center",
           });
+          element.focus({ preventScroll: true });
           clearInterval(interval);
         }
       }, 100);
 
-      return () => clearInterval(interval);
+      const highlightTimer = setTimeout(() => {
+        setHighlightedService(null);
+      }, 4500);
+
+      return () => {
+        clearInterval(interval);
+        clearTimeout(highlightTimer);
+      };
     } else {
+      setHighlightedService(null);
       window.scrollTo(0, 0);
     }
   }, [location]);
@@ -622,7 +641,7 @@ const Services = () => {
           </div>
           
           {detailedServices.map((service, idx) => (
-            <DetailedService key={service.id} service={service} index={idx} />
+            <DetailedService key={service.id} service={service} index={idx} isHighlighted={highlightedService === service.key} />
           ))}
         </section>
 
@@ -638,7 +657,7 @@ const Services = () => {
             </div>
             <div className="services-page-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
               {services.map((service, idx) => (
-                <ServiceCard3D key={idx} service={service} idx={idx} />
+                <ServiceCard3D key={idx} service={service} idx={idx} isHighlighted={highlightedService === service.key} />
               ))}
             </div>
           </div>

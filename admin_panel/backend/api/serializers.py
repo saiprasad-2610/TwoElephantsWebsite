@@ -1,10 +1,27 @@
+import re
+
 from rest_framework import serializers
 from .models import ContactSubmission, JobRole, JobApplication, Article
+
+MALICIOUS_CONTENT_MESSAGE = 'Message cannot include HTML, scripts, or executable content.'
+CONTROL_CHARACTER_PATTERN = re.compile(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]')
+DANGEROUS_MESSAGE_PATTERN = re.compile(
+    r'(?:<\s*/?\s*[a-z][^>]*>|&lt;\s*/?\s*[a-z][\s\S]*?&gt;|javascript\s*:|data\s*:\s*text/html|on[a-z]+\s*=)',
+    re.IGNORECASE,
+)
 
 class ContactSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactSubmission
         fields = '__all__'
+
+    def validate_message(self, value):
+        sanitized_value = CONTROL_CHARACTER_PATTERN.sub('', value).strip()
+
+        if DANGEROUS_MESSAGE_PATTERN.search(sanitized_value):
+            raise serializers.ValidationError(MALICIOUS_CONTENT_MESSAGE)
+
+        return sanitized_value
 
 class JobRoleSerializer(serializers.ModelSerializer):
     class Meta:

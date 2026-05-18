@@ -94,6 +94,18 @@
   letter-spacing: -0.02em;
 }
 
+.story-title-line {
+  display: inline;
+}
+
+.story-mobile-line {
+  display: inline;
+}
+
+.story-title-line + .story-title-line::before {
+  content: " ";
+}
+
 .story-hero .lead {
   font-size: clamp(18px, 2vw, 22px);
   color: rgba(255, 255, 255, 0.75);
@@ -130,6 +142,36 @@
 .chapter-section {
   position: relative;
   padding: 100px 0;
+}
+
+.story-page [tabindex="0"]:focus {
+  outline: none;
+}
+
+.story-page [tabindex="0"]:focus-visible,
+.story-page a:focus-visible,
+.story-page button:focus-visible {
+  outline: 1px solid rgba(96, 165, 250, 0.95);
+  outline-offset: 2px;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.focusable-story-section:focus-visible {
+  outline-offset: -4px;
+}
+
+.story-content:focus-visible,
+.purpose-block:focus-visible,
+.htl-wrap:focus-visible {
+  border-radius: 0;
+}
+
+.story-img-card:focus-visible,
+.htl-card:focus-visible,
+.principle-card:focus-visible,
+.elephant-emblem-card:focus-visible {
+  border-radius: 0;
 }
 
 .chapter-section.alt-spacing {
@@ -716,6 +758,35 @@
   }
 }
 
+@media (min-width: 700px) and (max-width: 1180px) {
+  .story-hero {
+    min-height: 62vh;
+    padding: 110px 0 92px;
+  }
+
+  .story-hero-content {
+    max-width: min(92vw, 920px);
+    padding: 0 32px;
+  }
+
+  .story-hero h1 {
+    max-width: 860px;
+    margin: 0 auto 22px;
+    font-size: clamp(42px, 7.6vw, 76px);
+    line-height: 1.06;
+    letter-spacing: 0;
+    text-wrap: auto;
+  }
+
+  .story-title-line {
+    display: block;
+  }
+
+  .story-title-line + .story-title-line::before {
+    content: "";
+  }
+}
+
 @media (max-width: 768px) {
   .principles-grid {
     grid-template-columns: 1fr;
@@ -755,5 +826,30 @@
   .story-hero {
     min-height: 70vh;
     padding: 100px 0 80px;
+  }
+
+  .story-hero-content {
+    width: 100%;
+    max-width: 360px;
+    padding: 0 16px;
+    text-align: center;
+  }
+
+  .story-hero h1 {
+    max-width: 300px;
+    margin: 0 auto 22px !important;
+    font-size: clamp(32px, 10vw, 38px);
+    line-height: 1.14;
+    letter-spacing: 0;
+    text-align: center;
+  }
+
+  .story-title-line,
+  .story-mobile-line {
+    display: block;
+  }
+
+  .story-title-line + .story-title-line::before {
+    content: "";
   }
 }

@@ -146,8 +146,13 @@ const Navbar = () => {
     }
 
     closeMobileMenu();
+    if (location.pathname === item.path) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     navigate(item.path);
-  }, [closeMobileMenu, handleSectionLinkClick, navigate]);
+  }, [closeMobileMenu, handleSectionLinkClick, location.pathname, navigate]);
 
   useEffect(() => {
     if (location.pathname !== '/') return;
@@ -282,6 +287,9 @@ const Navbar = () => {
                       if (item.sectionId) {
                         event.preventDefault();
                         handleSectionLinkClick(item.sectionId);
+                      } else if (location.pathname === item.path) {
+                        event.preventDefault();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
                       }
 
                       setClickedItemId(item.id);
@@ -407,10 +415,26 @@ const Navbar = () => {
         className={`mobile-overlay${isMobileMenuOpen ? ' open' : ''}`}
         onClick={closeMobileMenu}
         aria-label="Close menu overlay"
+        tabIndex={isMobileMenuOpen ? 0 : -1}
       ></button>
 
-      <div id="mobile-menu" className={`mobile-menu${isMobileMenuOpen ? ' open' : ''}`}>
-        <Link to="/" className="mobile-menu-logo" onClick={closeMobileMenu}>
+      <div
+        id="mobile-menu"
+        className={`mobile-menu${isMobileMenuOpen ? ' open' : ''}`}
+        aria-hidden={!isMobileMenuOpen}
+      >
+        <button
+          type="button"
+          className="mobile-menu-close"
+          onClick={closeMobileMenu}
+          aria-label="Close menu"
+          tabIndex={isMobileMenuOpen ? 0 : -1}
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </button>
+
+        <Link to="/" className="mobile-menu-logo" onClick={closeMobileMenu} tabIndex={isMobileMenuOpen ? 0 : -1}>
           <img src={logo} alt="Two Elephants" />
           <span>Two Elephants</span>
         </Link>
@@ -423,6 +447,7 @@ const Navbar = () => {
                 key={item.id}
                 className="mobile-nav-link mobile-nav-button"
                 onClick={() => handleMobileItemClick(item)}
+                tabIndex={isMobileMenuOpen ? 0 : -1}
               >
                 {item.name}
               </button>
@@ -430,7 +455,7 @@ const Navbar = () => {
           })}
         </div>
 
-        <Link to="/contact" className="btn btn-primary mobile-menu-cta" onClick={closeMobileMenu}>
+        <Link to="/contact" className="btn btn-primary mobile-menu-cta" onClick={closeMobileMenu} tabIndex={isMobileMenuOpen ? 0 : -1}>
           Contact Us
         </Link>
       </div>

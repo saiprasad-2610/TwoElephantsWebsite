@@ -77,7 +77,7 @@
 
 
 import React,{ useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   FaLinkedin,
   FaInstagram,
@@ -90,9 +90,20 @@ import logo from '../assets/images/logo1.svg';
 
 
 const Footer = () => {
+  const location = useLocation();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const handleSamePageLinkClick = (event, path) => {
+    if (location.pathname !== path) {
+      return;
+    }
+
+    event.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <footer>
@@ -120,10 +131,10 @@ const Footer = () => {
             </p>
 
             <div className="social-row">
-              <a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" className="social-btn" style={{ color: '#0077b5' }}>
+              <a href="https://www.linkedin.com/company/two-elephants-technologies-llp/" className="social-btn" style={{ color: '#0077b5' }} aria-label="Two Elephants on LinkedIn">
                 <FaLinkedin size={22} />
               </a>
-              <a href="https://www.instagram.com/twoelephantstechnologiesllp" className="social-btn" style={{ color: '#E4405F' }}>
+              <a href="https://www.instagram.com/twoelephantstechnologiesllp" className="social-btn" style={{ color: '#E4405F' }} aria-label="Two Elephants on Instagram">
                 <FaInstagram size={22} />
               </a>
             </div>
@@ -138,7 +149,7 @@ const Footer = () => {
               <li><Link to="/services">Services</Link></li>
               <li><Link to="/?scroll=team">Team</Link></li>
               <li><Link to="/?scroll=insights">Insights</Link></li>
-              <li><Link to="/careers">Careers</Link></li>
+              <li><Link to="/careers" onClick={(event) => handleSamePageLinkClick(event, '/careers')}>Careers</Link></li>
               <li><Link to="/contact">Contact</Link></li>
             </ul>
           </div>

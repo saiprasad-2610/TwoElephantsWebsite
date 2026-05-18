@@ -262,7 +262,11 @@ const Careers = () => {
       </section>
 
       {/* MISSION SECTION */}
-      <section className="bg-white py-24">
+      <section
+        className="bg-white py-24 keyboard-focus-section"
+        tabIndex={0}
+        aria-labelledby="careers-thinking-title"
+      >
         <div className="container">
           <div className="max-w-4xl mx-auto text-center">
             <div className="services-header">
@@ -275,7 +279,7 @@ const Careers = () => {
               transition={{ duration: 0.8 }}
             >
               {/* <div className="eyebrow dark">THINKING AT SCALE</div> */}
-              <h2 className="h2-title text-4xl mb-6">We move with <span className="careerHead">Strength</span> and execute with <span className="careerHead">Honesty</span>.</h2>
+              <h2 id="careers-thinking-title" className="h2-title text-4xl mb-6">We move with <span className="careerHead">Strength</span> and execute with <span className="careerHead">Honesty</span>.</h2>
               <p className="body-text text-lg leading-relaxed text-slate-600">
                 Two Elephants Technologies LLP is not just an IT company; it's a legacy of 65 years transitioning into the digital age.
                 We are looking for engineers who want to build the infrastructure that tomorrow's global markets will depend on.
@@ -286,7 +290,11 @@ const Careers = () => {
       </section>
 
       {/* CULTURE HIGHLIGHTS SECTION */}
-      <section className="career-highlights-section">
+      <section
+        className="career-highlights-section keyboard-focus-section"
+        tabIndex={0}
+        aria-labelledby="careers-life-title"
+      >
         <div className="container">
           <div className="highlights-intro">
             <motion.div
@@ -298,7 +306,7 @@ const Careers = () => {
               <div className="services-header">
                 <div className="eyebrow dark">LIFE AT Two Elephants Technologies LLP</div>
                 <div className="section-rule visible"></div>
-                <h3 className="h2-title text-3xl">A career where <span className="careerHead">impact</span>, <span className="careerHead">growth</span>, and <span className="careerHead">momentum</span> meet.</h3>
+                <h3 id="careers-life-title" className="h2-title text-3xl">A career where <span className="careerHead">impact</span>, <span className="careerHead">growth</span>, and <span className="careerHead">momentum</span> meet.</h3>
               </div>
             </motion.div>
           </div>
@@ -325,7 +333,12 @@ const Careers = () => {
       </section>
 
       {/* OPENINGS SECTION */}
-      <section id="openings" className="openings-section">
+      <section
+        id="openings"
+        className="openings-section keyboard-focus-section"
+        tabIndex={0}
+        aria-labelledby="careers-openings-title"
+      >
         <div className="openings-container container">
           <div className="max-w-3xl mx-auto text-center mb-20">
             <motion.div
@@ -336,7 +349,7 @@ const Careers = () => {
               <div className="services-header">
               <div className="eyebrow dark">OPPORTUNITIES</div>
               <div className="section-rule visible"></div>
-              <h2 className="h2-title text-5xl mb-6">Current Openings</h2>
+              <h2 id="careers-openings-title" className="h2-title text-5xl mb-6">Current Openings</h2>
               <p className="text-slate-600 text-lg leading-relaxed">
                 Join our growing team in Solapur and work on cutting-edge solutions.<br />
                 We're looking for passionate individuals to help build the future.
@@ -364,6 +377,16 @@ const Careers = () => {
                     key={role.id || idx}
                     className={`os-tab ${activeRole === idx ? 'active' : ''}`}
                     onClick={() => { setActiveRole(idx); setSelectedRole(role); }}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        setActiveRole(idx);
+                        setSelectedRole(role);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-pressed={activeRole === idx}
                   >
                     <span className="os-tab-dept">{role.department}</span>
                     <h3 className="os-tab-title">{role.title}</h3>
