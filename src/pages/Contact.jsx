@@ -32,7 +32,7 @@ const LOCATION_MAX_LENGTH = 50;
 const LOCATION_INPUT_ERROR = 'Only letters, spaces, commas and hyphens are allowed';
 const LETTERS_ONLY_PATTERN = /[^A-Za-z]/g;
 const NAME_INPUT_ERROR = 'Only letters are allowed.';
-const EMAIL_PATTERN = /^(?![.])(?!.*[.]{2})(?!.*[.]@)[A-Za-z0-9._+-]+@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/;
+const EMAIL_PATTERN = /^(?![._+-])(?!.*[.]{2})(?!.*[.]@)[A-Za-z0-9._+-]+@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/;
 const EMAIL_ALLOWED_INPUT_PATTERN = /^[A-Za-z0-9._+@-]+$/;
 const EMAIL_USERNAME_PATTERN = /^[A-Za-z0-9._+-]*$/;
 const EMAIL_DOMAIN_PATTERN = /^[A-Za-z0-9.-]*$/;
@@ -186,6 +186,7 @@ const Contact = () => {
   const [formStatus, setFormStatus] = useState('idle'); // idle, loading, success, error
   const [formErrors, setFormErrors] = useState({});
   const [duplicateMessage, setDuplicateMessage] = useState('');
+  const [submitNotice, setSubmitNotice] = useState('');
   const isSubmittingRef = useRef(false);
   
   const [formData, setFormData] = useState({
@@ -497,6 +498,8 @@ const Contact = () => {
 
     if (!EMAIL_USERNAME_PATTERN.test(username)) return EMAIL_RULE_MESSAGES.invalidUsername;
     if (username.startsWith('.')) return EMAIL_RULE_MESSAGES.startsWithDot;
+    if (username.startsWith('_')) return 'Email cannot start with underscore (_).';
+    if (username.startsWith('-')) return 'Email cannot start with hyphen (-).';
     if (username.includes('..')) return EMAIL_RULE_MESSAGES.consecutiveDots;
     if (hasAtSymbol && !username) return EMAIL_RULE_MESSAGES.missingUsername;
     if (hasAtSymbol && username.endsWith('.')) return EMAIL_RULE_MESSAGES.dotBeforeAt;
@@ -724,8 +727,26 @@ const Contact = () => {
   // Reset form status when user starts typing again after error
   const resetFormStatus = () => {
     setDuplicateMessage('');
+    setSubmitNotice('');
     if (formStatus === 'error') {
       setFormStatus('idle');
+    }
+  };
+
+  const handleSubmitButtonHover = () => {
+    if (isSubmitDisabled) {
+      setSubmitNotice('Fill all the field to send message.');
+    }
+  };
+
+  const handleSubmitButtonLeave = () => {
+    setSubmitNotice('');
+  };
+
+  const handleSubmitButtonClick = (e) => {
+    if (isSubmitDisabled) {
+      e.preventDefault();
+      setSubmitNotice('Fill all the field to send message.');
     }
   };
 
@@ -982,17 +1003,30 @@ const Contact = () => {
                             </div>
                           )}
 
-                          <button 
-                            className="btn btn-primary form-submit" 
-                            type="submit" 
-                            disabled={isSubmitDisabled}
+                          <div
+                            className="form-submit-wrapper"
+                            onClick={handleSubmitButtonClick}
+                            onMouseEnter={handleSubmitButtonHover}
+                            onMouseLeave={handleSubmitButtonLeave}
                           >
-                            {formStatus === 'loading' ? (
-                              <>Sending <Send size={18} style={{ marginLeft: '8px' }} /></>
-                            ) : (
-                              <>Send Message <Send size={18} style={{ marginLeft: '8px' }} /></>
-                            )}
-                          </button>
+                            <button 
+                              className="btn btn-primary form-submit" 
+                              type="submit" 
+                              disabled={isSubmitDisabled}
+                            >
+                              {formStatus === 'loading' ? (
+                                <>Sending <Send size={18} style={{ marginLeft: '8px' }} /></>
+                              ) : (
+                                <>Send Message <Send size={18} style={{ marginLeft: '8px' }} /></>
+                              )}
+                            </button>
+                          </div>
+
+                          {submitNotice && (
+                            <div className="form-submit-notice" role="alert">
+                              {submitNotice}
+                            </div>
+                          )}
                         </form>
                       </motion.div>
                     ) : (

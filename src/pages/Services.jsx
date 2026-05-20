@@ -6,6 +6,10 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ParticleBackground from '../components/ParticleBackground';
 import '../styles/tailwind.css';
+import FDDImage from '../assets/images/FDD.png';
+import BMSImage from '../assets/images/BMS.png';
+import FMSImage from '../assets/images/FMS.png';
+import CDAImage from '../assets/images/CDA.png';
 
 
 const services = [
@@ -134,7 +138,7 @@ const detailedServices = [
       "Centralized control across single or multiple sites",
       "Improved asset lifecycle and operational efficiency"
     ],
-    image: "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=800&q=80",
+    image: BMSImage,
     icon: <Zap className="w-6 h-6" />,
     color: "#F59E0B"
   },
@@ -156,7 +160,7 @@ const detailedServices = [
       "Improved SLA compliance and audit readiness",
       "Higher operational efficiency with reduced manual effort"
     ],
-    image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=800&q=80",
+    image: FMSImage,
     icon: <Activity className="w-6 h-6" />,
     color: "#3B82F6"
   },
@@ -178,7 +182,7 @@ const detailedServices = [
       "Significant savings on repair and maintenance costs",
       "Increased reliability of critical infrastructure"
     ],
-    image: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80",
+    image: FDDImage,
     icon: <ShieldCheck className="w-6 h-6" />,
     color: "#10B981"
   },
@@ -200,7 +204,7 @@ const detailedServices = [
     "Automated compliance (ESG, DPDP, SOC2, etc.)",
     "Continuous optimization through AI learning loops"
   ],
-  image: "https://blog.datamatics.com/hubfs/Top%203%20use%20cases%20with%20Connected%20Data%20%26%20Analytics%2c%202022%20and%20beyond.jpg",
+  image: CDAImage,
   icon: <BarChart3 className="w-6 h-6" />,
   color: "#8B5CF6"
 }

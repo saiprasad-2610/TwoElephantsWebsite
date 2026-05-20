@@ -2859,6 +2859,7 @@ footer {
   .footer-grid {
     grid-template-columns: 1fr;
     gap: 32px;
+    text-align: left;
   }
 
   .f-services-grid {
@@ -2869,7 +2870,20 @@ footer {
   .footer-bottom {
     flex-direction: column;
     gap: 16px;
-    text-align: center;
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  .footer-bottom > div,
+  .footer-bottom .f-bottom-links {
+    width: 100%;
+  }
+
+  .footer-bottom .f-bottom-links {
+    display: flex;
+    justify-content: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
   }
 }
 

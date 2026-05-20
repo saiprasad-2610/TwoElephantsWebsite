@@ -1128,34 +1128,34 @@
   }
 
   footer .logo {
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
   }
 
   .footer-grid {
     grid-template-columns: 1fr !important;
-    text-align: center;
+    text-align: left;
   }
 
   .f-links {
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
+    text-align: left;
   }
 
   .f-contact p {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    text-align: left;
   }
 
   .social-row,
   .f-bottom-links {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .footer-bottom {
-    align-items: center;
-    text-align: center;
+    align-items: flex-start;
+    text-align: left;
   }
 }
 
@@ -1385,18 +1385,24 @@
 
   .hero-badges {
     width: 100%;
-    flex-wrap: nowrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
     margin-bottom: 14px;
+    overflow: hidden;
   }
 
   .hero-badges .badge {
-    flex: 0 1 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
     min-width: 0;
     padding: 4px 8px;
     font-size: 8.5px;
-    white-space: nowrap;
+    white-space: normal;
+    line-height: 1.3;
+    text-align: center;
   }
 
   .hero-visual {

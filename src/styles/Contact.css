@@ -340,6 +340,22 @@
   padding: 12px 14px;
 }
 
+.form-submit-wrapper {
+  width: 100%;
+}
+
+.form-submit-notice {
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: 8px;
+  background: rgba(219, 234, 254, 0.95);
+  color: #1d4ed8;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  margin-top: 12px;
+  padding: 12px 14px;
+}
+
 .form-submit {
   width: 100%;
   background: #2459e6;
@@ -362,15 +378,17 @@
 }
 
 .form-submit:disabled {
-  opacity: 0.7;
+  background: #cbd5e1;
+  color: #586b7a;
+  opacity: 1;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
 }
 
 .form-submit:disabled:hover {
-  background: #2459e6;
-  color: #fff;
+  background: #cbd5e1;
+  color: #586b7a;
   transform: none;
   box-shadow: none;
 }
