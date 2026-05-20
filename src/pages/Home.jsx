@@ -816,22 +816,22 @@ const Team = () => {
       img: arpitaImg, 
       bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.", 
       linkedin: "https://www.linkedin.com/in/arpita-kulkarni/" 
-    }, 
-    { 
+    }
+    // { 
     
-      name: "Prashant Bollu", 
-      role: "Technology Leader - Software Development", 
-      img: prashantBolluImg, 
-      bio: "Technology Leader delivering robust, scalable solutions and improving system efficiency. Actively contributes to startup development, mentors, and focuses on practical execution and real-world impact.", 
-    }, 
+    //   name: "Prashant Bollu", 
+    //   role: "Technology Leader - Software Development", 
+    //   img: prashantBolluImg, 
+    //   bio: "Technology Leader delivering robust, scalable solutions and improving system efficiency. Actively contributes to startup development, mentors, and focuses on practical execution and real-world impact.", 
+    // }, 
 
-    { 
-      name: "Saurabh Kulkarni", 
-      role: "Technology Leader - Cyber Security", 
-      img: saurabhImg, 
-      bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.", 
+    // { 
+    //   name: "Saurabh Kulkarni", 
+    //   role: "Technology Leader - Cyber Security", 
+    //   img: saurabhImg, 
+    //   bio: "An Information Security and Compliance professional focused on audits, data security, and governance. Drives strong security practices, ensures regulatory alignment, and builds resilient, audit-ready systems in collaboration with global teams.", 
       
-    } 
+    // } 
 
   ]; 
 
