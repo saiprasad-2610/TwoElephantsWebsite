@@ -401,7 +401,10 @@
   }
 
   .modal-stats {
-    display: none;
+    display: flex;
+    gap: 20px;
+    padding-top: 16px;
+    margin-top: 16px;
   }
 }
 
