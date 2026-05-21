@@ -1655,6 +1655,23 @@ body.no-scroll {
   .svc-desc {
     max-width: 100%;
   }
+
+  .service-detail-list {
+    grid-template-columns: 1fr !important;
+  }
+
+  .service-detail-list li {
+    padding-left: 20px !important;
+  }
+
+  .service-detail-footer {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .service-detail-tags {
+    width: 100% !important;
+  }
 }
 
 /* ═══════════════════════════════════════════

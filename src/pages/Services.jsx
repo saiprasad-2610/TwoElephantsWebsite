@@ -189,9 +189,9 @@ const detailedServices = [
   {
   id: 4,
   key: "cda", 
-  title: "Cloud Data Analytics", 
+  title: "Connected Data & Analytics (CDA)", 
   subtitle: "Turn building data into actionable intelligence.",
-  description: "Modern buildings generate massive amounts of data—but most of it goes unused. Our Cloud Data Analytics service creates a unified data layer across all systems and applies AI/ML to unlock real business value. We bridge the gap between raw data and decision-making—delivering insights that drive efficiency, compliance, and performance.",
+  description: "Modern buildings generate massive amounts of data—but most of it goes unused. Our Connected Data & Analytics (CDA) service creates a unified data layer across all systems and applies AI/ML to unlock real business value. We bridge the gap between raw data and decision-making—delivering insights that drive efficiency, compliance, and performance.",
   deliverables: [
     "Unified data platform integrating BMS, IoT, IT, and security systems",
     "Real-time dashboards and KPI tracking",
@@ -289,9 +289,8 @@ const DetailedService = ({ service, index, isHighlighted }) => {
       tabIndex={0}
       style={{ 
       position: 'relative', 
-      padding: 'clamp(40px, 6vw, 80px) 0',
+      padding: 'clamp(60px, 8vw, 120px) 0',
       overflow: 'hidden',
-      borderBottom: '1px solid rgba(15, 23, 42, 0.05)',
       background: isEven ? '#fff' : '#F8FAFC'
     }}>
       {/* Background ambient glow - more subtle for light mode */}
@@ -300,12 +299,12 @@ const DetailedService = ({ service, index, isHighlighted }) => {
         style={{ 
           position: 'absolute',
           top: '50%',
-          left: '50%',
+          left: isEven ? '80%' : '20%',
           transform: 'translate(-50%, -50%)',
-          width: '500px',
-          height: '500px',
-          opacity: '0.05',
-          filter: 'blur(100px)',
+          width: '600px',
+          height: '600px',
+          opacity: '0.08',
+          filter: 'blur(120px)',
           pointerEvents: 'none',
           borderRadius: '50%',
           background: service.color 
@@ -317,124 +316,113 @@ const DetailedService = ({ service, index, isHighlighted }) => {
           display: 'flex', 
           flexDirection: isEven ? 'row' : 'row-reverse', 
           alignItems: 'center', 
-          gap: 'clamp(40px, 6vw, 80px)',
+          gap: 'clamp(40px, 8vw, 100px)',
           flexWrap: 'wrap'
         }}>
           
           {/* Text Content Area */}
           <motion.div 
             className="detailed-service-content"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: isEven ? -50 : 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8 }}
-            style={{ flex: '1', minWidth: '320px' }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            style={{ flex: '1.2', minWidth: 'min(100%, 320px)' }}
           >
-            <div className="service-id-badge-row" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+            <div className="service-id-badge-row" style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' }}>
               <div className="service-id-badge" style={{ 
                 display: 'inline-flex', 
                 alignItems: 'center', 
                 gap: '12px', 
-                padding: '6px 16px', 
+                padding: '8px 20px', 
                 borderRadius: '99px', 
-                background: 'rgba(15, 23, 42, 0.03)', 
-                border: '1px solid rgba(15, 23, 42, 0.08)', 
+                background: `${service.color}10`, 
+                border: `1px solid ${service.color}20`, 
+                boxShadow: `0 4px 12px ${service.color}05`
               }}>
                 <span style={{ color: service.color }}>{service.icon}</span>
                 <span style={{ 
-                  fontSize: '11px', 
+                  fontSize: '12px', 
                   fontWeight: '700', 
-                  letterSpacing: '0.2em', 
+                  letterSpacing: '0.15em', 
                   textTransform: 'uppercase', 
-                  color: 'rgba(15, 23, 42, 0.5)' 
+                  color: service.color 
                 }}>
-                  Service 0{service.id}
+                  0{service.id} — {service.key.toUpperCase()}
                 </span>
               </div>
-              
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                className="coming-soon-badge"
-                style={{
-                  padding: '4px 12px',
-                  borderRadius: '99px',
-                  background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
-                  color: '#fff',
-                  fontSize: '10px',
-                  fontWeight: '800',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                  boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
-                }}
-              >
-                Coming Soon
-              </motion.div>
             </div>
 
             <h2 id={titleId} style={{ 
-              fontSize: 'clamp(28px, 3.5vw, 42px)', 
-              fontWeight: '700', 
+              fontSize: 'clamp(24px, 5vw, 48px)', 
+              fontWeight: '800', 
               color: '#0F172A', 
-              marginBottom: '16px', 
-              lineHeight: '1.2' 
+              marginBottom: '20px', 
+              lineHeight: '1.1',
+              letterSpacing: '-0.02em'
             }}>
               {service.title}
               <span style={{ 
                 display: 'block', 
-                fontSize: 'clamp(16px, 1.8vw, 20px)', 
+                fontSize: 'clamp(18px, 2vw, 22px)', 
                 fontWeight: '500', 
-                marginTop: '12px', 
-                color: 'rgba(15, 23, 42, 0.5)', 
-                lineHeight: '1.5' 
+                marginTop: '16px', 
+                color: '#64748B', 
+                lineHeight: '1.4' 
               }}>
                 {service.subtitle}
               </span>
             </h2>
 
             <p style={{ 
-              fontSize: '16px', 
+              fontSize: 'clamp(14px, 4vw, 17px)', 
               color: '#475569', 
               lineHeight: '1.7', 
-              marginBottom: '24px', 
-              maxWidth: '600px' 
+              marginBottom: '32px', 
+              maxWidth: '640px' 
             }}>
               {service.description}
             </p>
 
             <div className="service-details-grid" style={{ 
               display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
-              gap: '24px' 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', 
+              gap: 'clamp(16px, 3vw, 32px)' 
             }}>
               {/* Deliverables Column */}
-              <div className="details-col">
+              <div className="details-col" style={{
+                padding: '24px',
+                borderRadius: '20px',
+                background: isEven ? '#F8FAFC' : '#fff',
+                border: '1px solid rgba(15, 23, 42, 0.05)',
+                transition: 'transform 0.3s ease'
+              }}>
                 <h4 style={{ 
-                  fontSize: '13px', 
+                  fontSize: '14px', 
                   fontWeight: '700', 
                   color: '#0F172A', 
                   textTransform: 'uppercase', 
                   letterSpacing: '0.1em', 
                   display: 'flex', 
                   alignItems: 'center', 
-                  gap: '8px', 
-                  marginBottom: '16px' 
+                  gap: '10px', 
+                  marginBottom: '20px' 
                 }}>
-                  <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: service.color }} />
-                  What we deliver:
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: service.color }} />
+                  What we deliver
                 </h4>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                   {service.deliverables.map((item, i) => (
                     <li key={i} style={{ 
                       display: 'flex', 
                       alignItems: 'flex-start', 
-                      gap: '10px', 
-                      marginBottom: '10px', 
-                      fontSize: '13.5px', 
+                      gap: '12px', 
+                      marginBottom: '12px', 
+                      fontSize: 'clamp(13px, 3.8vw, 14.5px)', 
                       color: '#475569', 
-                      lineHeight: '1.4' 
+                      lineHeight: '1.5' 
                     }}>
-                      <ArrowRightCircle size={14} style={{ marginTop: '2px', color: service.color, opacity: 0.4 }} />
+                      <ArrowRightCircle size={16} style={{ marginTop: '3px', color: service.color, flexShrink: 0 }} />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -442,33 +430,39 @@ const DetailedService = ({ service, index, isHighlighted }) => {
               </div>
 
               {/* Impact Column */}
-              <div className="details-col">
+              <div className="details-col" style={{
+                padding: '24px',
+                borderRadius: '20px',
+                background: isEven ? '#F8FAFC' : '#fff',
+                border: '1px solid rgba(15, 23, 42, 0.05)',
+                transition: 'transform 0.3s ease'
+              }}>
                 <h4 style={{ 
-                  fontSize: '13px', 
+                  fontSize: '14px', 
                   fontWeight: '700', 
                   color: '#0F172A', 
                   textTransform: 'uppercase', 
                   letterSpacing: '0.1em', 
                   display: 'flex', 
                   alignItems: 'center', 
-                  gap: '8px', 
-                  marginBottom: '16px' 
+                  gap: '10px', 
+                  marginBottom: '20px' 
                 }}>
-                  <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#10B981' }} />
-                  Business impact:
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981' }} />
+                  Business impact
                 </h4>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                   {service.impact.map((item, i) => (
                     <li key={i} style={{ 
                       display: 'flex', 
                       alignItems: 'flex-start', 
-                      gap: '10px', 
-                      marginBottom: '10px', 
-                      fontSize: '13.5px', 
+                      gap: '12px', 
+                      marginBottom: '12px', 
+                      fontSize: 'clamp(13px, 3.8vw, 14.5px)', 
                       color: '#475569', 
-                      lineHeight: '1.4' 
+                      lineHeight: '1.5' 
                     }}>
-                      <CheckCircle2 size={14} style={{ marginTop: '2px', color: '#10B981', opacity: 0.6 }} />
+                      <CheckCircle2 size={16} style={{ marginTop: '3px', color: '#10B981', flexShrink: 0 }} />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -480,40 +474,68 @@ const DetailedService = ({ service, index, isHighlighted }) => {
           {/* Visual Area */}
           <motion.div 
             className="detailed-service-visual"
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, x: isEven ? 50 : -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            style={{ flex: '1', minWidth: '320px' }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            style={{ flex: '1', minWidth: 'min(100%, 320px)' }}
           >
-            <div className="image-wrapper" style={{ position: 'relative' }}>
-              {/* Decorative Frame */}
+            <div className="image-wrapper" style={{ position: 'relative', padding: 'clamp(10px, 4vw, 20px)' }}>
+              {/* Decorative Frame / Shadow */}
               <div style={{ 
                 position: 'absolute', 
-                inset: '-12px', 
-                borderRadius: '32px', 
-                border: '1px solid rgba(15, 23, 42, 0.05)', 
-                background: `radial-gradient(circle at top left, ${service.color}05, transparent)` 
+                inset: '0', 
+                borderRadius: '40px', 
+                background: `linear-gradient(135deg, ${service.color}10, transparent)`,
+                transform: isEven ? 'rotate(-2deg)' : 'rotate(2deg)',
+                zIndex: 1
               }} />
               
               {/* Image Container */}
-              <div style={{ 
-                position: 'relative', 
-                borderRadius: '24px', 
-                overflow: 'hidden', 
-                aspectRatio: '4/3', 
-                boxShadow: '0 20px 40px rgba(15, 23, 42, 0.1)' 
-              }}>
+              <motion.div 
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.5 }}
+                style={{ 
+                  position: 'relative', 
+                  borderRadius: '32px', 
+                  overflow: 'hidden', 
+                  aspectRatio: '1/1', 
+                  boxShadow: '0 30px 60px -12px rgba(15, 23, 42, 0.25)',
+                  zIndex: 2,
+                  border: '8px solid #fff'
+                }}
+              >
                 <img 
                   src={service.image} 
                   alt={service.title} 
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
-              </div>
+                <div style={{ 
+                  position: 'absolute', 
+                  inset: 0, 
+                  background: `linear-gradient(to bottom, transparent 60%, ${service.color}20)`,
+                  pointerEvents: 'none'
+                }} />
+              </motion.div>
 
-              {/* Decorative accents */}
-              <div style={{ position: 'absolute', top: '-32px', right: '-32px', width: '64px', height: '64px', background: 'rgba(15, 23, 42, 0.02)', borderRadius: '50%', filter: 'blur(24px)' }} />
-              <div style={{ position: 'absolute', bottom: '-24px', left: '-24px', width: '48px', height: '48px', background: 'rgba(15, 23, 42, 0.02)', borderRadius: '50%', filter: 'blur(16px)' }} />
+              {/* Decorative Floating Elements */}
+              <motion.div 
+                animate={{ y: [0, -15, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                style={{ 
+                  position: 'absolute', 
+                  top: '-10px', 
+                  right: isEven ? '-10px' : 'auto',
+                  left: isEven ? 'auto' : '-10px',
+                  width: '80px', 
+                  height: '80px', 
+                  background: `${service.color}15`, 
+                  borderRadius: '24px', 
+                  backdropFilter: 'blur(8px)',
+                  zIndex: 3,
+                  border: '1px solid rgba(255, 255, 255, 0.5)'
+                }} 
+              />
             </div>
           </motion.div>
 
@@ -631,15 +653,15 @@ const Services = () => {
                 flexDirection: 'column', 
                 alignItems: 'center', 
                 textAlign: 'center', 
-                marginBottom: '40px' 
+                marginBottom: '60px' 
               }}
             >
-              <div style={{ height: '1px', width: '96px', background: 'rgba(59, 130, 246, 0.2)', marginBottom: '20px' }} />
-              <h2 style={{ fontSize: 'clamp(24px, 3.5vw, 36px)', fontWeight: '700', color: '#0F172A', marginBottom: '12px' }}>
+              <div style={{ height: '2px', width: '64px', background: 'linear-gradient(90deg, transparent, #3B82F6, transparent)', marginBottom: '24px' }} />
+              <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 44px)', fontWeight: '800', color: '#0F172A', marginBottom: '16px', letterSpacing: '-0.02em' }}>
                 Industrial & Building Intelligence
               </h2>
-              <p style={{ color: '#64748B', maxWidth: '600px', fontSize: '15px', lineHeight: '1.5' }}>
-                Comprehensive solutions for optimizing infrastructure, enhancing operational efficiency, and driving data-led decisions.
+              <p style={{ color: '#64748B', maxWidth: '700px', fontSize: '18px', lineHeight: '1.6' }}>
+                Precision-engineered solutions for high-stakes environments — where operational efficiency meets intelligent automation.
               </p>
             </motion.div>
           </div>

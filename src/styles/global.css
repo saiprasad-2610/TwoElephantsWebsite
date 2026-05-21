@@ -3555,24 +3555,6 @@ canvas {
   @apply relative overflow-hidden h-7 mb-12 font-mono text-lg text-cyan-200 font-medium tracking-wide;
 }
 
-.typewriter-cursor {
-  @apply absolute right-0 top-0 w-px h-full bg-gradient-to-b from-cyan-300 to-blue-400;
-  animation: twinkle 1s infinite;
-}
-
-@keyframes twinkle {
-
-  0%,
-  50% {
-    opacity: 1;
-  }
-
-  51%,
-  100% {
-    opacity: 0;
-  }
-}
-
 /* Responsive Tailwind Overrides for Hero */
 @media (max-width: 768px) {
   .hero-elephant-container {

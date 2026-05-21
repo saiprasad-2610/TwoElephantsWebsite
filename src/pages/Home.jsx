@@ -158,7 +158,6 @@ const Hero = () => {
             </p>
             <div className="typewriter-container typewriter-enhanced">
               <div className="typewriter-text">{text}</div>
-              <span className="typewriter-cursor">|</span>
             </div>
             <div className="hero-badges hero-badges-main">
               <span className="badge">BFSI &middot; Oil &amp; Gas &middot; Pharma</span>
@@ -816,7 +815,7 @@ const Team = () => {
       img: arpitaImg, 
       bio: "Operations and technology professional focused on optimizing processes, driving strategic initiatives, and delivering enterprise solutions. Bridges business and technology to enhance efficiency, lead teams, and create scalable, high-impact outcomes.", 
       linkedin: "https://www.linkedin.com/in/arpita-kulkarni/" 
-    }
+    } 
     // { 
     
     //   name: "Prashant Bollu", 

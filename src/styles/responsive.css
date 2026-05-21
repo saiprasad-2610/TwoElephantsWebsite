@@ -244,7 +244,12 @@
 
   .hero-buttons,
   .hero-badges {
-    justify-content: flex-start;
+    justify-content: center;
+    flex-wrap: nowrap;
+  }
+
+  .hero-badges .badge {
+    white-space: nowrap;
   }
 
   .hero-visual {
@@ -422,6 +427,8 @@
   .hero-buttons {
     /* flex-direction: column; */
     align-items: stretch;
+    width: 100%;
+    gap: 12px;
   }
 
   .hero-buttons .btn,
@@ -429,9 +436,29 @@
   .cta-merged-actions .btn,
   .apply-btn-massive,
   .btn-yellow {
-    width: 100%;
+    width: auto;
     max-width: 340px;
+    min-width: 220px;
     justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-badges {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    width: 100%;
+    padding: 0 10px;
+    margin-bottom: 14px;
+  }
+
+  .hero-badges .badge {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    min-width: 0;
   }
 
   .hero-logo-wrapper {
@@ -530,6 +557,12 @@
 
   .service-detail-card {
     padding: 28px 22px;
+    margin: 0 14px;
+  }
+
+  .detailed-service-item {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
   }
 
   .service-detail-card h2 {
@@ -537,9 +570,52 @@
   }
 
   .service-detail-list {
-    grid-template-columns: 1fr;
+    display: block !important;
+    grid-template-columns: unset !important;
     gap: 12px;
     margin-bottom: 24px;
+  }
+
+  .service-detail-list li {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding-left: 0 !important;
+    margin-left: 0;
+  }
+
+  .service-detail-list li::before {
+    position: relative;
+    left: auto;
+    top: auto;
+    content: '•';
+    display: inline-flex;
+    min-width: 18px;
+    color: var(--color-blue-core);
+    font-size: 16px;
+    margin-top: 2px;
+  }
+
+  .detailed-service-flex {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .service-detail-footer {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    width: calc(100% - 28px);
+    margin-left: 14px;
+  }
+
+  .service-detail-footer span {
+    width: 100%;
+  }
+
+  .service-detail-tags {
+    width: 100% !important;
+    justify-content: flex-start;
   }
 
   .svc-card-inner {
@@ -638,7 +714,17 @@
   }
 
   .hero-bento-grid {
-    display: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 180px;
+    gap: 14px;
+    width: 100%;
+    margin: 0 auto 20px;
+  }
+
+  .hero-bento-grid .bento-box {
+    height: 100%;
+    min-height: unset;
   }
 
   .highlight-cards-grid {
@@ -845,8 +931,21 @@
   }
 
   .blog-img-wrap {
-    aspect-ratio: 16 / 10;
+    display: block !important;
+    width: 100% !important;
     height: auto !important;
+    min-height: 0 !important;
+    position: relative;
+    overflow: visible !important;
+    aspect-ratio: auto !important;
+  }
+
+  .blog-img,
+  .blog-img-wrap img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    object-position: top center !important;
   }
 
   .story-section .services-header {
@@ -1360,13 +1459,8 @@
     text-wrap: balance;
   }
 
-  .typewriter-cursor {
-    display: none;
-  }
-
   .hero-buttons {
     width: min(100%, 340px);
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 12px;
@@ -1376,7 +1470,7 @@
   }
 
   .hero-buttons .btn {
-    width: 100%;
+    width: auto;
     max-width: calc(100vw - 40px);
     min-height: 48px;
     margin-left: auto;
@@ -1385,22 +1479,25 @@
 
   .hero-badges {
     width: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
     margin-bottom: 14px;
-    overflow: hidden;
+    padding: 0 8px;
   }
 
   .hero-badges .badge {
+    flex: 0 0 auto;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: auto;
     min-width: 0;
     padding: 4px 8px;
     font-size: 8.5px;
-    white-space: normal;
+    white-space: nowrap;
     line-height: 1.3;
     text-align: center;
   }
@@ -1586,7 +1683,8 @@
 
   .highlight-card,
   .service-detail-card,
-  .contact-card {
+  .contact-card,
+  .details-col {
     padding: 16px !important;
   }
 
@@ -1694,5 +1792,53 @@
   .closing-actions .custom-mobile-btn {
     padding: 10px 8px;
     font-size: 11.5px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-buttons,
+  .hero-buttons > *,
+  .hero-badges,
+  .hero-badges .badge {
+    display: flex !important;
+  }
+
+  .hero-buttons {
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  .hero-buttons > * {
+    width: auto !important;
+    max-width: 340px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .hero-badges {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 10px !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    width: 100% !important;
+    padding: 0 12px !important;
+  }
+
+  .hero-badges.hero-badges-main {
+    display: flex !important;
+  }
+
+  .hero-badges .badge {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    width: auto !important;
+    min-width: 0 !important;
+    text-align: center !important;
   }
 }

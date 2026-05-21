@@ -103,20 +103,22 @@
 }
 
 .blog-img-wrap {
-  aspect-ratio: 16 / 10;
-  height: auto;
-  min-height: 0;
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 0 !important;
   position: relative;
-  overflow: hidden;
+  overflow: visible !important;
   background: #e2e8f0;
+  aspect-ratio: auto !important;
 }
 
-.blog-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  transition: transform 0.6s ease;
+.blog-img,
+.blog-img-wrap img {
+  width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
+  object-position: top center !important;
 }
 
 .blog-card:hover .blog-img {
@@ -330,7 +332,22 @@
   }
 
   .blog-img-wrap {
-    aspect-ratio: 4 / 3;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    position: relative;
+    overflow: visible !important;
+    background: #e2e8f0;
+    aspect-ratio: auto !important;
+  }
+
+  .blog-img,
+  .blog-img-wrap img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    object-position: top center !important;
   }
 
   .blog-content {
