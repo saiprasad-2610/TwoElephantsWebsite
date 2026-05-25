@@ -319,7 +319,7 @@
 }
 
 
-@media (min-width: 769px) and (max-width: 1200px) {
+@media (min-width: 993px) and (max-width: 1200px) {
   .footer-grid {
     grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
     gap: 24px !important;
@@ -686,6 +686,50 @@
     overflow-y: auto;
   }
 
+  @media (min-width: 769px) {
+    .team-modal-content {
+      width: 100% !important;
+      max-width: min(78vw, 760px) !important;
+    }
+
+    .modal-body {
+      grid-template-columns: minmax(260px, 38%) 1fr !important;
+      min-height: 380px !important;
+    }
+
+    .modal-image-wrap {
+      height: auto !important;
+      min-height: 380px !important;
+    }
+
+    .modal-text {
+      padding: 36px 30px !important;
+    }
+  }
+
+  @media (max-height: 520px) and (orientation: landscape) {
+    .team-modal-content {
+      width: min(82vw, 680px) !important;
+      max-width: min(82vw, 680px) !important;
+      max-height: 88vh !important;
+      border-radius: 18px !important;
+    }
+
+    .modal-body {
+      grid-template-columns: minmax(190px, 38%) 1fr !important;
+      min-height: 0 !important;
+    }
+
+    .modal-image-wrap {
+      height: auto !important;
+      min-height: 300px !important;
+    }
+
+    .modal-text {
+      padding: 28px 30px 24px !important;
+    }
+  }
+
   .cta-merged-grid {
     text-align: center;
     gap: 24px;
@@ -1050,6 +1094,73 @@
   }
 }
 
+@media (min-width: 641px) and (max-width: 1200px) and (max-height: 520px) and (orientation: landscape) {
+  .story-section .story-grid {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+    justify-items: center;
+  }
+
+  .story-section .story-content {
+    align-items: center;
+    max-width: 820px;
+    width: 100%;
+  }
+
+  .story-section .story-content .h2-title,
+  .story-section .story-content .body-text {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .story-section .image-stack {
+    min-height: 270px;
+    isolation: isolate;
+    position: relative;
+  }
+
+  .story-section .story-img-main {
+    position: relative;
+    z-index: 1;
+  }
+
+  .story-section .story-img-fg {
+    top: 76px;
+    bottom: auto;
+    z-index: 2;
+  }
+
+  .story-section .story-img-card {
+    position: absolute !important;
+  }
+
+  .story-section .card-legacy {
+    top: 14px !important;
+    left: max(14px, calc(50% - 196px)) !important;
+    z-index: 20 !important;
+  }
+
+  .story-section .card-tech {
+    top: clamp(138px, 24vw, 166px) !important;
+    left: auto !important;
+    right: clamp(24px, 6vw, 52px) !important;
+    bottom: auto !important;
+    z-index: 21 !important;
+  }
+
+  .story-section .legacy-stats {
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    justify-items: center;
+  }
+
+  .story-section .l-stat {
+    align-items: center;
+    text-align: center;
+  }
+}
+
 @media (max-width: 640px) {
   .container {
     padding-left: 16px !important;
@@ -1368,6 +1479,74 @@
 
   .f-bottom-links {
     justify-content: flex-end;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 992px),
+       (min-width: 641px) and (max-width: 1200px) and (max-height: 520px) and (orientation: landscape) {
+  footer {
+    padding: 40px 0 24px;
+  }
+
+  footer .container {
+    padding-left: 28px !important;
+    padding-right: 28px !important;
+  }
+
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 30px 44px !important;
+    margin-bottom: 36px;
+    text-align: left;
+  }
+
+  .f-col {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .f-brand {
+    grid-column: 1 / -1;
+    max-width: 520px;
+  }
+
+  .f-brand br {
+    display: none;
+  }
+
+  .f-desc {
+    margin-top: 14px;
+    max-width: 460px;
+  }
+
+  .f-links {
+    align-items: flex-start;
+    gap: 7px;
+    text-align: left;
+  }
+
+  .f-links a,
+  .contact-item a,
+  .contact-item p {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .footer-bottom {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px 20px;
+    align-items: center;
+    text-align: left;
+  }
+
+  .footer-bottom > div:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .f-bottom-links {
+    justify-content: flex-end;
+    flex-wrap: wrap;
   }
 }
 

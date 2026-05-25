@@ -4,16 +4,43 @@ from rest_framework import serializers
 from .models import ContactSubmission, JobRole, JobApplication, Article
 
 MALICIOUS_CONTENT_MESSAGE = 'Message cannot include HTML, scripts, or executable content.'
+INTEREST_INPUT_ERROR = 'Use letters, numbers, spaces, and common symbols like &, /, +, #, hyphen, comma, dot, or parentheses.'
+INTEREST_MIN_LENGTH = 2
+INTEREST_MAX_LENGTH = 200
 CONTROL_CHARACTER_PATTERN = re.compile(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]')
 DANGEROUS_MESSAGE_PATTERN = re.compile(
     r'(?:<\s*/?\s*[a-z][^>]*>|&lt;\s*/?\s*[a-z][\s\S]*?&gt;|javascript\s*:|data\s*:\s*text/html|on[a-z]+\s*=)',
     re.IGNORECASE,
 )
+INTEREST_ALLOWED_PATTERN = re.compile(r'^[A-Za-z0-9\s&.,+/#()-]+$')
 
 class ContactSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactSubmission
         fields = '__all__'
+
+    def validate_interest(self, value):
+        sanitized_value = CONTROL_CHARACTER_PATTERN.sub('', value).strip()
+
+        if not sanitized_value:
+            return sanitized_value
+
+        if len(sanitized_value) < INTEREST_MIN_LENGTH:
+            raise serializers.ValidationError(f'Interest must be at least {INTEREST_MIN_LENGTH} characters.')
+
+        if len(sanitized_value) > INTEREST_MAX_LENGTH:
+            raise serializers.ValidationError(f'Interest cannot be longer than {INTEREST_MAX_LENGTH} characters.')
+
+        if DANGEROUS_MESSAGE_PATTERN.search(sanitized_value):
+            raise serializers.ValidationError(MALICIOUS_CONTENT_MESSAGE)
+
+        if not re.search(r'[A-Za-z]', sanitized_value):
+            raise serializers.ValidationError('Interest must include meaningful text, not only numbers or symbols.')
+
+        if not INTEREST_ALLOWED_PATTERN.fullmatch(sanitized_value):
+            raise serializers.ValidationError(INTEREST_INPUT_ERROR)
+
+        return sanitized_value
 
     def validate_message(self, value):
         sanitized_value = CONTROL_CHARACTER_PATTERN.sub('', value).strip()

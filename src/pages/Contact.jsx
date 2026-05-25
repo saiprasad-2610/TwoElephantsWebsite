@@ -51,6 +51,12 @@ const EMAIL_RULE_MESSAGES = {
   invalidDomainDotHyphen: "Domain can't place dot and hyphen together.",
   tooLong: `Email cannot be longer than ${EMAIL_MAX_LENGTH} characters.`,
 };
+const OTHER_INTEREST_VALUE = 'Other';
+const INTEREST_MAX_LENGTH = 200;
+const INTEREST_MIN_LENGTH = 2;
+const INTEREST_CUSTOM_ERROR = 'Please tell us what you are interested in.';
+const INTEREST_INPUT_ERROR = 'Use letters, numbers, spaces, and common symbols like &, /, +, #, hyphen, comma, dot, or parentheses.';
+const INTEREST_ALLOWED_PATTERN = /^[A-Za-z0-9\s&.,+/#()-]+$/;
 const TEXT_ONLY_FIELDS = new Set(['fname', 'lname']);
 const CONTACT_FORM_FIELDS = ['fname', 'lname', 'email', 'location', 'interest', 'message'];
 const DUPLICATE_SUBMISSION_MESSAGE =
@@ -79,8 +85,36 @@ const hasDangerousMessageContent = (value) =>
 const validateContactField = (id, value) => {
   const trimmedValue = id === 'message' ? sanitizeMessageValue(value) : value.trim();
 
-  if (CONTACT_FORM_FIELDS.includes(id) && !trimmedValue) {
+  if ((CONTACT_FORM_FIELDS.includes(id) || id === 'otherInterest') && !trimmedValue) {
+    if (id === 'otherInterest') {
+      return INTEREST_CUSTOM_ERROR;
+    }
+
     return REQUIRED_FIELD_MESSAGE;
+  }
+
+  if ((id === 'interest' || id === 'otherInterest') && trimmedValue.length > INTEREST_MAX_LENGTH) {
+    return `Interest cannot be longer than ${INTEREST_MAX_LENGTH} characters.`;
+  }
+
+  if (id === 'otherInterest' && trimmedValue.length < INTEREST_MIN_LENGTH) {
+    return `Interest must be at least ${INTEREST_MIN_LENGTH} characters.`;
+  }
+
+  if (id === 'otherInterest' && /^\s/.test(value)) {
+    return 'Interest cannot start with a space.';
+  }
+
+  if (id === 'otherInterest' && !/[A-Za-z]/.test(trimmedValue)) {
+    return 'Interest must include meaningful text, not only numbers or symbols.';
+  }
+
+  if (id === 'otherInterest' && !INTEREST_ALLOWED_PATTERN.test(trimmedValue)) {
+    return INTEREST_INPUT_ERROR;
+  }
+
+  if ((id === 'interest' || id === 'otherInterest') && hasDangerousMessageContent(trimmedValue)) {
+    return MALICIOUS_CONTENT_MESSAGE;
   }
 
   if ((id === 'fname' || id === 'lname') && trimmedValue.length > NAME_MAX_LENGTH) {
@@ -141,6 +175,16 @@ const validateContactField = (id, value) => {
   return '';
 };
 
+const getContactFormFields = (formData) =>
+  formData.interest === OTHER_INTEREST_VALUE
+    ? [...CONTACT_FORM_FIELDS, 'otherInterest']
+    : CONTACT_FORM_FIELDS;
+
+const getSubmittedInterest = (formData) =>
+  formData.interest === OTHER_INTEREST_VALUE
+    ? formData.otherInterest.trim()
+    : formData.interest.trim();
+
 const normalizeSubmissionValue = (value) =>
   value.trim().replace(/\s+/g, ' ').toLowerCase();
 
@@ -195,11 +239,12 @@ const Contact = () => {
     email: '',
     location: '',
     interest: '',
+    otherInterest: '',
     message: ''
   });
 
   const hasFormErrors = Object.values(formErrors).some(Boolean);
-  const isFormCompleteAndValid = CONTACT_FORM_FIELDS.every(
+  const isFormCompleteAndValid = getContactFormFields(formData).every(
     (fieldId) => !validateContactField(fieldId, formData[fieldId])
   );
   const isSubmitDisabled =
@@ -233,12 +278,24 @@ const Contact = () => {
       return;
     }
 
+    if (id === 'otherInterest') {
+      const interestError = getInterestInputError(value);
+
+      if (interestError) {
+        e.target.value = formData.otherInterest;
+        showInterestInputError(e.target, interestError);
+        return;
+      }
+    }
+
     const nextValue = id === 'message'
       ? stripMessageControlCharacters(value).slice(0, MESSAGE_MAX_LENGTH)
       : id === 'fname' || id === 'lname'
         ? value.replace(LETTERS_ONLY_PATTERN, '').slice(0, NAME_MAX_LENGTH)
         : id === 'email'
           ? value.slice(0, EMAIL_MAX_LENGTH)
+        : id === 'otherInterest'
+          ? stripMessageControlCharacters(value).slice(0, INTEREST_MAX_LENGTH)
         : value;
 
     const emailPartialError = id === 'email' ? getEmailPartialError(nextValue) : '';
@@ -252,8 +309,16 @@ const Contact = () => {
     const fieldError = validateContactField(id, nextValue);
 
     e.target.setCustomValidity(fieldError);
-    setFormData({ ...formData, [id]: nextValue });
-    setFormErrors({ ...formErrors, [id]: fieldError });
+    setFormData((currentData) => ({
+      ...currentData,
+      [id]: nextValue,
+      ...(id === 'interest' && nextValue !== OTHER_INTEREST_VALUE ? { otherInterest: '' } : {}),
+    }));
+    setFormErrors((currentErrors) => ({
+      ...currentErrors,
+      [id]: fieldError,
+      ...(id === 'interest' && nextValue !== OTHER_INTEREST_VALUE ? { otherInterest: '' } : {}),
+    }));
     setDuplicateMessage('');
 
     if (formStatus === 'error') {
@@ -370,6 +435,79 @@ const Contact = () => {
   const handleLocationDrop = (e) => {
     e.preventDefault();
     showLocationInputError(e.currentTarget);
+  };
+
+  const showInterestInputError = (input, message = INTEREST_INPUT_ERROR) => {
+    input.setCustomValidity(message);
+    setFormErrors((currentErrors) => ({
+      ...currentErrors,
+      otherInterest: message,
+    }));
+  };
+
+  const getInterestInputError = (value) => {
+    if (/^\s/.test(value)) {
+      return 'Interest cannot start with a space.';
+    }
+
+    if (value.length > INTEREST_MAX_LENGTH) {
+      return `Interest cannot be longer than ${INTEREST_MAX_LENGTH} characters.`;
+    }
+
+    if (value && !INTEREST_ALLOWED_PATTERN.test(value)) {
+      return INTEREST_INPUT_ERROR;
+    }
+
+    if (hasDangerousMessageContent(value)) {
+      return MALICIOUS_CONTENT_MESSAGE;
+    }
+
+    return '';
+  };
+
+  const handleInterestBeforeInput = (e) => {
+    const interestError = e.data
+      ? getInterestInputError(getNextInputValue(e.currentTarget, e.data))
+      : '';
+
+    if (interestError) {
+      e.preventDefault();
+      showInterestInputError(e.currentTarget, interestError);
+    }
+  };
+
+  const handleInterestKeyDown = (e) => {
+    const interestError = e.key.length === 1
+      ? getInterestInputError(getNextInputValue(e.currentTarget, e.key))
+      : '';
+
+    if (
+      e.key.length === 1 &&
+      !e.ctrlKey &&
+      !e.metaKey &&
+      !e.altKey &&
+      interestError
+    ) {
+      e.preventDefault();
+      showInterestInputError(e.currentTarget, interestError);
+    }
+  };
+
+  const handleInterestPaste = (e) => {
+    const pastedText = e.clipboardData.getData('text');
+    const interestError = pastedText
+      ? getInterestInputError(getNextInputValue(e.currentTarget, pastedText))
+      : '';
+
+    if (interestError) {
+      e.preventDefault();
+      showInterestInputError(e.currentTarget, interestError);
+    }
+  };
+
+  const handleInterestDrop = (e) => {
+    e.preventDefault();
+    showInterestInputError(e.currentTarget);
   };
 
   const showMessageInputError = (input, message = 'Message cannot start with a space') => {
@@ -572,7 +710,7 @@ const Contact = () => {
     const nextErrors = {};
     let firstInvalidField = null;
 
-    CONTACT_FORM_FIELDS.forEach((fieldId) => {
+    getContactFormFields(formData).forEach((fieldId) => {
       const fieldInput = e.currentTarget.elements[fieldId];
       const fieldError = validateContactField(fieldId, formData[fieldId]);
       fieldInput.setCustomValidity(fieldError);
@@ -600,7 +738,7 @@ const Contact = () => {
     const sanitizedLastName = formData.lname.trim();
     const sanitizedLocation = formData.location.trim();
     const sanitizedMessage = sanitizeMessageValue(formData.message);
-    const sanitizedInterest = formData.interest.trim();
+    const sanitizedInterest = getSubmittedInterest(formData);
     const submissionFingerprint = createSubmissionFingerprint({
       fname: sanitizedFirstName,
       lname: sanitizedLastName,
@@ -703,6 +841,7 @@ const Contact = () => {
         email: '',
         location: '',
         interest: '',
+        otherInterest: '',
         message: ''
       });
     } catch (error) {
@@ -717,6 +856,7 @@ const Contact = () => {
         email: '',
         location: '',
         interest: '',
+        otherInterest: '',
         message: ''
       });
     } finally {
@@ -963,12 +1103,39 @@ const Contact = () => {
                               <option value="Oil & Gas IT">Oil & Gas IT</option>
                               <option value="Pharmaceutical IT">Pharmaceutical IT</option>
                               <option value="Cloud & AI Solutions">Cloud & AI Solutions</option>
-                              <option value="Other">Other</option>
+                              <option value={OTHER_INTEREST_VALUE}>Other</option>
                             </select>
                             {formErrors.interest && (
                               <div className="field-error" id="interest-error">{formErrors.interest}</div>
                             )}
                           </div>
+
+                          {formData.interest === OTHER_INTEREST_VALUE && (
+                            <div className="form-group">
+                              <label htmlFor="otherInterest">Please specify *</label>
+                              <input
+                                type="text"
+                                id="otherInterest"
+                                name="otherInterest"
+                                required
+                                minLength={INTEREST_MIN_LENGTH}
+                                maxLength={INTEREST_MAX_LENGTH}
+                                placeholder="Enter your area of interest"
+                                onBeforeInput={handleInterestBeforeInput}
+                                onKeyDown={handleInterestKeyDown}
+                                onPaste={handleInterestPaste}
+                                onDrop={handleInterestDrop}
+                                onChange={handleChange}
+                                onInvalid={handleInvalid}
+                                value={formData.otherInterest}
+                                aria-describedby="otherInterest-error"
+                                aria-invalid={Boolean(formErrors.otherInterest)}
+                              />
+                              {formErrors.otherInterest && (
+                                <div className="field-error" id="otherInterest-error">{formErrors.otherInterest}</div>
+                              )}
+                            </div>
+                          )}
 
                           <div className="form-group message-form-group">
                             <label htmlFor="message">Your Message *</label>

@@ -3815,10 +3815,12 @@ canvas {
   position: absolute;
   top: 22px;
   /* vertically center on dots */
-  left: 2%;
-  right: 2%;
+  left: 50%;
+  right: auto;
+  width: 96%;
   height: 2px;
   background: linear-gradient(90deg, #3b82f6, #f8cc1c, #10b981);
+  transform: translateX(-50%);
   transform-origin: left center;
   z-index: 0;
 }
@@ -3866,16 +3868,45 @@ canvas {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  right: auto;
+  width: calc(100% - 48px);
   height: 3px;
   background: var(--color-blue-core);
+  border-radius: 999px;
   opacity: 0;
+  transform: translateX(-50%);
   transition: opacity 0.4s ease;
 }
 
 .htl-item:hover .htl-card::before {
   opacity: 1;
+}
+
+.story-page .htl-track {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 24px;
+  align-items: start;
+}
+
+.story-page .htl-line {
+  grid-column: 1 / -1;
+  top: 12px;
+}
+
+.story-page .htl-item {
+  width: auto;
+  min-width: 0;
+  align-items: center;
+}
+
+.story-page .htl-dot {
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  margin-inline: auto;
 }
 
 .htl-icon {

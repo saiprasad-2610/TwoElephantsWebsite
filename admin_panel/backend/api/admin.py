@@ -5,7 +5,7 @@ from .models import ContactSubmission, JobRole, JobApplication, Article
 class ContactSubmissionAdmin(admin.ModelAdmin):
     list_display = ('fname', 'lname', 'email', 'interest', 'submitted_at', 'is_read')
     list_filter = ('is_read', 'interest', 'submitted_at')
-    search_fields = ('fname', 'lname', 'email', 'message')
+    search_fields = ('fname', 'lname', 'email', 'interest', 'message')
     readonly_fields = ('submitted_at',)
 
 @admin.register(JobRole)

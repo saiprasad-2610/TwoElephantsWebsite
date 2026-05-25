@@ -628,11 +628,11 @@
 .htl-line {
   position: absolute;
   top: 50%;
-  left: 5%;
+  left: 50%;
   height: 4px;
   background: linear-gradient(90deg, var(--story-blue), rgba(37, 99, 235, 0.2), var(--story-blue));
   width: 90%;
-  transform: translateY(-50%);
+  transform: translate(-50%, -50%);
   z-index: 1;
   border-radius: 100px;
 }

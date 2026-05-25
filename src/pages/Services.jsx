@@ -125,7 +125,7 @@ const detailedServices = [
     key: "bms",
     title: "Building Management System (BMS)",
     subtitle: "Your building already generates data. We make it intelligent.",
-    description: "Our Building Management System (BMS) service integrates and optimizes all core building systems —HVAC, energy, lighting, and utilities—into a unified control layer. We work with existing infrastructure (Siemens, Honeywell, Schneider, BACnet, Modbus, etc.) without requiring costly replacements. By combining deep engineering expertise with modern cloud and IoT integration, we transform traditional BMS into a connected, scalable, and future-ready platform.",
+    description: "Our Building Management System (BMS) service integrates and optimizes all core building systems—HVAC, energy, lighting, and utilities—into a unified control layer. We work with existing infrastructure (Siemens, Honeywell, Schneider, BACnet, Modbus, etc.) without requiring costly replacements. By combining deep engineering expertise with modern cloud and IoT integration, we transform traditional BMS into a connected, scalable, and future-ready platform.",
     deliverables: [
       "End-to-end BMS integration and modernization",
       "HVAC and energy system optimization",
